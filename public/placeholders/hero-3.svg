@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" preserveAspectRatio="xMidYMid slice" role="img" aria-label="">
+  <title>Placeholder  finitions</title>
+  <defs>
+    <linearGradient id="h3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3f3f46"/>
+      <stop offset="100%" stop-color="#18181b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="700" fill="url(#h3)"/>
+  <circle cx="380" cy="220" r="130" fill="none" stroke="#f97316" stroke-width="2" opacity="0.28"/>
+  <rect x="880" y="160" width="520" height="380" fill="none" stroke="#cbd5e1" stroke-width="1.5" opacity="0.28"/>
+  <path d="M0 480h1600" stroke="#ffffff" stroke-width="0.6" opacity="0.07"/>
+  <path d="M0 520h1600" stroke="#ffffff" stroke-width="0.6" opacity="0.05"/>
+  <g stroke="#f97316" stroke-width="0.8" opacity="0.2" fill="none">
+    <path d="M200 560h1200"/>
+    <path d="M300 520h1000"/>
+  </g>
+</svg>
