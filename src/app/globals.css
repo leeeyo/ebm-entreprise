@@ -209,9 +209,6 @@
 .ebm-hero-intro > *:nth-child(4) {
   animation-delay: 0.4s;
 }
-.ebm-hero-intro > *:nth-child(5) {
-  animation-delay: 0.52s;
-}
 
 .ebm-teaser-bg {
   background: linear-gradient(

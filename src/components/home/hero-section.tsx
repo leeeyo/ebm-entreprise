@@ -5,30 +5,8 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { homeHero } from "@/content/home";
+import { heroSlides } from "@/components/home/hero-slides";
 import { cn } from "@/lib/utils";
-
-const slides = [
-  {
-    id: 1,
-    label: "Plans et structure",
-    src: "/hero/hero1.png",
-  },
-  {
-    id: 2,
-    label: "Gros œuvre",
-    src: "/hero/hero2.png",
-  },
-  {
-    id: 3,
-    label: "Finitions",
-    src: "/hero/hero3.png",
-  },
-  {
-    id: 4,
-    label: "Réalisations",
-    src: "/hero/hero4.png",
-  },
-] as const;
 
 function subscribeReducedMotion(onStoreChange: () => void) {
   const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -54,16 +32,16 @@ export function HeroSection() {
   const motionOk = !prefersReducedMotion;
 
   useEffect(() => {
-    const t = setInterval(() => setI((v) => (v + 1) % slides.length), 6000);
+    const t = setInterval(() => setI((v) => (v + 1) % heroSlides.length), 6000);
     return () => clearInterval(t);
   }, []);
 
   return (
-    <section className="relative z-0 border-b">
-      <div className="relative min-h-[min(92vh,56rem)] w-full">
-        {/* z-0: slides never stack above copy */}
+    <section className="relative z-0 border-b bg-muted pt-24">
+      {/* pt-24 clears the fixed header; hero body height = remaining viewport so the fold is not pushed down with extra white */}
+      <div className="relative min-h-[min(56rem,calc(100svh-6rem))] w-full">
         <div className="absolute inset-0 z-0 overflow-hidden bg-muted">
-          {slides.map((s, idx) => (
+          {heroSlides.map((s, idx) => (
             <div
               key={s.id}
               className={cn(
@@ -92,45 +70,40 @@ export function HeroSection() {
         </div>
 
         <div
-          className="pointer-events-none absolute inset-0 z-10 bg-linear-to-t from-background via-background/35 to-transparent"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[min(38vh,26rem)] bg-linear-to-t from-background via-background/55 to-transparent md:h-[min(36vh,28rem)]"
           aria-hidden
         />
 
-        <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 sm:p-10 md:p-14">
-          <div className="ebm-hero-intro mx-auto w-full max-w-6xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/70">
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 sm:p-10 md:p-14">
+          <div className="ebm-hero-intro mx-auto w-full max-w-6xl text-center">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-primary sm:text-xs">
               Entreprise de construction
             </p>
-            <h1 className="font-heading mt-3 max-w-4xl text-balance text-3xl font-semibold tracking-[-0.02em] sm:text-4xl md:text-5xl md:leading-[1.08] lg:text-6xl">
+            <h1 className="font-heading mx-auto mt-4 max-w-4xl text-balance text-3xl font-semibold tracking-[-0.025em] text-black sm:text-4xl md:text-5xl md:leading-[1.1] lg:text-6xl">
               {homeHero.h1}
             </h1>
-            <p className="mt-4 max-w-3xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-              {homeHero.subtitle}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button size="lg" asChild className="shadow-md shadow-primary/20 transition-transform hover:-translate-y-0.5">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <Button size="lg" asChild className="shadow-md shadow-primary/15 transition-transform hover:-translate-y-0.5">
                 <Link href="/simulateur">{homeHero.ctaPrimary}</Link>
               </Button>
               <Button
                 size="lg"
                 variant="outline"
                 asChild
-                className="border-ebm-navy/25 bg-background/85 backdrop-blur-sm transition-transform hover:-translate-y-0.5"
+                className="border-foreground/20 bg-background/80 backdrop-blur-sm transition-transform hover:-translate-y-0.5"
               >
                 <Link href="/projets">{homeHero.ctaSecondary}</Link>
               </Button>
             </div>
-            <div className="mt-6 flex justify-start gap-2 sm:justify-center md:justify-start">
-              {slides.map((s, idx) => (
+            <div className="mt-6 flex justify-center gap-2">
+              {heroSlides.map((s, idx) => (
                 <button
                   key={s.id}
                   type="button"
                   onClick={() => setI(idx)}
                   className={cn(
-                    "h-2 w-8 rounded-full transition-all duration-300",
-                    idx === i
-                      ? "bg-primary shadow-[0_0_12px_rgba(249,115,22,0.45)]"
-                      : "bg-muted-foreground/35 hover:bg-muted-foreground/55",
+                    "h-2 w-8 rounded-full transition-colors duration-300",
+                    idx === i ? "bg-primary" : "bg-foreground/20 hover:bg-foreground/35",
                   )}
                   aria-label={`Voir visuel ${idx + 1} — ${s.label}`}
                 />

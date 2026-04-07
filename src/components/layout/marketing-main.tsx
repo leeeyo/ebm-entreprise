@@ -4,8 +4,8 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 /**
- * Fixed header does not occupy layout height; home needs no top padding so the hero
- * can sit under the transparent bar. Other routes need offset so content is not hidden.
+ * Fixed header does not occupy layout height. Non-home routes use pt-* so content clears
+ * the bar; the home hero adds its own top padding in HeroSection.
  */
 export function MarketingMain({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -17,7 +17,7 @@ export function MarketingMain({ children }: { children: React.ReactNode }) {
       tabIndex={-1}
       className={cn(
         "flex-1 scroll-mt-24 outline-none",
-        !isHome && "pt-20 md:pt-[4.75rem]",
+        !isHome && "pt-20 md:pt-19",
       )}
     >
       {children}

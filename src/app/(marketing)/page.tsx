@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { HeroSection } from "@/components/home/hero-section";
+import { HeroSectionSplit } from "@/components/home/hero-section-split";
 import { MasonryGallery } from "@/components/home/masonry-gallery";
 import { Reveal } from "@/components/home/reveal";
 import { StatCounters } from "@/components/home/stat-counters";
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      <HeroSection />
+      <HeroSectionSplit />
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">

@@ -20,8 +20,9 @@ import { Separator } from "@/components/ui/separator";
 import { navSections, type NavChild, type NavSection } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
-const focusRingBlend =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/50";
+/** Focus rings for the dark “top of home” bar */
+const focusRingHero =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/80 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950";
 const focusRingSolid =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
@@ -128,12 +129,12 @@ function NavLink({
         "text-sm font-medium transition-colors",
         homeBlend
           ? active
-            ? "text-white drop-shadow-sm"
-            : "text-white/90 hover:text-white"
+            ? "text-zinc-50"
+            : "text-zinc-300 hover:text-zinc-50"
           : active
             ? "font-semibold text-foreground"
             : "text-foreground/80 hover:text-foreground",
-        homeBlend ? focusRingBlend : focusRingSolid,
+        homeBlend ? focusRingHero : focusRingSolid,
         className,
       )}
     >
@@ -155,12 +156,12 @@ function DesktopNavMenu({
 }) {
   return (
     <nav id={id} aria-label="Navigation principale" className={cn("min-h-10 min-w-0", className)}>
-      <NavigationMenu className="flex max-w-none justify-center">
-        <NavigationMenuList className="flex flex-wrap items-center justify-center gap-x-1 gap-y-2 sm:gap-x-1.5">
+      <NavigationMenu className="flex w-full max-w-none justify-center">
+        <NavigationMenuList className="flex flex-nowrap items-center justify-center gap-x-0.5 overflow-x-auto overscroll-x-contain py-0.5 [scrollbar-width:none] sm:gap-x-1 md:gap-x-1.5 [&::-webkit-scrollbar]:hidden">
           {navSections.map((section) =>
             section.href ? (
               <NavigationMenuItem key={section.title}>
-                <NavLink href={section.href} homeBlend={homeBlend} className="rounded-lg px-2.5 py-2">
+                <NavLink href={section.href} homeBlend={homeBlend} className="shrink-0 rounded-lg px-2 py-2 sm:px-2.5">
                   {section.title}
                 </NavLink>
               </NavigationMenuItem>
@@ -194,8 +195,8 @@ function HeaderCtas({
           ctaBase,
           homeBlend
             ? cn(
-                "border border-white/50 bg-black/35 text-white shadow-md backdrop-blur-md hover:bg-black/50 hover:text-white",
-                focusRingBlend,
+                "border border-zinc-500/90 bg-zinc-100 text-zinc-900 shadow-sm hover:bg-white hover:text-zinc-950",
+                focusRingHero,
               )
             : cn(
                 "border-2 border-foreground/35 bg-background text-foreground shadow-sm hover:bg-muted hover:text-foreground",
@@ -212,8 +213,8 @@ function HeaderCtas({
           ctaBase,
           homeBlend
             ? cn(
-                "bg-primary text-primary-foreground shadow-lg ring-2 ring-white/35 hover:bg-primary/90",
-                focusRingBlend,
+                "bg-primary text-primary-foreground shadow-lg ring-2 ring-black/20 hover:bg-primary/90",
+                focusRingHero,
               )
             : cn(
                 "bg-primary text-primary-foreground shadow-md ring-1 ring-foreground/20 hover:bg-primary/90",
@@ -259,34 +260,37 @@ export function SiteHeader() {
   const triggerClass = cn(
     navigationMenuTriggerStyle(),
     homeBlend &&
-      "!bg-transparent text-sm font-medium text-white shadow-none hover:bg-white/10 hover:text-white data-open:bg-white/10 data-popup-open:bg-white/10 [&_svg]:text-white/80",
-    homeBlend ? focusRingBlend : focusRingSolid,
+      "!bg-transparent text-sm font-medium text-zinc-200 shadow-none hover:bg-white/10 hover:text-zinc-50 data-open:bg-white/12 data-popup-open:bg-white/12 [&_svg]:text-zinc-400",
+    homeBlend ? focusRingHero : focusRingSolid,
   );
 
-  const ctaBase = "min-h-10 px-4 text-sm font-semibold sm:min-h-11 sm:px-5";
+  const ctaBase = "min-h-11 px-3.5 text-sm font-semibold sm:min-h-12 sm:px-5";
 
   return (
     <header
       className={cn(
-        /* fixed: main content starts at y=0 so the home hero paints behind a transparent bar */
         "fixed inset-x-0 top-0 z-50 w-full transition-[min-height,background-color,backdrop-filter,border-color,box-shadow] duration-300 ease-out",
         homeBlend
-          ? "border-transparent bg-transparent shadow-none"
+          ? "border-b border-white/10 bg-zinc-950/92 shadow-[0_8px_32px_rgba(0,0,0,0.42)] backdrop-blur-md supports-backdrop-filter:bg-zinc-950/88"
           : "border-b-2 border-foreground/15 bg-background/98 shadow-md backdrop-blur-md supports-backdrop-filter:bg-background/95",
-        scrolled ? "min-h-14" : isHome ? "min-h-[5.75rem] md:min-h-[6.75rem] lg:min-h-[7rem]" : "min-h-16 md:min-h-[4.5rem]",
+        scrolled
+          ? "min-h-14 md:min-h-16"
+          : isHome
+            ? "min-h-20 md:min-h-22 lg:min-h-23"
+            : "min-h-16 md:min-h-19",
       )}
     >
       <div
         className={cn(
-          "relative mx-auto flex min-h-[inherit] w-full max-w-6xl items-center justify-between gap-x-3 gap-y-2 px-4 sm:gap-x-4 sm:px-6",
-          scrolled ? "py-2" : "py-3 md:py-4",
+          "relative mx-auto flex min-h-[inherit] w-full max-w-[1920px] items-center justify-between gap-x-2 gap-y-2 px-4 sm:gap-x-4 sm:px-6 lg:gap-x-6 lg:px-8 xl:px-10",
+          scrolled ? "py-2.5" : "py-3.5 md:py-4",
         )}
       >
         <Link
           href="/"
           className={cn(
             "relative z-30 flex shrink-0 items-center gap-2.5 rounded-md sm:gap-3",
-            homeBlend ? focusRingBlend : focusRingSolid,
+            homeBlend ? focusRingHero : focusRingSolid,
           )}
         >
           <Image
@@ -304,14 +308,14 @@ export function SiteHeader() {
             className={cn(
               "hidden min-w-0 flex-col leading-tight transition-opacity duration-300 sm:flex",
               scrolled && "lg:hidden",
-              homeBlend && "text-white drop-shadow-md",
+              homeBlend && "text-zinc-50",
             )}
           >
             <span className="text-sm font-semibold tracking-tight">EBM Ben Mokhtar</span>
             <span
               className={cn(
                 "text-xs",
-                homeBlend ? "text-white/85" : "text-muted-foreground",
+                homeBlend ? "text-zinc-400" : "text-muted-foreground",
               )}
             >
               Entreprise de construction
@@ -319,33 +323,15 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        {/* Default bar: nav + CTAs span the max-width row */}
-        {!homeBlend ? (
-          <>
-            <DesktopNavMenu
-              id="navigation-principale"
-              homeBlend={homeBlend}
-              triggerClass={triggerClass}
-              className="hidden min-h-10 w-full min-w-0 flex-1 items-center justify-center self-center lg:flex"
-            />
-            <div className="hidden shrink-0 items-center md:flex md:self-center">
-              <HeaderCtas homeBlend={homeBlend} ctaBase={ctaBase} />
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="absolute left-[29.166667vw] top-1/2 z-20 hidden w-[min(42rem,calc(58.333vw-2rem))] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-3 lg:flex">
-              <DesktopNavMenu
-                id="navigation-principale"
-                homeBlend={homeBlend}
-                triggerClass={triggerClass}
-                className="w-full"
-              />
-              <HeaderCtas homeBlend={homeBlend} ctaBase={ctaBase} />
-            </div>
-            <div className="hidden min-w-0 flex-1 lg:block" aria-hidden />
-          </>
-        )}
+        <DesktopNavMenu
+          id="navigation-principale"
+          homeBlend={homeBlend}
+          triggerClass={triggerClass}
+          className="hidden min-h-10 min-w-0 flex-1 items-center justify-center self-center px-1 lg:flex"
+        />
+        <div className="hidden shrink-0 items-center md:flex md:self-center">
+          <HeaderCtas homeBlend={homeBlend} ctaBase={ctaBase} />
+        </div>
 
         <div className="flex items-center gap-2 self-center lg:hidden">
           <Button
@@ -354,8 +340,8 @@ export function SiteHeader() {
               "hidden min-h-10 px-4 font-semibold sm:inline-flex sm:min-h-11",
               homeBlend
                 ? cn(
-                    "bg-primary text-primary-foreground shadow-lg ring-2 ring-white/35 hover:bg-primary/90",
-                    focusRingBlend,
+                    "bg-primary text-primary-foreground shadow-lg ring-2 ring-black/25 hover:bg-primary/90",
+                    focusRingHero,
                   )
                 : cn("shadow-md", focusRingSolid),
             )}
@@ -370,8 +356,8 @@ export function SiteHeader() {
                 "size-10 shrink-0 sm:size-11",
                 homeBlend
                   ? cn(
-                      "border border-white/50 bg-black/35 text-white backdrop-blur-md hover:bg-black/50 hover:text-white",
-                      focusRingBlend,
+                      "border border-zinc-600/80 bg-zinc-800/70 text-zinc-100 backdrop-blur-sm hover:bg-zinc-700/85 hover:text-zinc-50",
+                      focusRingHero,
                     )
                   : cn(
                       "border-2 border-foreground/35 bg-background text-foreground hover:bg-muted",
