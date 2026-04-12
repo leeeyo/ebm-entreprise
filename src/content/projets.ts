@@ -40,4 +40,10 @@ export const projets: ProjetMeta[] = [
     title: "Résidence el khalil",
     shortDescription: "Projet de référence pour la construction résidentielle en Tunisie.",
   },
+  {
+    slug: "residence-les-orangers",
+    title: "Résidence Les Orangers",
+    shortDescription:
+      "Complexe résidentiel à Mrezga (Nabeul) — livraison et finitions maîtrisées par EBM.",
+  },
 ];

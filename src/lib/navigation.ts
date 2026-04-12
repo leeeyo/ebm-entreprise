@@ -5,9 +5,29 @@ export type NavChild = {
   category?: string;
 };
 
+/** Group children by `category` for mega menus and hub pages (Services). */
+export function groupNavChildren(children: NavChild[]): { label: string; items: NavChild[] }[] {
+  const hasCategory = children.some((c) => c.category);
+  if (!hasCategory) return [{ label: "", items: children }];
+  const order: string[] = [];
+  const map = new Map<string, NavChild[]>();
+  for (const c of children) {
+    const label = c.category ?? "Autres";
+    if (!map.has(label)) {
+      map.set(label, []);
+      order.push(label);
+    }
+    map.get(label)!.push(c);
+  }
+  return order.map((label) => ({ label, items: map.get(label)! }));
+}
+
 export type NavSection = {
   title: string;
+  /** Top-level link when the section has no submenu */
   href?: string;
+  /** Hub page for sections with a dropdown (click title + “Tout voir”) */
+  hubHref?: string;
   children?: NavChild[];
 };
 
@@ -15,6 +35,7 @@ export const navSections: NavSection[] = [
   { title: "Accueil", href: "/" },
   {
     title: "Construction",
+    hubHref: "/construction",
     children: [
       { title: "Construction villa", href: "/construction/villa" },
       {
@@ -25,6 +46,7 @@ export const navSections: NavSection[] = [
   },
   {
     title: "Rénovation",
+    hubHref: "/renovation",
     children: [
       { title: "Rénovation maison et appartement", href: "/renovation/maison-appartement" },
       { title: "Rénovation salle de bain", href: "/renovation/salle-de-bain" },
@@ -32,6 +54,7 @@ export const navSections: NavSection[] = [
   },
   {
     title: "Services",
+    hubHref: "/services",
     children: [
       { title: "Chauffage", href: "/services/fluide/chauffage", category: "Fluide" },
       { title: "Sanitaire", href: "/services/fluide/sanitaire", category: "Fluide" },
@@ -84,6 +107,7 @@ export const navSections: NavSection[] = [
   },
   {
     title: "Nos projets",
+    hubHref: "/projets",
     children: [
       { title: "Résidence Amira", href: "/projets/residence-amira" },
       { title: "Résidence la Tulipe", href: "/projets/residence-la-tulipe" },
@@ -92,6 +116,7 @@ export const navSections: NavSection[] = [
       { title: "Résidence el Amen", href: "/projets/residence-el-amen" },
       { title: "Résidence el ons", href: "/projets/residence-el-ons" },
       { title: "Résidence el khalil", href: "/projets/residence-el-khalil" },
+      { title: "Résidence Les Orangers", href: "/projets/residence-les-orangers" },
     ],
   },
   { title: "Simulateur", href: "/simulateur" },

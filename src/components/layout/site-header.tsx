@@ -17,7 +17,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { navSections, type NavChild, type NavSection } from "@/lib/navigation";
+import { groupNavChildren, navSections, type NavSection } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
 /** Focus rings for the dark “top of home” bar */
@@ -26,20 +26,17 @@ const focusRingHero =
 const focusRingSolid =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
-function groupNavChildren(children: NavChild[]): { label: string; items: NavChild[] }[] {
-  const hasCategory = children.some((c) => c.category);
-  if (!hasCategory) return [{ label: "", items: children }];
-  const order: string[] = [];
-  const map = new Map<string, NavChild[]>();
-  for (const c of children) {
-    const label = c.category ?? "Autres";
-    if (!map.has(label)) {
-      map.set(label, []);
-      order.push(label);
-    }
-    map.get(label)!.push(c);
-  }
-  return order.map((label) => ({ label, items: map.get(label)! }));
+function MegaMenuFooter({ hubHref }: { hubHref: string }) {
+  return (
+    <div className="mt-4 border-t border-border/70 pt-4">
+      <Link
+        href={hubHref}
+        className="inline-flex min-h-9 w-full items-center justify-center rounded-lg border-2 border-primary/35 bg-background px-4 text-sm font-semibold text-foreground shadow-sm transition-colors hover:bg-muted sm:w-auto"
+      >
+        Tout voir
+      </Link>
+    </div>
+  );
 }
 
 function MegaMenuContent({ section }: { section: NavSection }) {
@@ -69,6 +66,7 @@ function MegaMenuContent({ section }: { section: NavSection }) {
             </div>
           ))}
         </div>
+        {section.hubHref ? <MegaMenuFooter hubHref={section.hubHref} /> : null}
       </NavigationMenuContent>
     );
   }
@@ -85,6 +83,7 @@ function MegaMenuContent({ section }: { section: NavSection }) {
             </li>
           ))}
         </ul>
+        {section.hubHref ? <MegaMenuFooter hubHref={section.hubHref} /> : null}
       </NavigationMenuContent>
     );
   }
@@ -100,6 +99,7 @@ function MegaMenuContent({ section }: { section: NavSection }) {
           </li>
         ))}
       </ul>
+      {section.hubHref ? <MegaMenuFooter hubHref={section.hubHref} /> : null}
     </NavigationMenuContent>
   );
 }
@@ -165,12 +165,25 @@ function DesktopNavMenu({
                   {section.title}
                 </NavLink>
               </NavigationMenuItem>
-            ) : (
+            ) : section.hubHref && section.children ? (
+              <NavigationMenuItem key={section.title} className="flex items-center gap-0">
+                <NavLink href={section.hubHref} homeBlend={homeBlend} className="shrink-0 rounded-md px-2 py-2 sm:px-2.5">
+                  {section.title}
+                </NavLink>
+                <NavigationMenuTrigger
+                  aria-label={`Sous-menu ${section.title}`}
+                  className={cn(triggerClass, "shrink-0 px-1.5!")}
+                >
+                  <span className="sr-only">Ouvrir le sous-menu {section.title}</span>
+                </NavigationMenuTrigger>
+                <MegaMenuContent section={section} />
+              </NavigationMenuItem>
+            ) : section.children ? (
               <NavigationMenuItem key={section.title}>
                 <NavigationMenuTrigger className={triggerClass}>{section.title}</NavigationMenuTrigger>
                 <MegaMenuContent section={section} />
               </NavigationMenuItem>
-            ),
+            ) : null,
           )}
         </NavigationMenuList>
       </NavigationMenu>
@@ -307,7 +320,6 @@ export function SiteHeader() {
           <span
             className={cn(
               "hidden min-w-0 flex-col leading-tight transition-opacity duration-300 sm:flex",
-              scrolled && "lg:hidden",
               homeBlend && "text-zinc-50",
             )}
           >
@@ -394,6 +406,14 @@ export function SiteHeader() {
                           <p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">
                             {section.title}
                           </p>
+                          {section.hubHref ? (
+                            <Link
+                              href={section.hubHref}
+                              className="mb-3 inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline"
+                            >
+                              Tout voir
+                            </Link>
+                          ) : null}
                           <ul className="space-y-1">
                             {section.children?.map((c) => (
                               <li key={c.href}>

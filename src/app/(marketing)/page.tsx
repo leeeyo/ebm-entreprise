@@ -12,6 +12,7 @@ import {
   simulateurTeaser,
   temoignages,
 } from "@/content/home";
+import { HERO_VIDEO_SRC } from "@/content/hero-video";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -23,6 +24,13 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
+      <link
+        rel="preload"
+        href={HERO_VIDEO_SRC}
+        as="video"
+        type="video/mp4"
+        fetchPriority="high"
+      />
       <HeroSectionSplit />
 
       <section className="py-16 sm:py-20">
