@@ -59,7 +59,24 @@ function Button({
   const classes = cn(buttonVariants({ variant, size, className }));
 
   if (asChild) {
-    return <Slot data-slot="button" className={classes} {...props} />;
+    const {
+      style,
+      render: _render,
+      nativeButton: _nativeButton,
+      focusableWhenDisabled: _focusableWhenDisabled,
+      ...rest
+    } = props;
+
+    const slotStyle = typeof style === "function" ? undefined : style;
+
+    return (
+      <Slot
+        data-slot="button"
+        className={classes}
+        {...(rest as React.ComponentPropsWithoutRef<typeof Slot>)}
+        style={slotStyle}
+      />
+    );
   }
 
   return (
