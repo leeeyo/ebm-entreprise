@@ -1,12 +1,29 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { homeHero } from "@/content/home";
-import { HERO_FALLBACK_IMAGE_SRC, HERO_VIDEO_SRC } from "@/content/hero-video";
+import {
+  HERO_FALLBACK_IMAGE_SRC,
+  HERO_VIDEO_END_STATIC_SRC,
+  HERO_VIDEO_LAYOUT_MIN_WIDTH_PX,
+  HERO_VIDEO_MOBILE_SRC,
+  HERO_VIDEO_SRC,
+} from "@/content/hero-video";
 import { cn } from "@/lib/utils";
+
+const HERO_END_CROSSFADE = {
+  duration: 0.9,
+  ease: [0.22, 1, 0.36, 1] as const,
+};
+
+const HERO_VIDEO_INTRO = {
+  duration: 0.5,
+  ease: [0.22, 1, 0.36, 1] as const,
+};
 
 function subscribeReducedMotion(onStoreChange: () => void) {
   const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -55,9 +72,15 @@ type HeroFullBleedMediaProps = {
 function HeroFullBleedMedia({ mounted, motionOk }: HeroFullBleedMediaProps) {
   const showVideo = mounted && motionOk;
   const [videoSurfaceActive, setVideoSurfaceActive] = useState(false);
+  const [playbackEnded, setPlaybackEnded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const posterVisible = !motionOk || !showVideo || !videoSurfaceActive;
+  const posterVisible =
+    !motionOk ||
+    !showVideo ||
+    (!videoSurfaceActive && !playbackEnded);
+
+  const videoOpacity = playbackEnded ? 0 : videoSurfaceActive ? 1 : 0;
 
   return (
     <div className="absolute inset-0 z-0 bg-muted">
@@ -74,24 +97,47 @@ function HeroFullBleedMedia({ mounted, motionOk }: HeroFullBleedMediaProps) {
         aria-hidden
       />
       {showVideo ? (
-        <video
-          ref={videoRef}
-          className={cn(
-            "absolute inset-0 z-1 h-full w-full object-cover transition-opacity duration-500 ease-out",
-            videoSurfaceActive ? "opacity-100" : "pointer-events-none opacity-0",
-          )}
-          muted
-          playsInline
-          preload="auto"
-          onCanPlay={() => {
-            const el = videoRef.current;
-            if (el) void el.play().catch(() => {});
-          }}
-          onPlaying={() => setVideoSurfaceActive(true)}
-          aria-label="Présentation vidéo des réalisations EBM Ben Mokhtar"
-        >
-          <source src={HERO_VIDEO_SRC} type="video/mp4" />
-        </video>
+        <>
+          <motion.div
+            className="absolute inset-0 z-1 h-full w-full"
+            initial={false}
+            animate={{ opacity: playbackEnded ? 1 : 0 }}
+            transition={HERO_END_CROSSFADE}
+          >
+            <Image
+              src={HERO_VIDEO_END_STATIC_SRC}
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-cover"
+              aria-hidden
+            />
+          </motion.div>
+          <motion.video
+            ref={videoRef}
+            className="absolute inset-0 z-2 h-full w-full object-cover"
+            initial={false}
+            animate={{ opacity: videoOpacity }}
+            transition={playbackEnded ? HERO_END_CROSSFADE : HERO_VIDEO_INTRO}
+            muted
+            playsInline
+            preload="auto"
+            onCanPlay={() => {
+              const el = videoRef.current;
+              if (el) void el.play().catch(() => {});
+            }}
+            onPlaying={() => setVideoSurfaceActive(true)}
+            onEnded={() => setPlaybackEnded(true)}
+            aria-label="Présentation vidéo des réalisations EBM Ben Mokhtar"
+          >
+            <source
+              src={HERO_VIDEO_MOBILE_SRC}
+              type="video/mp4"
+              media={`(max-width: ${HERO_VIDEO_LAYOUT_MIN_WIDTH_PX - 1}px)`}
+            />
+            <source src={HERO_VIDEO_SRC} type="video/mp4" />
+          </motion.video>
+        </>
       ) : null}
     </div>
   );
@@ -99,7 +145,7 @@ function HeroFullBleedMedia({ mounted, motionOk }: HeroFullBleedMediaProps) {
 
 /**
  * Full-viewport hero (below fixed header): poster image first, then fullscreen video.
- * When playback finishes, the video stays on its last frame (no return to the image).
+ * When playback finishes, the video crossfades to the static Résidence Amira cover.
  */
 export function HeroSectionSplit() {
   const mounted = useSyncExternalStore(
@@ -115,9 +161,9 @@ export function HeroSectionSplit() {
   const motionOk = !prefersReducedMotion;
 
   return (
-    <section className="relative z-0 border-b pt-24">
-      <div className="relative isolate min-h-[min(36rem,calc(100svh-6rem))] w-full overflow-hidden lg:min-h-0 lg:h-[min(56rem,calc(100svh-6rem))] lg:max-h-[calc(100svh-6rem)]">
-        {/* Full-bleed media: Résidence el Menyar still until video plays; then video (last frame at end). */}
+    <section className="relative z-0 border-b pt-0 lg:pt-[calc(6rem-3px)]">
+      <div className="relative isolate pt-[calc(6rem-3px)] lg:pt-0 min-h-[min(36rem,calc(100svh-6rem))] w-full overflow-hidden lg:min-h-0 lg:h-[min(56rem,calc(100svh-6rem))] lg:max-h-[calc(100svh-6rem)]">
+        {/* Full-bleed media: poster → video → crossfade to static cover at end. */}
         <HeroFullBleedMedia key={String(motionOk)} mounted={mounted} motionOk={motionOk} />
 
         {/* Readability scrims above media (z-0–1), below copy (z-10) */}
@@ -134,16 +180,16 @@ export function HeroSectionSplit() {
           aria-hidden
         />
 
-        {/* Copy */}
+        {/* Copy — entrance stagger via globals `.ebm-hero-intro` */}
         <div className="relative z-10 mx-auto flex min-h-[min(36rem,calc(100svh-6rem))] w-full max-w-6xl flex-col justify-center px-5 py-12 sm:px-6 sm:py-14 lg:min-h-0 lg:h-full lg:max-h-[calc(100svh-6rem)] lg:py-10 lg:pr-[42%]">
           <div className="ebm-hero-intro w-full max-w-xl">
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-primary sm:text-xs">
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-primary sm:text-[0.7rem]">
               Entreprise de construction
             </p>
-            <h1 className="font-heading mt-3 text-balance text-2xl font-semibold tracking-[-0.025em] text-foreground sm:text-3xl md:text-[1.85rem] md:leading-[1.12] lg:text-[2rem]">
+            <h1 className="font-heading mt-3.5 text-balance text-2xl font-semibold tracking-[-0.03em] text-foreground sm:text-[1.65rem] sm:leading-[1.15] md:text-[1.85rem] md:leading-[1.1] lg:text-[2.05rem]">
               {homeHero.h1}
             </h1>
-            <p className="mt-3 text-pretty text-sm font-medium leading-relaxed text-foreground/90 sm:text-[0.9375rem]">
+            <p className="mt-3.5 text-pretty text-sm font-medium leading-relaxed text-foreground/92 sm:text-[0.9375rem]">
               {homeHero.subtitle}
             </p>
             <div className="mt-5 flex flex-wrap gap-3 sm:mt-6">

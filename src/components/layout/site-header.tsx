@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -17,8 +17,38 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { groupNavChildren, navSections, type NavSection } from "@/lib/navigation";
+import { groupNavChildren, navSections, type NavChild, type NavSection } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
+
+function subscribeHoverFinePointer(cb: () => void) {
+  const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+}
+
+function hoverFinePointerSnapshot() {
+  return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+}
+
+function hoverFinePointerServerSnapshot() {
+  return false;
+}
+
+/** On desktop with real hover: mega menu opens on hover; block trigger click so the hub link is the only click target. */
+function NavTriggerHoverOnly({ active, children }: { active: boolean; children: React.ReactNode }) {
+  if (!active) return <>{children}</>;
+  return (
+    <span
+      className="inline-flex"
+      onClickCapture={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+    >
+      {children}
+    </span>
+  );
+}
 
 /** Focus rings for the dark “top of home” bar */
 const focusRingHero =
@@ -108,6 +138,53 @@ function MegaMenuContent({ section }: { section: NavSection }) {
 const SCROLL_ENTER = 28;
 const SCROLL_EXIT = 2;
 
+/** Single control: hub link + chevron; mega opens on hover (click navigates when using Link as trigger render). */
+function DesktopHubMegaTrigger({
+  section,
+  homeBlend,
+  triggerClass,
+  menuOpensOnHover,
+}: {
+  section: NavSection & { hubHref: string; children: NavChild[] };
+  homeBlend: boolean;
+  triggerClass: string;
+  menuOpensOnHover: boolean;
+}) {
+  const pathname = usePathname();
+  const active = pathname.startsWith(section.hubHref);
+  const linkClass = cn(
+    navigationMenuTriggerStyle(),
+    triggerClass,
+    "inline-flex min-h-9 w-max max-w-[min(100vw,14rem)] items-center gap-0.5 truncate rounded-lg px-2.5 py-1.5 text-sm font-medium sm:max-w-none",
+    homeBlend
+      ? active
+        ? "text-zinc-50"
+        : "text-zinc-300 hover:text-zinc-50"
+      : active
+        ? "font-semibold text-foreground"
+        : "text-foreground/80 hover:text-foreground",
+    homeBlend ? focusRingHero : focusRingSolid,
+  );
+
+  return (
+    <NavTriggerHoverOnly active={menuOpensOnHover}>
+      <NavigationMenuTrigger
+        nativeButton={false}
+        aria-label={`${section.title}, menu au survol`}
+        render={
+          <Link href={section.hubHref} className={linkClass} aria-current={active ? "page" : undefined}>
+            <span className="truncate">{section.title}</span>
+            <ChevronDown
+              className="relative top-px ml-0.5 size-3 shrink-0 opacity-90 transition duration-300 group-data-popup-open/navigation-menu-trigger:rotate-180 group-data-open/navigation-menu-trigger:rotate-180"
+              aria-hidden
+            />
+          </Link>
+        }
+      />
+    </NavTriggerHoverOnly>
+  );
+}
+
 function NavLink({
   href,
   children,
@@ -154,9 +231,15 @@ function DesktopNavMenu({
   triggerClass: string;
   className?: string;
 }) {
+  const menuOpensOnHover = useSyncExternalStore(
+    subscribeHoverFinePointer,
+    hoverFinePointerSnapshot,
+    hoverFinePointerServerSnapshot,
+  );
+
   return (
     <nav id={id} aria-label="Navigation principale" className={cn("min-h-10 min-w-0", className)}>
-      <NavigationMenu className="flex w-full max-w-none justify-center">
+      <NavigationMenu delay={80} closeDelay={120} className="flex w-full max-w-none justify-center">
         <NavigationMenuList className="flex flex-nowrap items-center justify-center gap-x-0.5 overflow-x-auto overscroll-x-contain py-0.5 [scrollbar-width:none] sm:gap-x-1 md:gap-x-1.5 [&::-webkit-scrollbar]:hidden">
           {navSections.map((section) =>
             section.href ? (
@@ -166,21 +249,20 @@ function DesktopNavMenu({
                 </NavLink>
               </NavigationMenuItem>
             ) : section.hubHref && section.children ? (
-              <NavigationMenuItem key={section.title} className="flex items-center gap-0">
-                <NavLink href={section.hubHref} homeBlend={homeBlend} className="shrink-0 rounded-md px-2 py-2 sm:px-2.5">
-                  {section.title}
-                </NavLink>
-                <NavigationMenuTrigger
-                  aria-label={`Sous-menu ${section.title}`}
-                  className={cn(triggerClass, "shrink-0 px-1.5!")}
-                >
-                  <span className="sr-only">Ouvrir le sous-menu {section.title}</span>
-                </NavigationMenuTrigger>
+              <NavigationMenuItem key={section.title} value={section.title}>
+                <DesktopHubMegaTrigger
+                  section={section as NavSection & { hubHref: string; children: NavChild[] }}
+                  homeBlend={homeBlend}
+                  triggerClass={triggerClass}
+                  menuOpensOnHover={menuOpensOnHover}
+                />
                 <MegaMenuContent section={section} />
               </NavigationMenuItem>
             ) : section.children ? (
               <NavigationMenuItem key={section.title}>
-                <NavigationMenuTrigger className={triggerClass}>{section.title}</NavigationMenuTrigger>
+                <NavTriggerHoverOnly active={menuOpensOnHover}>
+                  <NavigationMenuTrigger className={triggerClass}>{section.title}</NavigationMenuTrigger>
+                </NavTriggerHoverOnly>
                 <MegaMenuContent section={section} />
               </NavigationMenuItem>
             ) : null,
@@ -245,6 +327,7 @@ export function SiteHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
+  const [sheetOpenSections, setSheetOpenSections] = useState<Record<string, boolean>>({});
 
   useLayoutEffect(() => {
     const id = requestAnimationFrame(() => {
@@ -380,8 +463,11 @@ export function SiteHeader() {
             >
               <Menu className="size-5" aria-hidden />
             </SheetTrigger>
-            <SheetContent side="right" className="w-[min(100vw,380px)] p-0">
-              <SheetHeader className="border-b px-4 py-4 text-left">
+            <SheetContent
+              side="right"
+              className="flex h-full max-h-dvh w-[min(100vw,380px)] min-h-0 flex-col gap-0 overflow-hidden p-0"
+            >
+              <SheetHeader className="shrink-0 border-b px-4 py-4 text-left">
                 <div className="flex items-center gap-3">
                   <Image
                     src="/logo.png"
@@ -393,49 +479,8 @@ export function SiteHeader() {
                   <SheetTitle className="text-base">Menu</SheetTitle>
                 </div>
               </SheetHeader>
-              <ScrollArea className="h-[calc(100vh-8rem)]">
-                <div className="space-y-4 p-4">
-                  {navSections.map((section) => (
-                    <div key={section.title}>
-                      {section.href ? (
-                        <NavLink href={section.href} className="block py-1 text-base">
-                          {section.title}
-                        </NavLink>
-                      ) : (
-                        <>
-                          <p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">
-                            {section.title}
-                          </p>
-                          {section.hubHref ? (
-                            <Link
-                              href={section.hubHref}
-                              className="mb-3 inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline"
-                            >
-                              Tout voir
-                            </Link>
-                          ) : null}
-                          <ul className="space-y-1">
-                            {section.children?.map((c) => (
-                              <li key={c.href}>
-                                <Link
-                                  href={c.href}
-                                  className={cn(
-                                    "block rounded-md py-1.5 text-sm hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                                  )}
-                                >
-                                  {c.title}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </>
-                      )}
-                      <Separator className="mt-4" />
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
-              <div className="space-y-2 border-t p-4">
+
+              <div className="shrink-0 space-y-2 border-b px-4 py-3">
                 <Button className="min-h-11 w-full font-semibold" asChild>
                   <Link href="/simulateur">Lancer le simulateur</Link>
                 </Button>
@@ -443,6 +488,88 @@ export function SiteHeader() {
                   <Link href="/contact">Demander un devis</Link>
                 </Button>
               </div>
+
+              <ScrollArea className="min-h-0 flex-1 overscroll-contain">
+                <div className="space-y-3 p-4 pb-6">
+                  {navSections.map((section, sectionIndex) => {
+                    const expanded = !!sheetOpenSections[section.title];
+                    const sheetId = `nav-sheet-${sectionIndex}`;
+                    return (
+                      <div key={section.title}>
+                        {section.href ? (
+                          <NavLink href={section.href} className="block min-h-11 py-2 text-base leading-snug">
+                            {section.title}
+                          </NavLink>
+                        ) : section.children ? (
+                          <>
+                            <div className="flex min-h-11 items-stretch gap-1">
+                              {section.hubHref ? (
+                                <NavLink
+                                  href={section.hubHref}
+                                  className="flex min-w-0 flex-1 items-center py-2 pr-1 text-left text-base font-medium leading-snug"
+                                >
+                                  <span className="line-clamp-2">{section.title}</span>
+                                </NavLink>
+                              ) : (
+                                <span className="flex min-w-0 flex-1 items-center py-2 text-base font-medium leading-snug">
+                                  <span className="line-clamp-2">{section.title}</span>
+                                </span>
+                              )}
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="size-11 shrink-0 self-center"
+                                aria-expanded={expanded}
+                                aria-controls={sheetId}
+                                onClick={() =>
+                                  setSheetOpenSections((s) => ({
+                                    ...s,
+                                    [section.title]: !s[section.title],
+                                  }))
+                                }
+                              >
+                                <ChevronDown
+                                  className={cn("size-5 transition-transform", expanded && "rotate-180")}
+                                  aria-hidden
+                                />
+                                <span className="sr-only">
+                                  {expanded ? "Masquer" : "Afficher"} les liens — {section.title}
+                                </span>
+                              </Button>
+                            </div>
+                            {expanded ? (
+                              <div id={sheetId} className="mt-2 space-y-2 border-l-2 border-primary/20 pl-3">
+                                {section.hubHref ? (
+                                  <Link
+                                    href={section.hubHref}
+                                    className="inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline"
+                                  >
+                                    Tout voir
+                                  </Link>
+                                ) : null}
+                                <ul className="space-y-0.5">
+                                  {section.children.map((c) => (
+                                    <li key={c.href}>
+                                      <Link
+                                        href={c.href}
+                                        className="block min-h-10 rounded-md py-2 text-sm leading-snug hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                      >
+                                        {c.title}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ) : null}
+                          </>
+                        ) : null}
+                        <Separator className="mt-3" />
+                      </div>
+                    );
+                  })}
+                </div>
+              </ScrollArea>
             </SheetContent>
           </Sheet>
         </div>

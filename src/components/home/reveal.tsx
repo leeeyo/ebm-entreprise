@@ -3,14 +3,30 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
+export type RevealVariant = "fade-up" | "fade" | "scale";
+
+const variantHidden: Record<RevealVariant, string> = {
+  "fade-up": "opacity-0 translate-y-6",
+  fade: "opacity-0",
+  scale: "opacity-0 scale-[0.97]",
+};
+
+const variantVisible: Record<RevealVariant, string> = {
+  "fade-up": "opacity-100 translate-y-0",
+  fade: "opacity-100",
+  scale: "opacity-100 scale-100",
+};
+
 type RevealProps = {
   children: ReactNode;
   className?: string;
   /** Extra delay after entering view (ms), for staggered lists */
   delayMs?: number;
+  /** Animation preset; ignored when prefers-reduced-motion */
+  variant?: RevealVariant;
 };
 
-export function Reveal({ children, className, delayMs = 0 }: RevealProps) {
+export function Reveal({ children, className, delayMs = 0, variant = "fade-up" }: RevealProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -50,13 +66,14 @@ export function Reveal({ children, className, delayMs = 0 }: RevealProps) {
     return () => obs.disconnect();
   }, [reducedMotion]);
 
+  const v = variant;
   return (
     <div
       ref={ref}
       className={cn(
         "transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform",
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
-        reducedMotion && "opacity-100 translate-y-0",
+        visible ? variantVisible[v] : variantHidden[v],
+        reducedMotion && "scale-100 opacity-100 translate-y-0",
         className,
       )}
       style={
