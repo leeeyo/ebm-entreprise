@@ -19,8 +19,29 @@ const outfit = Outfit({
   display: "swap",
 });
 
+function metadataBaseUrl(): URL {
+  const auth = process.env.AUTH_URL?.trim();
+  const vercel = process.env.VERCEL_URL?.trim();
+
+  const candidate =
+    auth ||
+    (vercel ? `https://${vercel}` : null) ||
+    "http://localhost:3090";
+
+  const normalized =
+    candidate.startsWith("http://") || candidate.startsWith("https://")
+      ? candidate
+      : `https://${candidate}`;
+
+  try {
+    return new URL(normalized);
+  } catch {
+    return new URL("http://localhost:3090");
+  }
+}
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.AUTH_URL ?? "http://localhost:3090"),
+  metadataBase: metadataBaseUrl(),
   title: {
     default: "EBM Ben Mokhtar — Entreprise de construction Tunisie",
     template: "%s | EBM Ben Mokhtar",
