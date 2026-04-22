@@ -10,7 +10,7 @@ export function SiteFooter() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex max-w-lg flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
             <Image
-              src="/logo.png"
+              src="/logo-ebm.png"
               alt="EBM Ben Mokhtar — entreprise de construction"
               width={200}
               height={64}

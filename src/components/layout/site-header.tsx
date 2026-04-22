@@ -390,7 +390,7 @@ export function SiteHeader() {
           )}
         >
           <Image
-            src="/logo.png"
+            src="/logo-ebm.png"
             alt="EBM Ben Mokhtar — accueil"
             width={200}
             height={64}
@@ -470,7 +470,7 @@ export function SiteHeader() {
               <SheetHeader className="shrink-0 border-b px-4 py-4 text-left">
                 <div className="flex items-center gap-3">
                   <Image
-                    src="/logo.png"
+                    src="/logo-ebm.png"
                     alt="EBM Ben Mokhtar"
                     width={140}
                     height={48}
