@@ -16,8 +16,8 @@ export function MarketingMain({ children }: { children: React.ReactNode }) {
       id="contenu-principal"
       tabIndex={-1}
       className={cn(
-        "flex-1 scroll-mt-24 outline-none",
-        !isHome && "pt-20 md:pt-19",
+        "flex-1 scroll-mt-32 outline-none",
+        !isHome && "pt-16 md:pt-20 lg:pt-32",
       )}
     >
       {children}

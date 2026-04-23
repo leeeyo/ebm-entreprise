@@ -3,7 +3,7 @@
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState, useSyncExternalStore } from "react";
+import { Fragment, useRef, useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import { homeHero } from "@/content/home";
 import {
@@ -115,30 +115,31 @@ function HeroMedia({ mounted, motionOk }: HeroMediaProps) {
 function KineticH1({ text }: { text: string }) {
   const tokens = tokenizeH1(text);
   return (
-    <h1 className="font-heading mt-3.5 text-balance text-[1.9rem] font-semibold tracking-[-0.03em] text-foreground sm:text-[2.1rem] sm:leading-[1.08] md:text-[2.45rem] lg:text-[2.75rem]">
+    <h1 className="font-heading mt-3.5 text-balance text-[2rem] font-semibold leading-[1.1] tracking-[-0.015em] text-foreground sm:text-[2.25rem] sm:leading-[1.08] md:text-[2.6rem] lg:text-[3rem] xl:text-[3.25rem]">
       {tokens.map((raw, i) => {
         const isAccent = raw === ACCENT_WORD;
-        const trailingSpace = i < tokens.length - 1 ? " " : "";
         return (
-          <span key={`${raw}-${i}`} className="ebm-word-mask">
-            <span
-              className="ebm-word"
-              style={{ animationDelay: `${120 + i * 70}ms` }}
-            >
-              {isAccent ? (
-                <span className="relative inline-block align-baseline">
-                  <span className="relative z-10">{raw}</span>
-                  <span
-                    className="ebm-underline-draw absolute inset-x-0 -bottom-[0.05em]"
-                    aria-hidden
-                  />
-                </span>
-              ) : (
-                raw
-              )}
-              {trailingSpace}
+          <Fragment key={`${raw}-${i}`}>
+            <span className="ebm-word-mask">
+              <span
+                className="ebm-word"
+                style={{ animationDelay: `${120 + i * 70}ms` }}
+              >
+                {isAccent ? (
+                  <span className="relative inline-block align-baseline">
+                    <span className="relative z-10">{raw}</span>
+                    <span
+                      className="ebm-underline-draw absolute inset-x-0 -bottom-[0.05em]"
+                      aria-hidden
+                    />
+                  </span>
+                ) : (
+                  raw
+                )}
+              </span>
             </span>
-          </span>
+            {i < tokens.length - 1 ? " " : null}
+          </Fragment>
         );
       })}
     </h1>
@@ -186,9 +187,12 @@ export function HeroKinetic() {
   );
   const motionOk = useMotionOk();
 
+  const wordCount = tokenizeH1(homeHero.h1).length;
+  const ctaDelay = 120 + wordCount * 70 + 220;
+
   return (
-    <section className="relative z-0 border-b pt-0 lg:pt-[calc(6rem-3px)]">
-      <div className="relative isolate pt-[calc(6rem-3px)] lg:pt-0 min-h-[min(40rem,calc(100svh-6rem))] w-full overflow-hidden lg:min-h-0 lg:h-[min(56rem,calc(100svh-6rem))] lg:max-h-[calc(100svh-6rem)]">
+    <section className="relative z-0 border-b pt-16 md:pt-20 lg:pt-32">
+      <div className="relative isolate min-h-[min(44rem,calc(100svh-4rem))] w-full overflow-hidden md:min-h-[min(46rem,calc(100svh-5rem))] lg:min-h-0 lg:h-[calc(100svh-8rem)] lg:max-h-224">
         <HeroMedia key={String(motionOk)} mounted={mounted} motionOk={motionOk} />
 
         {/* Animated mesh overlay, sits above media but under scrim/copy. */}
@@ -198,33 +202,53 @@ export function HeroKinetic() {
           </div>
         ) : null}
 
-        {/* Readability scrims */}
+        {/* Readability scrim — one cohesive stack, darker on the copy side */}
         <div
-          className="pointer-events-none absolute inset-0 z-5 bg-linear-to-r from-background/65 via-background/35 to-background/5 sm:via-background/28"
+          className="pointer-events-none absolute inset-0 z-5 bg-linear-to-r from-background/80 via-background/45 to-transparent lg:via-background/25"
           aria-hidden
         />
         <div
-          className="pointer-events-none absolute inset-0 z-5 bg-linear-to-t from-background/15 via-transparent to-background/25"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-5 h-48 bg-linear-to-t from-background/60 to-transparent"
           aria-hidden
         />
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 z-6 h-[min(30%,14rem)] bg-linear-to-b from-background/20 to-transparent"
+
+        {/* Decorative left rail — subtle vertical hairline */}
+        <span
+          className="pointer-events-none absolute inset-y-10 left-4 z-6 hidden w-px bg-linear-to-b from-transparent via-foreground/20 to-transparent md:block md:left-6 lg:left-8 xl:left-10"
           aria-hidden
         />
 
         {/* Copy */}
-        <div className="relative z-10 mx-auto flex min-h-[min(40rem,calc(100svh-6rem))] w-full max-w-6xl flex-col justify-center px-5 py-12 sm:px-6 sm:py-14 lg:min-h-0 lg:h-full lg:max-h-[calc(100svh-6rem)] lg:py-10 lg:pr-[40%]">
-          <div className="w-full max-w-2xl">
-            <p
-              className="ebm-word inline-block text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-primary sm:text-[0.75rem]"
+        <div className="relative z-10 mx-auto flex h-full w-full max-w-[1920px] flex-col justify-center px-5 sm:px-6 lg:px-10 xl:px-14">
+          <div className="w-full max-w-[min(42rem,90vw)] lg:max-w-176">
+            {/* Chapter number + eyebrow */}
+            <div
+              className="ebm-word flex items-center gap-3"
               style={{ animationDelay: "60ms" }}
             >
-              Entreprise de construction
-            </p>
+              <span className="font-mono text-[0.7rem] font-medium tracking-[0.2em] text-primary/90 tabular-nums">
+                01
+              </span>
+              <span className="h-px w-8 bg-primary/50" aria-hidden />
+              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-primary sm:text-[0.75rem]">
+                Entreprise de construction
+              </p>
+            </div>
+
             <KineticH1 text={homeHero.h1} />
+
+            {/* Supporting lead sentence */}
+            <p
+              className="ebm-word mt-5 max-w-152 text-balance text-[0.95rem] leading-relaxed text-foreground/75 sm:mt-6 sm:text-base"
+              style={{ animationDelay: `${ctaDelay - 120}ms` }}
+            >
+              Quinze ans d&rsquo;expertise au service du bâtiment, du gros œuvre
+              aux finitions — partout en Tunisie.
+            </p>
+
             <div
-              className="ebm-word mt-6 flex flex-wrap gap-3 sm:mt-7"
-              style={{ animationDelay: `${120 + tokenizeH1(homeHero.h1).length * 70 + 220}ms` }}
+              className="ebm-word mt-7 flex flex-wrap gap-3 sm:mt-8"
+              style={{ animationDelay: `${ctaDelay}ms` }}
             >
               <MagneticCta href="/simulateur" label={homeHero.ctaPrimary} />
               <MagneticCta href="/projets" label={homeHero.ctaSecondary} variant="outline" />
@@ -232,11 +256,30 @@ export function HeroKinetic() {
           </div>
         </div>
 
-        {/* Scroll cue */}
+        {/* Residence caption — bottom-right on the media side */}
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-4 z-10 flex justify-center sm:bottom-6"
+          className="pointer-events-none absolute bottom-6 right-5 z-10 hidden items-end gap-3 text-right md:flex md:bottom-8 md:right-6 lg:bottom-10 lg:right-10 xl:right-14"
           aria-hidden
         >
+          <span className="h-px w-10 bg-foreground/30 md:w-14" />
+          <div className="min-w-0">
+            <span className="block font-mono text-[0.62rem] font-medium uppercase tracking-[0.22em] text-foreground/55">
+              Résidence en vedette
+            </span>
+            <span className="block font-heading text-sm font-semibold tracking-tight text-foreground/85 md:text-base">
+              Résidence Amira
+            </span>
+          </div>
+        </div>
+
+        {/* Scroll cue */}
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-4 z-10 flex flex-col items-center gap-1.5 sm:bottom-6"
+          aria-hidden
+        >
+          <span className="text-[0.6rem] font-medium uppercase tracking-[0.28em] text-foreground/55">
+            Découvrir
+          </span>
           <span className="ebm-scroll-cue inline-flex size-9 items-center justify-center rounded-full border border-foreground/25 bg-background/70 text-foreground/80 backdrop-blur-sm">
             <ChevronDown className="size-4" />
           </span>

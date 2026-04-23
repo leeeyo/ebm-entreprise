@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { MagneticLink } from "./magnetic-link";
 import { cn } from "@/lib/utils";
@@ -37,7 +37,7 @@ function KineticHeading({ title, accent }: { title: string; accent?: string }) {
   return (
     <h1
       className={cn(
-        "font-heading mt-3 text-balance font-semibold tracking-[-0.02em] text-foreground",
+        "font-heading mt-3 text-balance font-semibold tracking-[-0.01em] text-foreground",
         "text-[2rem] sm:text-[2.4rem] md:text-[2.8rem] lg:text-[3.1rem] leading-[1.08]",
       )}
     >
@@ -45,27 +45,28 @@ function KineticHeading({ title, accent }: { title: string; accent?: string }) {
         const clean = raw.replace(/[.,;:!?]+$/, "");
         const isAccent =
           !!accent && clean.toLowerCase() === accent.toLowerCase();
-        const trailing = i < words.length - 1 ? " " : "";
         return (
-          <span key={`${raw}-${i}`} className="ebm-word-mask">
-            <span
-              className="ebm-word"
-              style={{ animationDelay: `${120 + i * 60}ms` }}
-            >
-              {isAccent ? (
-                <span className="relative inline-block align-baseline">
-                  <span className="relative z-10">{raw}</span>
-                  <span
-                    className="ebm-underline-draw absolute inset-x-0 -bottom-[0.05em]"
-                    aria-hidden
-                  />
-                </span>
-              ) : (
-                raw
-              )}
-              {trailing}
+          <Fragment key={`${raw}-${i}`}>
+            <span className="ebm-word-mask">
+              <span
+                className="ebm-word"
+                style={{ animationDelay: `${120 + i * 60}ms` }}
+              >
+                {isAccent ? (
+                  <span className="relative inline-block align-baseline">
+                    <span className="relative z-10">{raw}</span>
+                    <span
+                      className="ebm-underline-draw absolute inset-x-0 -bottom-[0.05em]"
+                      aria-hidden
+                    />
+                  </span>
+                ) : (
+                  raw
+                )}
+              </span>
             </span>
-          </span>
+            {i < words.length - 1 ? " " : null}
+          </Fragment>
         );
       })}
     </h1>
@@ -139,7 +140,7 @@ export function PageHero({
         className={cn(
           "relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center px-4 sm:px-6",
           compact ? "py-12 sm:py-14" : "py-14 sm:py-20",
-          compact ? "min-h-[18rem] sm:min-h-[22rem] lg:min-h-[24rem]" : "min-h-[26rem] sm:min-h-[32rem] lg:min-h-[36rem]",
+          compact ? "min-h-72 sm:min-h-96 lg:min-h-128" : "min-h-96 sm:min-h-128 lg:min-h-160",
         )}
       >
         <div className={cn("max-w-3xl", compact && "mx-auto text-center")}>

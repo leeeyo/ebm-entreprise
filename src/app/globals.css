@@ -430,6 +430,74 @@
   will-change: transform, opacity;
 }
 
+/* =====================================================================
+ * Navigation — editorial megamenu & drawer
+ * ===================================================================== */
+
+/* Staggered entrance for megamenu content rows */
+@keyframes ebm-nav-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.ebm-nav-item {
+  opacity: 0;
+  animation: ebm-nav-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--ebm-nav-index, 0) * 28ms + 80ms);
+}
+
+.ebm-nav-chapter {
+  opacity: 0;
+  animation: ebm-nav-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 40ms;
+}
+
+/* Diagonal hatch overlay used on the navy "chapter" slab */
+.ebm-hatch {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0 1px,
+    transparent 1px 10px
+  );
+}
+
+/* Drawer accordion: smooth height via grid-row interpolation */
+.ebm-disclosure {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ebm-disclosure[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+.ebm-disclosure > div {
+  overflow: hidden;
+}
+
+/* Mobile drawer row entrance (plays when section expands) */
+@keyframes ebm-drawer-sublink-in {
+  from {
+    opacity: 0;
+    transform: translate3d(-6px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.ebm-disclosure[data-open="true"] .ebm-drawer-sublink {
+  animation: ebm-drawer-sublink-in 0.36s cubic-bezier(0.22, 1, 0.36, 1)
+    both;
+  animation-delay: calc(var(--ebm-sublink-index, 0) * 30ms + 120ms);
+}
+
 /* ---------- Reduced motion — static fallbacks ---------- */
 @media (prefers-reduced-motion: reduce) {
   .ebm-word,
@@ -443,10 +511,16 @@
   .ebm-domaine-progress,
   .ebm-drift-a,
   .ebm-drift-b,
-  .ebm-drift-c {
+  .ebm-drift-c,
+  .ebm-nav-item,
+  .ebm-nav-chapter,
+  .ebm-disclosure[data-open="true"] .ebm-drawer-sublink {
     animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
-  .ebm-faq-panel {
+  .ebm-faq-panel,
+  .ebm-disclosure {
     transition: none !important;
   }
   .ebm-word {
