@@ -5,25 +5,37 @@ import { m, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Reveal } from "@/components/home/reveal";
 import { useTilt } from "@/hooks/use-tilt";
-import { realisations } from "@/content/home";
-import { getResidenceCover } from "@/content/residence-covers";
-import { projets } from "@/content/projets";
 import { cn } from "@/lib/utils";
 
-const HOME_SHOWCASE_COUNT = 6;
-
-type CardItem = {
+export type ProjectCardItem = {
   slug: string;
   title: string;
   description: string;
-  src: string;
-  alt: string;
+  image?: { src: string; alt: string };
+  /** Optional meta tag shown above the title (e.g. "Résidentiel"). */
+  tag?: string;
 };
 
-function RealisationCard({ item, eager }: { item: CardItem; eager: boolean }) {
+export type ProjectCardProps = {
+  item: ProjectCardItem;
+  /** If true, image is fetched eagerly (above the fold). */
+  eager?: boolean;
+  /** Aspect ratio to use on the cover. */
+  aspect?: "4/5" | "3/4" | "16/10";
+  className?: string;
+};
+
+/**
+ * Unified project card — tilt + cover parallax. Must render inside a
+ * `LazyMotionProvider` (typically the page level).
+ */
+export function ProjectCard({
+  item,
+  eager = false,
+  aspect = "4/5",
+  className,
+}: ProjectCardProps) {
   const outerRef = useTilt<HTMLAnchorElement>({ max: 5, scale: 1 });
   const mediaRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -32,23 +44,31 @@ function RealisationCard({ item, eager }: { item: CardItem; eager: boolean }) {
   });
   const y = useTransform(scrollYProgress, [0, 1], ["-7%", "7%"]);
 
+  const aspectClass =
+    aspect === "3/4"
+      ? "aspect-3/4"
+      : aspect === "16/10"
+        ? "aspect-16/10"
+        : "aspect-4/5";
+
   return (
     <Link
       ref={outerRef}
       href={`/projets/${item.slug}`}
       className={cn(
-        "group relative mb-5 block break-inside-avoid overflow-hidden rounded-3xl border border-border/55 bg-card shadow-sm",
+        "group relative block overflow-hidden rounded-3xl border border-border/55 bg-card shadow-sm",
         "transition-[box-shadow,border-color] duration-300 ease-out will-change-transform",
         "hover:border-primary/25 hover:shadow-xl hover:shadow-primary/5",
+        className,
       )}
     >
       <div ref={mediaRef} className="relative overflow-hidden">
-        <div className="relative aspect-4/5 w-full bg-muted">
-          {item.src ? (
+        <div className={cn("relative w-full bg-muted", aspectClass)}>
+          {item.image ? (
             <m.div className="absolute inset-[-7%]" style={{ y }}>
               <Image
-                src={item.src}
-                alt={item.alt}
+                src={item.image.src}
+                alt={item.image.alt}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className="object-cover transition-transform duration-600 ease-out group-hover:scale-[1.04]"
@@ -56,7 +76,9 @@ function RealisationCard({ item, eager }: { item: CardItem; eager: boolean }) {
                 priority={eager}
               />
             </m.div>
-          ) : null}
+          ) : (
+            <div className="absolute inset-0 bg-linear-to-br from-zinc-200 to-zinc-500 dark:from-zinc-800 dark:to-zinc-950" />
+          )}
           <div
             className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/75 via-black/15 to-transparent"
             aria-hidden
@@ -64,6 +86,11 @@ function RealisationCard({ item, eager }: { item: CardItem; eager: boolean }) {
         </div>
 
         <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-6">
+          {item.tag ? (
+            <p className="mb-2 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-white/75">
+              {item.tag}
+            </p>
+          ) : null}
           <div className="translate-y-2 transition-transform duration-400 ease-out group-hover:translate-y-0">
             <div className="flex items-start justify-between gap-4">
               <h3 className="font-heading text-lg font-semibold leading-tight tracking-tight">
@@ -83,58 +110,5 @@ function RealisationCard({ item, eager }: { item: CardItem; eager: boolean }) {
         </div>
       </div>
     </Link>
-  );
-}
-
-export function LandingRealisations() {
-  const slice = projets.slice(0, HOME_SHOWCASE_COUNT);
-  const items: CardItem[] = slice.map((p) => {
-    const cover = getResidenceCover(p.slug, p.title);
-    return {
-      slug: p.slug,
-      title: p.title,
-      description: p.shortDescription,
-      src: cover?.src ?? "",
-      alt: cover?.alt ?? p.title,
-    };
-  });
-
-  return (
-    <section
-      className="cv-auto border-t py-16 sm:py-20"
-      style={{ containIntrinsicSize: "auto 1400px" }}
-    >
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <Reveal variant="fade-up">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <span className="mb-3 block h-1 w-9 rounded-full bg-primary/80" aria-hidden />
-              <h2 className="font-heading text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">
-                {realisations.title}
-              </h2>
-              <p className="mt-3 max-w-xl text-pretty text-[0.9375rem] leading-relaxed text-muted-foreground">
-                Un aperçu de nos résidences livrées et en cours — chaque chantier illustre une méthode.
-              </p>
-            </div>
-          </div>
-        </Reveal>
-
-        <div className="mt-10 columns-1 gap-5 sm:columns-2 lg:columns-3">
-          {items.map((item, idx) => (
-            <RealisationCard key={item.slug} item={item} eager={idx < 2} />
-          ))}
-        </div>
-
-        <Reveal className="mt-10 flex justify-center" delayMs={120} variant="scale">
-          <Button
-            asChild
-            size="lg"
-            className="min-w-52 shadow-md transition-[transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-lg"
-          >
-            <Link href="/projets">{realisations.cta}</Link>
-          </Button>
-        </Reveal>
-      </div>
-    </section>
   );
 }

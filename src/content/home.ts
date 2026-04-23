@@ -1,7 +1,5 @@
 export const homeHero = {
   h1: "EBM Ben Mokhtar : Construire l'Avenir avec Rigueur",
-  subtitle:
-    "Une expertise globale au service de vos projets de construction. De la conception structurelle à la livraison finale, nous apportons des solutions durables et innovantes à chaque défi architectural.",
   ctaPrimary: "Estimer votre projet",
   ctaSecondary: "Consulter nos Réalisations",
 };

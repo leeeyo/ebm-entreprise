@@ -1,4 +1,4 @@
-import { HeroSectionSplit } from "@/components/home/hero-section-split";
+import { HeroKinetic } from "@/components/home/hero-kinetic";
 import {
   LandingDomaines,
   LandingPourquoi,
@@ -6,7 +6,10 @@ import {
   LandingSimulateurTeaser,
   LandingStats,
   LandingTemoignages,
+  MarqueeProjects,
+  ProcessTimeline,
 } from "@/components/landing";
+import { LazyMotionProvider } from "@/components/motion/lazy-motion-provider";
 import {
   HERO_VIDEO_LAYOUT_MIN_WIDTH_PX,
   HERO_VIDEO_MOBILE_SRC,
@@ -39,14 +42,18 @@ export default function HomePage() {
         media={`(min-width: ${HERO_VIDEO_LAYOUT_MIN_WIDTH_PX}px)`}
         fetchPriority="high"
       />
-      <HeroSectionSplit />
 
-      <LandingDomaines />
-      <LandingStats />
-      <LandingPourquoi />
-      <LandingRealisations />
-      <LandingTemoignages />
-      <LandingSimulateurTeaser />
+      <LazyMotionProvider>
+        <HeroKinetic />
+        <MarqueeProjects />
+        <LandingDomaines />
+        <LandingStats />
+        <LandingPourquoi />
+        <ProcessTimeline />
+        <LandingRealisations />
+        <LandingTemoignages />
+        <LandingSimulateurTeaser />
+      </LazyMotionProvider>
     </>
   );
 }

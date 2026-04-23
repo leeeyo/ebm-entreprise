@@ -147,84 +147,317 @@
   }
 }
 
-/* Landing motion — respects prefers-reduced-motion */
-@keyframes ebm-hero-ken {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.07);
-  }
+/* =====================================================================
+ * Landing motion (rebuild)
+ * ---------------------------------------------------------------------
+ * All animations: transform / opacity only. No layout / paint churn.
+ * Every keyframe has a `prefers-reduced-motion` short-circuit below.
+ * ===================================================================== */
+
+/* Skip off-screen section paint/layout cost. Each section sets its
+ * own `contain-intrinsic-size` via an inline style for accurate height. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
 }
 
-@keyframes ebm-hero-intro-in {
+/* ---------- Hero kinetic ---------- */
+
+@keyframes ebm-word-in {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translate3d(0, 110%, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
-@keyframes ebm-teaser-shimmer {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 100% 50%;
-  }
-}
-
-.ebm-hero-ken {
-  animation: ebm-hero-ken 12s ease-out forwards;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ebm-hero-ken {
-    animation: none;
-  }
-  .ebm-hero-intro > * {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
-
-.ebm-hero-intro > * {
+.ebm-word {
+  display: inline-block;
+  will-change: transform, opacity;
+  transform: translate3d(0, 110%, 0);
   opacity: 0;
-  animation: ebm-hero-intro-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: ebm-word-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.ebm-hero-intro > *:nth-child(1) {
-  animation-delay: 0.06s;
-}
-.ebm-hero-intro > *:nth-child(2) {
-  animation-delay: 0.16s;
-}
-.ebm-hero-intro > *:nth-child(3) {
-  animation-delay: 0.28s;
-}
-.ebm-hero-intro > *:nth-child(4) {
-  animation-delay: 0.4s;
+.ebm-word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 1.1;
+  padding-bottom: 0.08em;
 }
 
-.ebm-teaser-bg {
-  background: linear-gradient(
-    115deg,
-    var(--ebm-navy) 0%,
-    oklch(0.36 0.08 260) 42%,
-    oklch(0.34 0.09 255) 58%,
-    var(--ebm-navy) 100%
+/* Hand-drawn underline beneath the accent word. */
+@keyframes ebm-underline-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.ebm-underline-draw {
+  display: inline-block;
+  height: 0.18em;
+  background: linear-gradient(90deg, var(--ebm-orange), oklch(0.78 0.17 48));
+  border-radius: 999px;
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: ebm-underline-draw 0.9s cubic-bezier(0.65, 0.05, 0.36, 1) forwards;
+  animation-delay: 0.9s;
+}
+
+/* ---------- Scroll cue ---------- */
+
+@keyframes ebm-scroll-cue {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate3d(0, 6px, 0);
+    opacity: 1;
+  }
+}
+
+.ebm-scroll-cue {
+  animation: ebm-scroll-cue 2.4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* ---------- Mesh (conic blobs drifting) ---------- */
+
+@keyframes ebm-mesh-drift {
+  0%,
+  100% {
+    transform: translate3d(-6%, -4%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6%, 4%, 0) scale(1.08);
+  }
+}
+
+.ebm-mesh {
+  position: absolute;
+  inset: -20%;
+  background-image:
+    radial-gradient(40% 40% at 22% 28%, oklch(0.82 0.18 55 / 0.55), transparent 70%),
+    radial-gradient(36% 36% at 78% 68%, oklch(0.68 0.14 258 / 0.45), transparent 72%),
+    radial-gradient(30% 30% at 50% 85%, oklch(0.88 0.12 55 / 0.35), transparent 72%);
+  filter: blur(40px);
+  will-change: transform;
+  animation: ebm-mesh-drift 22s ease-in-out infinite alternate;
+}
+
+/* ---------- Infinite marquee ---------- */
+
+@keyframes ebm-marquee-track {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.ebm-marquee {
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
   );
-  background-size: 220% 100%;
-  animation: ebm-teaser-shimmer 14s ease-in-out infinite alternate;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
 }
 
+.ebm-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: ebm-marquee-track 38s linear infinite;
+  will-change: transform;
+}
+
+.ebm-marquee:hover .ebm-marquee-track {
+  animation-play-state: paused;
+}
+
+/* ---------- Simulateur / ambient blobs ---------- */
+
+@keyframes ebm-blob-a {
+  0%,
+  100% {
+    transform: translate3d(-6%, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(8%, -4%, 0) scale(1.1);
+  }
+}
+
+@keyframes ebm-blob-b {
+  0%,
+  100% {
+    transform: translate3d(6%, 4%, 0) scale(1.08);
+  }
+  50% {
+    transform: translate3d(-8%, -2%, 0) scale(1);
+  }
+}
+
+.ebm-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  will-change: transform;
+  opacity: 0.55;
+}
+
+.ebm-blob-a {
+  animation: ebm-blob-a 18s ease-in-out infinite;
+}
+
+.ebm-blob-b {
+  animation: ebm-blob-b 22s ease-in-out infinite;
+}
+
+/* ---------- Drifting cards (actualites empty state) ---------- */
+
+@keyframes ebm-drift-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-6deg);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0) rotate(-4deg);
+  }
+}
+
+@keyframes ebm-drift-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(4deg);
+  }
+  50% {
+    transform: translate3d(0, 10px, 0) rotate(6deg);
+  }
+}
+
+@keyframes ebm-drift-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-1deg);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0) rotate(1deg);
+  }
+}
+
+.ebm-drift-a {
+  animation: ebm-drift-a 6.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.ebm-drift-b {
+  animation: ebm-drift-b 7.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.ebm-drift-c {
+  animation: ebm-drift-c 5.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* ---------- Domaines accordion progress ---------- */
+
+@keyframes ebm-domaine-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.ebm-domaine-progress {
+  transform: scaleX(0);
+  animation: ebm-domaine-progress 5.5s linear forwards;
+  will-change: transform;
+}
+
+/* ---------- FAQ accordion panel (max-height collapse) ---------- */
+
+.ebm-faq-panel {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.34s ease-out,
+    opacity 0.34s ease-out;
+  will-change: grid-template-rows, opacity;
+}
+
+.ebm-faq-panel-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+/* ---------- Quote pulse (testimonials) ---------- */
+
+@keyframes ebm-quote-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.18;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.3;
+  }
+}
+
+.ebm-quote-pulse {
+  animation: ebm-quote-pulse 5.4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* ---------- Reduced motion — static fallbacks ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .ebm-teaser-bg {
-    animation: none;
-    background-size: 100% 100%;
+  .ebm-word,
+  .ebm-underline-draw,
+  .ebm-scroll-cue,
+  .ebm-mesh,
+  .ebm-marquee-track,
+  .ebm-blob-a,
+  .ebm-blob-b,
+  .ebm-quote-pulse,
+  .ebm-domaine-progress,
+  .ebm-drift-a,
+  .ebm-drift-b,
+  .ebm-drift-c {
+    animation: none !important;
+  }
+  .ebm-faq-panel {
+    transition: none !important;
+  }
+  .ebm-word {
+    opacity: 1;
+    transform: none;
+  }
+  .ebm-underline-draw {
+    transform: scaleX(1);
+  }
+  .ebm-mesh,
+  .ebm-blob {
+    transform: none !important;
   }
 }

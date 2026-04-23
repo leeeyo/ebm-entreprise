@@ -4,3 +4,5 @@ export { LandingRealisations } from "./landing-realisations";
 export { LandingSimulateurTeaser } from "./landing-simulateur-teaser";
 export { LandingStats } from "./landing-stats";
 export { LandingTemoignages } from "./landing-temoignages";
+export { MarqueeProjects } from "./marquee-projects";
+export { ProcessTimeline } from "./process-timeline";
