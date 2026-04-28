@@ -16,6 +16,13 @@ export async function POST(req: Request) {
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "Fichier manquant" }, { status: 400 });
   }
+  const label = String(form.get("label") ?? "").trim();
+  const alt = String(form.get("alt") ?? "").trim();
+  const caption = String(form.get("caption") ?? "").trim();
+  const projectSlug = String(form.get("projectSlug") ?? "").trim();
+  const serviceSlug = String(form.get("serviceSlug") ?? "").trim();
+  const gallery = String(form.get("gallery") ?? "chantiers").trim() || "chantiers";
+  const status = form.get("status") === "published" ? "published" : "draft";
 
   const uploadDir = process.env.UPLOAD_DIR ?? "./uploads";
   const abs = path.isAbsolute(uploadDir)
@@ -35,6 +42,13 @@ export async function POST(req: Request) {
   const doc = await ChantierAsset.create({
     filename: safeName,
     relativePath,
+    label,
+    alt,
+    caption,
+    projectSlug,
+    serviceSlug,
+    gallery,
+    status,
   });
 
   return NextResponse.json({ id: doc._id.toString(), relativePath });

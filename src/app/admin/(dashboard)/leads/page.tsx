@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { BadgeDollarSign, Inbox, Ruler, Sparkles } from "lucide-react";
 import { auth } from "@/auth";
 import { connectDB } from "@/lib/db";
 import { Lead } from "@/models/Lead";
+import { AdminMetricCard, AdminPageHeader } from "@/components/admin/admin-ui";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
@@ -41,9 +43,21 @@ export default async function AdminLeadsPage() {
   const leads = await Lead.find().sort({ createdAt: -1 }).limit(200).lean();
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">Leads simulateur</h1>
-      <div className="rounded-md border bg-card">
+    <div className="space-y-8">
+      <AdminPageHeader
+        eyebrow="Opérations / Leads"
+        title="Transformer les estimations en opportunités suivies."
+        description="Tous les contacts issus du simulateur, avec leur budget, leur surface et les hypothèses utiles pour préparer un rappel commercial précis."
+      />
+
+      <div className="grid gap-4 md:grid-cols-4">
+        <AdminMetricCard icon={Inbox} label="Volume" value={`${leads.length}`} detail="Derniers leads chargés." tone="dark" />
+        <AdminMetricCard icon={Sparkles} label="Origine" value="Simulateur" detail="Demandes qualifiées." />
+        <AdminMetricCard icon={Ruler} label="Projet" value="Surface + zone" detail="Critères clés visibles." />
+        <AdminMetricCard icon={BadgeDollarSign} label="Budget" value="Fourchette" detail="Estimation TND." tone="orange" />
+      </div>
+
+      <div className="overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>

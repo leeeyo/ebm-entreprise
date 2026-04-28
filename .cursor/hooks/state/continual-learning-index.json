@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-28T10:38:00Z",
+  "transcripts": {
+    "agent-transcripts\\06e0032c-c5a5-4375-9e8c-edc6e9b9a743\\06e0032c-c5a5-4375-9e8c-edc6e9b9a743.jsonl": {
+      "mtimeUtc": "2026-04-23T13:51:45.2034947Z",
+      "size": 280016
+    },
+    "agent-transcripts\\0b54c2a4-ea8a-4de4-ac47-8a4b4203dbac\\0b54c2a4-ea8a-4de4-ac47-8a4b4203dbac.jsonl": {
+      "mtimeUtc": "2026-04-12T14:19:05.8801126Z",
+      "size": 53339
+    },
+    "agent-transcripts\\0fe7a415-2f00-4391-ab48-2086bf5e40a8\\0fe7a415-2f00-4391-ab48-2086bf5e40a8.jsonl": {
+      "mtimeUtc": "2026-04-11T21:16:55.2978444Z",
+      "size": 44993
+    },
+    "agent-transcripts\\148c1a1c-9271-48d8-b4a5-3b239c2a7ca0\\148c1a1c-9271-48d8-b4a5-3b239c2a7ca0.jsonl": {
+      "mtimeUtc": "2026-04-28T10:24:53.5186880Z",
+      "size": 334669
+    },
+    "agent-transcripts\\148c1a1c-9271-48d8-b4a5-3b239c2a7ca0\\subagents\\1ddeaf29-fe43-40e3-b5ae-156637d357cf.jsonl": {
+      "mtimeUtc": "2026-04-28T09:24:46.7512906Z",
+      "size": 6330
+    },
+    "agent-transcripts\\148c1a1c-9271-48d8-b4a5-3b239c2a7ca0\\subagents\\b1cb1001-57a7-4ba7-b161-d2f2f48dfe9f.jsonl": {
+      "mtimeUtc": "2026-04-28T09:25:21.7643146Z",
+      "size": 10019
+    },
+    "agent-transcripts\\148c1a1c-9271-48d8-b4a5-3b239c2a7ca0\\subagents\\b66bae7e-6cf4-46e1-b82c-c9f7a025669a.jsonl": {
+      "mtimeUtc": "2026-04-28T09:25:50.3840953Z",
+      "size": 9709
+    },
+    "agent-transcripts\\3175d603-0f8b-4a51-912a-cdd476f206d0\\3175d603-0f8b-4a51-912a-cdd476f206d0.jsonl": {
+      "mtimeUtc": "2026-04-28T10:27:50.3609708Z",
+      "size": 7975
+    },
+    "agent-transcripts\\354a76ce-65a9-4224-8baf-b49402a7dcd6\\354a76ce-65a9-4224-8baf-b49402a7dcd6.jsonl": {
+      "mtimeUtc": "2026-04-07T12:21:17.5249470Z",
+      "size": 150816
+    },
+    "agent-transcripts\\36e9b9e3-4737-4624-b74c-83a5b333c2f8\\36e9b9e3-4737-4624-b74c-83a5b333c2f8.jsonl": {
+      "mtimeUtc": "2026-04-05T21:43:58.4578714Z",
+      "size": 184853
+    },
+    "agent-transcripts\\3cd02654-2d37-4a1d-a922-d2719be4c477\\3cd02654-2d37-4a1d-a922-d2719be4c477.jsonl": {
+      "mtimeUtc": "2026-04-13T13:31:49.8575438Z",
+      "size": 11445
+    },
+    "agent-transcripts\\5856e137-f90d-4f05-b72b-cf9fc301a70c\\5856e137-f90d-4f05-b72b-cf9fc301a70c.jsonl": {
+      "mtimeUtc": "2026-04-23T19:32:03.9196275Z",
+      "size": 7507
+    },
+    "agent-transcripts\\5c3e31fd-6584-4a6b-8239-d6496913534b\\5c3e31fd-6584-4a6b-8239-d6496913534b.jsonl": {
+      "mtimeUtc": "2026-04-13T12:48:49.7363433Z",
+      "size": 61076
+    },
+    "agent-transcripts\\7fb4e2dd-0415-42e9-a242-005f69c6992f\\7fb4e2dd-0415-42e9-a242-005f69c6992f.jsonl": {
+      "mtimeUtc": "2026-04-28T10:39:16.0824446Z",
+      "size": 87540
+    },
+    "agent-transcripts\\7fb4e2dd-0415-42e9-a242-005f69c6992f\\subagents\\303669ed-89e5-4ddb-aa9c-78b7e0b19cd3.jsonl": {
+      "mtimeUtc": "2026-04-28T10:34:42.0024123Z",
+      "size": 16058
+    },
+    "agent-transcripts\\7fb4e2dd-0415-42e9-a242-005f69c6992f\\subagents\\59b10e25-04b0-472c-bb1a-e3314ec08323.jsonl": {
+      "mtimeUtc": "2026-04-28T10:39:05.1185177Z",
+      "size": 1215
+    },
+    "agent-transcripts\\8c8839d2-a868-4e63-8016-fa6ef98d51a9\\8c8839d2-a868-4e63-8016-fa6ef98d51a9.jsonl": {
+      "mtimeUtc": "2026-04-22T16:46:07.2385940Z",
+      "size": 318215
+    },
+    "agent-transcripts\\8c8839d2-a868-4e63-8016-fa6ef98d51a9\\subagents\\cc22f5c2-e879-4689-bf0d-7ac7e57c09d6.jsonl": {
+      "mtimeUtc": "2026-04-22T16:26:51.3554123Z",
+      "size": 17217
+    },
+    "agent-transcripts\\9ae569c6-7db0-4f2c-ae51-e7e29568c79d\\9ae569c6-7db0-4f2c-ae51-e7e29568c79d.jsonl": {
+      "mtimeUtc": "2026-04-23T11:03:07.4382088Z",
+      "size": 9216
+    },
+    "agent-transcripts\\b95daa17-3c89-461b-a7e1-eed4064b6c12\\b95daa17-3c89-461b-a7e1-eed4064b6c12.jsonl": {
+      "mtimeUtc": "2026-04-13T00:05:40.4654616Z",
+      "size": 309625
+    },
+    "agent-transcripts\\bc86538c-50ba-42c5-a5ea-44841b868ce6\\bc86538c-50ba-42c5-a5ea-44841b868ce6.jsonl": {
+      "mtimeUtc": "2026-04-05T14:57:08.3988969Z",
+      "size": 206521
+    },
+    "agent-transcripts\\c70fffa7-88fd-4d4b-aca8-5ee598bc87ec\\c70fffa7-88fd-4d4b-aca8-5ee598bc87ec.jsonl": {
+      "mtimeUtc": "2026-04-11T21:01:01.8836061Z",
+      "size": 13574
+    },
+    "agent-transcripts\\e76fb6e6-6d01-4a3a-a682-8c5c35a8c857\\e76fb6e6-6d01-4a3a-a682-8c5c35a8c857.jsonl": {
+      "mtimeUtc": "2026-04-05T14:17:12.0765100Z",
+      "size": 59806
+    }
+  }
+}

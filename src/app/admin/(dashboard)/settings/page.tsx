@@ -1,15 +1,14 @@
+import { AdminPageHeader } from "@/components/admin/admin-ui";
 import { SimulatorSettingsForm } from "./settings-form";
 
 export default function AdminSettingsPage() {
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Simulateur — tarification</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Ajustez les hypothèses du simulateur avancé : prix au m², coefficients de structure,
-          zones tunisiennes, options et marges.
-        </p>
-      </div>
+    <div className="space-y-8">
+      <AdminPageHeader
+        eyebrow="Opérations / Tarification"
+        title="Garder le simulateur aligné avec le marché tunisien."
+        description="Ajustez les hypothèses du simulateur avancé : prix au m², coefficients de structure, zones tunisiennes, options, décomposition et marges."
+      />
       <SimulatorSettingsForm />
     </div>
   );

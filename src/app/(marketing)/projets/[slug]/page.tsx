@@ -11,36 +11,39 @@ import {
   SectionHeading,
 } from "@/components/marketing";
 import { bento } from "@/content/media";
-import { getResidenceCover } from "@/content/residence-covers";
-import { projets } from "@/content/projets";
+import { getProjectBySlug, listChantierAssets, listProjects } from "@/lib/cms-content";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export async function generateStaticParams() {
-  return projets.map((p) => ({ slug: p.slug }));
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const p = projets.find((x) => x.slug === slug);
+  const p = await getProjectBySlug(slug, { publishedOnly: true });
   if (!p) return { title: "Projet" };
   return {
-    title: p.title,
-    description: p.shortDescription,
+    title: p.seoTitle ?? p.title,
+    description: p.seoDescription ?? p.shortDescription,
   };
 }
 
 export default async function ProjetDetailPage({ params }: Props) {
   const { slug } = await params;
-  const idx = projets.findIndex((x) => x.slug === slug);
-  const p = projets[idx];
+  const projects = await listProjects({ publishedOnly: true });
+  const idx = projects.findIndex((x) => x.slug === slug);
+  const p = projects[idx];
   if (!p) {
     notFound();
   }
 
-  const cover = getResidenceCover(p.slug, p.title);
-  const next = projets[(idx + 1) % projets.length];
-  const nextCover = getResidenceCover(next.slug, next.title);
+  const cover = p.coverImage?.src ? { src: p.coverImage.src, alt: p.coverImage.alt ?? p.title } : null;
+  const next = projects[(idx + 1) % projects.length];
+  const nextCover = next?.coverImage?.src ? { src: next.coverImage.src, alt: next.coverImage.alt ?? next.title } : null;
+  const chantierAssets = (await listChantierAssets({ publishedOnly: true })).filter((asset) => asset.projectSlug === p.slug);
+  const galleryImages = chantierAssets.length >= 1
+    ? chantierAssets.map((asset) => ({
+        src: `/api/uploads/${asset.relativePath}`,
+        alt: asset.alt || asset.label || `${p.title} — chantier EBM`,
+      }))
+    : bento.projetGallery;
 
   return (
     <LazyMotionProvider>
@@ -74,16 +77,12 @@ export default async function ProjetDetailPage({ params }: Props) {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,18rem)] lg:gap-14">
           <div className="min-w-0 space-y-6 text-pretty leading-relaxed text-foreground/90">
             <p className="text-lg text-muted-foreground">{p.shortDescription}</p>
-            <p>
-              Chantier résidentiel accompagné par EBM Ben Mokhtar, avec un pilotage
-              complet du gros œuvre au second œuvre. Notre équipe coordonne les
-              corps d&apos;état sur un planning partagé pour sécuriser la qualité
-              et les délais.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Contenu enrichi prochainement : galerie chantier, vidéo de livraison
-              et fiche technique complète.
-            </p>
+            <p>{p.body || "Chantier résidentiel accompagné par EBM Ben Mokhtar, avec un pilotage complet du gros œuvre au second œuvre."}</p>
+            {chantierAssets.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                Ajoutez des médias publiés liés à ce projet depuis l'administration pour remplacer la galerie par défaut.
+              </p>
+            ) : null}
           </div>
 
           <aside className="lg:sticky lg:top-28 lg:self-start">
@@ -103,7 +102,7 @@ export default async function ProjetDetailPage({ params }: Props) {
                     <dt className="text-xs uppercase tracking-wider text-muted-foreground">
                       Localisation
                     </dt>
-                    <dd className="mt-0.5 font-medium text-foreground">Tunisie</dd>
+                    <dd className="mt-0.5 font-medium text-foreground">{p.city}</dd>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -117,7 +116,7 @@ export default async function ProjetDetailPage({ params }: Props) {
                     <dt className="text-xs uppercase tracking-wider text-muted-foreground">
                       Typologie
                     </dt>
-                    <dd className="mt-0.5 font-medium text-foreground">Résidentiel</dd>
+                    <dd className="mt-0.5 font-medium text-foreground">{p.type}</dd>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -131,7 +130,7 @@ export default async function ProjetDetailPage({ params }: Props) {
                     <dt className="text-xs uppercase tracking-wider text-muted-foreground">
                       Statut
                     </dt>
-                    <dd className="mt-0.5 font-medium text-foreground">Livré</dd>
+                    <dd className="mt-0.5 font-medium text-foreground">{p.status === "published" ? "Publié" : "Brouillon"}</dd>
                   </div>
                 </div>
               </dl>
@@ -157,7 +156,7 @@ export default async function ProjetDetailPage({ params }: Props) {
             subtitle="Structures, volumes, finitions — la réalité du chantier en images."
           />
           <div className="mt-10">
-            <ImageBentoGrid images={bento.projetGallery} />
+            <ImageBentoGrid images={galleryImages} />
           </div>
         </div>
       </section>

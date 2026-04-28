@@ -7,8 +7,7 @@ import {
   SectionHeading,
 } from "@/components/marketing";
 import { heroes } from "@/content/media";
-import { getResidenceCover } from "@/content/residence-covers";
-import { projets } from "@/content/projets";
+import { listProjects } from "@/lib/cms-content";
 
 export const metadata: Metadata = {
   title: "Nos projets",
@@ -19,15 +18,16 @@ export const metadata: Metadata = {
 // Static chips (visual only for now — no client-side filtering yet).
 const CHIPS = ["Tous les projets", "Résidentiel", "Clé en main", "Programmes livrés"] as const;
 
-export default function ProjetsIndexPage() {
-  const items = projets.map((p) => {
-    const cover = getResidenceCover(p.slug, p.title);
+export default async function ProjetsIndexPage() {
+  const projects = await listProjects({ publishedOnly: true });
+  const items = projects.map((p) => {
+    const cover = p.coverImage?.src ? p.coverImage : undefined;
     return {
       slug: p.slug,
       title: p.title,
       description: p.shortDescription,
-      image: cover ? { src: cover.src, alt: cover.alt } : undefined,
-      tag: "Résidentiel",
+      image: cover ? { src: cover.src ?? "", alt: cover.alt ?? p.title } : undefined,
+      tag: p.type,
     };
   });
 

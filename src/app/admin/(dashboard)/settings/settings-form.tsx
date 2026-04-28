@@ -117,7 +117,7 @@ export function SimulatorSettingsForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="max-w-5xl space-y-6">
+    <form onSubmit={onSubmit} className="space-y-6">
       <SettingsSnapshot data={data} />
 
       <div className="flex flex-wrap gap-2 rounded-2xl border bg-card p-2">

@@ -189,9 +189,14 @@ export const DEFAULT_SIMULATOR_SETTINGS: SimulatorSettingsSnapshot = {
 };
 
 type SimulatorSettingsSnapshotInput = {
-  [K in keyof SimulatorSettingsSnapshot]?: SimulatorSettingsSnapshot[K] extends Record<string, number>
+  [K in keyof Omit<SimulatorSettingsSnapshot, "decompositionItems">]?: SimulatorSettingsSnapshot[K] extends Record<
+    string,
+    number
+  >
     ? Partial<SimulatorSettingsSnapshot[K]>
     : SimulatorSettingsSnapshot[K];
+} & {
+  decompositionItems?: unknown;
 };
 
 export function normalizeSimulatorSettingsSnapshot(
@@ -277,9 +282,9 @@ function normalizeOffers(value: unknown): SimulatorDecompositionItem["offers"] {
 
 function mergeNumberDefaults<T extends Record<string, number>>(
   defaults: T,
-  value: Partial<T> | undefined,
-): T {
-  const result = { ...defaults };
+  value: Partial<Record<keyof T, number>> | undefined,
+): { [K in keyof T]: number } {
+  const result: { [K in keyof T]: number } = { ...defaults };
 
   for (const key of Object.keys(defaults) as Array<keyof T>) {
     const nextValue = value?.[key];

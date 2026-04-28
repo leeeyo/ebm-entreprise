@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   Timer,
 } from "lucide-react";
-import { contactContent } from "@/content/contact";
 import { contactMap } from "@/content/media";
 import { LazyMotionProvider } from "@/components/motion/lazy-motion-provider";
 import {
@@ -20,6 +19,8 @@ import {
   TrustStrip,
 } from "@/components/marketing";
 import { Reveal } from "@/components/home/reveal";
+import { ContactForm } from "@/components/contact/contact-form";
+import { ensureSiteSettings, type SiteSettingsRecord } from "@/lib/cms-content";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -27,47 +28,54 @@ export const metadata: Metadata = {
     "Contactez EBM Ben Mokhtar — Ariana, Tunisie. Téléphone 22 181 181, email contact@ebm-entreprise.tn.",
 };
 
-const phoneHref = `tel:+216${contactContent.phone.replace(/\s/g, "")}`;
-const mailHref = `mailto:${contactContent.email}`;
-const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-  `${contactContent.addressLine}, Ariana, Tunisie`,
-)}`;
+function getContactLinks(settings: SiteSettingsRecord) {
+  return {
+    phoneHref: `tel:${settings.phoneHref}`,
+    mailHref: `mailto:${settings.email}`,
+    mapsHref: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      `${settings.addressLine}, Ariana, Tunisie`,
+    )}`,
+  };
+}
 
-const INFO_ITEMS: Array<{
+function getInfoItems(settings: SiteSettingsRecord): Array<{
   icon: typeof MapPin;
   label: string;
   value: string;
   hint?: string;
   href?: string;
-}> = [
-  {
-    icon: MapPin,
-    label: "Adresse",
-    value: contactContent.addressLine,
-    hint: "Ariana, Tunisie",
-    href: mapsHref,
-  },
-  {
-    icon: Phone,
-    label: "Téléphone",
-    value: contactContent.phone,
-    hint: "Lun–Ven · 08h30–17h00",
-    href: phoneHref,
-  },
-  {
-    icon: Mail,
-    label: "Email",
-    value: contactContent.email,
-    hint: "Réponse sous 24 h ouvrées",
-    href: mailHref,
-  },
-  {
-    icon: Clock,
-    label: contactContent.hoursTitle,
-    value: contactContent.hoursWeek,
-    hint: contactContent.hoursWeekend,
-  },
-];
+}> {
+  const { phoneHref, mailHref, mapsHref } = getContactLinks(settings);
+  return [
+    {
+      icon: MapPin,
+      label: "Adresse",
+      value: settings.addressLine,
+      hint: settings.addressShort,
+      href: mapsHref,
+    },
+    {
+      icon: Phone,
+      label: "Téléphone",
+      value: settings.phone,
+      hint: "Lun–Ven · 08h30–17h00",
+      href: phoneHref,
+    },
+    {
+      icon: Mail,
+      label: "Email",
+      value: settings.email,
+      hint: "Réponse sous 24 h ouvrées",
+      href: mailHref,
+    },
+    {
+      icon: Clock,
+      label: settings.hoursTitle,
+      value: settings.hoursWeek,
+      hint: settings.hoursWeekend,
+    },
+  ];
+}
 
 const TRUST_ITEMS = [
   {
@@ -87,7 +95,7 @@ const TRUST_ITEMS = [
   },
 ];
 
-function InfoCard({ item, index }: { item: (typeof INFO_ITEMS)[number]; index: number }) {
+function InfoCard({ item, index }: { item: ReturnType<typeof getInfoItems>[number]; index: number }) {
   const Icon = item.icon;
   const body = (
     <article className="group relative h-full rounded-2xl border border-border/55 bg-card/80 p-5 shadow-sm backdrop-blur-sm transition-[box-shadow,border-color,transform] duration-300 ease-out will-change-transform hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-xl hover:shadow-primary/5">
@@ -132,7 +140,11 @@ function InfoCard({ item, index }: { item: (typeof INFO_ITEMS)[number]; index: n
   );
 }
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const settings = await ensureSiteSettings();
+  const infoItems = getInfoItems(settings);
+  const { mapsHref, mailHref } = getContactLinks(settings);
+
   return (
     <LazyMotionProvider>
       <PageHero
@@ -155,7 +167,7 @@ export default function ContactPage() {
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[1.05fr_1fr]">
           <ul className="grid gap-4 sm:grid-cols-2">
-            {INFO_ITEMS.map((item, idx) => (
+            {infoItems.map((item, idx) => (
               <li key={item.label} className="h-full">
                 <InfoCard item={item} index={idx} />
               </li>
@@ -183,7 +195,7 @@ export default function ContactPage() {
                     Nos bureaux
                   </p>
                   <p className="mt-1 font-heading text-lg font-semibold tracking-tight text-foreground">
-                    {contactContent.addressLine}
+                    {settings.addressLine}
                   </p>
                 </div>
                 <MagneticLink
@@ -202,6 +214,22 @@ export default function ContactPage() {
 
         <div className="mt-14">
           <TrustStrip items={TRUST_ITEMS} />
+        </div>
+      </section>
+
+      <section
+        className="cv-auto border-t bg-muted/10 py-16 sm:py-20"
+        style={{ containIntrinsicSize: "auto 900px" }}
+      >
+        <div className="mx-auto max-w-4xl px-4 sm:px-6">
+          <SectionHeading
+            eyebrow="Demande contact"
+            title="Écrivez-nous, le back-office reçoit tout."
+            subtitle="Votre message arrive dans l'espace admin Demandes contact avec statut, source et notes internes pour le suivi commercial."
+          />
+          <div className="mt-10">
+            <ContactForm />
+          </div>
         </div>
       </section>
 

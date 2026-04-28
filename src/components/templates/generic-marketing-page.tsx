@@ -28,6 +28,7 @@ import {
 import { heroes, genericPageBento } from "@/content/media";
 import { genericServicePages } from "@/content/service-pages";
 import type { PageHeroProps } from "@/components/marketing";
+import type { ServicePageRecord } from "@/lib/cms-content";
 
 const KEY_ICONS: Record<string, LucideIcon> = {
   "construction/immeubles-residences": Home,
@@ -74,8 +75,8 @@ const KEY_HERO: Record<string, { src: string; alt: string }> = {
 /** Three generic rotating icons for bullet rows without a dedicated icon. */
 const BULLET_ICON_ROTATION: LucideIcon[] = [CheckCircle2, TrendingUp, Sparkles];
 
-export function GenericMarketingPage({ pageKey }: { pageKey: string }) {
-  const data = genericServicePages[pageKey];
+export function GenericMarketingPage({ pageKey, page }: { pageKey: string; page?: ServicePageRecord }) {
+  const data = page ?? genericServicePages[pageKey];
   if (!data) {
     notFound();
   }
@@ -83,6 +84,8 @@ export function GenericMarketingPage({ pageKey }: { pageKey: string }) {
   const hero: { src: string; alt: string } = KEY_HERO[pageKey] ?? heroes.services;
   const primaryIcon = KEY_ICONS[pageKey] ?? CheckCircle2;
   const bento = genericPageBento[pageKey];
+  const primaryCtaLabel = page?.ctaPrimaryLabel ?? "Demander un devis";
+  const secondaryCtaLabel = page?.ctaSecondaryLabel ?? "Lancer le simulateur";
 
   const heroProps: PageHeroProps = {
     eyebrow: "Savoir-faire EBM",
@@ -90,8 +93,12 @@ export function GenericMarketingPage({ pageKey }: { pageKey: string }) {
     subtitle: data.intro,
     image: hero,
     ctas: [
-      { label: "Demander un devis", href: "/contact" },
-      { label: "Lancer le simulateur", href: "/simulateur", variant: "outline" },
+      { label: primaryCtaLabel, href: "/contact" },
+      {
+        label: secondaryCtaLabel,
+        href: "/simulateur",
+        variant: "outline",
+      },
     ],
   };
 
