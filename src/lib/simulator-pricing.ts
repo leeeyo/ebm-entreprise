@@ -32,7 +32,7 @@ export function computeEstimateTnd(input: SimulationInput, settings: SimulatorSe
         ? "premium"
         : "luxe";
   const offerMul = settings.offerMultipliers[offerKey] ?? 1;
-  const styleMul = input.style === "mediterraneenne" ? 1.03 : 1;
+  const styleMul = settings.styleMultipliers[input.style] ?? 1;
 
   let factor = 1;
   if (input.options.pool) factor += settings.optionAdds.pool;

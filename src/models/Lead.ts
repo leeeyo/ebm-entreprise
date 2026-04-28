@@ -7,6 +7,8 @@ const LeadSchema = new Schema(
     phone: { type: String, required: true, trim: true },
     estimateTnd: { type: Number },
     simulation: { type: Schema.Types.Mixed },
+    pricingVersion: { type: String },
+    settingsSnapshot: { type: Schema.Types.Mixed },
     contacted: { type: Boolean, default: false },
   },
   { timestamps: true },

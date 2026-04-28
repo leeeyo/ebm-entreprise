@@ -6,7 +6,8 @@ export default function AdminSettingsPage() {
       <div>
         <h1 className="text-2xl font-semibold">Simulateur — tarification</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Les montants sont indicatifs ; ajustez le prix au m² et les multiplicateurs selon le marché.
+          Ajustez les hypothèses du simulateur avancé : prix au m², coefficients de structure,
+          zones tunisiennes, options et marges.
         </p>
       </div>
       <SimulatorSettingsForm />

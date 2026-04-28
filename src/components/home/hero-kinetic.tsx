@@ -129,7 +129,7 @@ function KineticH1({ text }: { text: string }) {
                   <span className="relative inline-block align-baseline">
                     <span className="relative z-10">{raw}</span>
                     <span
-                      className="ebm-underline-draw absolute inset-x-0 -bottom-[0.05em]"
+                      className="ebm-underline-draw absolute inset-x-0 bottom-[0.05em]"
                       aria-hidden
                     />
                   </span>
@@ -226,9 +226,6 @@ export function HeroKinetic() {
               className="ebm-word flex items-center gap-3"
               style={{ animationDelay: "60ms" }}
             >
-              <span className="font-mono text-[0.7rem] font-medium tracking-[0.2em] text-primary/90 tabular-nums">
-                01
-              </span>
               <span className="h-px w-8 bg-primary/50" aria-hidden />
               <p className="text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-primary sm:text-[0.75rem]">
                 Entreprise de construction

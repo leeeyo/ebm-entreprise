@@ -1,6 +1,7 @@
 import { config } from "dotenv";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
+import { DEFAULT_SIMULATOR_SETTINGS } from "../src/lib/simulator-settings-defaults";
 import { SimulatorSettings } from "../src/models/SimulatorSettings";
 import { User } from "../src/models/User";
 
@@ -30,7 +31,7 @@ async function main() {
 
   await SimulatorSettings.findOneAndUpdate(
     { key: "default" },
-    { $setOnInsert: { key: "default" } },
+    { $setOnInsert: { key: "default", ...DEFAULT_SIMULATOR_SETTINGS } },
     { upsert: true, returnDocument: "after" },
   );
 

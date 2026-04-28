@@ -1,0 +1,59 @@
+{
+  "project": {
+    "name": "Riverside Office Renovation",
+    "client": "Meridian Properties LLC",
+    "estimator": "J. Carter",
+    "date": "2026-03-18",
+    "bidDueDate": "2026-04-01",
+    "address": "1200 River Rd, Suite 300, Portland, OR 97201"
+  },
+  "divisions": [
+    { "id": "02", "name": "Site Work & Demo" },
+    { "id": "03", "name": "Concrete & Foundations" },
+    { "id": "05", "name": "Structural Steel" },
+    { "id": "07", "name": "Exterior Envelope" },
+    { "id": "09", "name": "Finishes" },
+    { "id": "15", "name": "Mechanical / Plumbing" },
+    { "id": "16", "name": "Electrical" },
+    { "id": "01", "name": "General Requirements" }
+  ],
+  "lineItems": [
+    { "id": "1", "division": "02", "description": "Selective interior demolition", "quantity": 4200, "unit": "SF", "unitCost": 3.50, "costType": "labor" },
+    { "id": "2", "division": "02", "description": "Debris removal & dumpster", "quantity": 12, "unit": "EA", "unitCost": 475.00, "costType": "equipment" },
+    { "id": "3", "division": "02", "description": "Asbestos abatement (flooring)", "quantity": 1800, "unit": "SF", "unitCost": 8.25, "costType": "subcontractor" },
+    { "id": "4", "division": "03", "description": "Concrete slab patch & repair", "quantity": 320, "unit": "SF", "unitCost": 12.00, "costType": "material" },
+    { "id": "5", "division": "03", "description": "Concrete form & pour (curbs)", "quantity": 18, "unit": "LF", "unitCost": 45.00, "costType": "labor" },
+    { "id": "6", "division": "05", "description": "Steel beam reinforcement", "quantity": 6, "unit": "EA", "unitCost": 2800.00, "costType": "subcontractor" },
+    { "id": "7", "division": "05", "description": "Misc. steel (angles, plates)", "quantity": 1.5, "unit": "TN", "unitCost": 4200.00, "costType": "material" },
+    { "id": "8", "division": "07", "description": "Window replacement (commercial)", "quantity": 24, "unit": "EA", "unitCost": 1250.00, "costType": "material" },
+    { "id": "9", "division": "07", "description": "Storefront glazing system", "quantity": 180, "unit": "SF", "unitCost": 65.00, "costType": "subcontractor" },
+    { "id": "10", "division": "07", "description": "Exterior caulking & sealant", "quantity": 640, "unit": "LF", "unitCost": 4.50, "costType": "material" },
+    { "id": "11", "division": "09", "description": "Drywall (5/8\" Type X)", "quantity": 8400, "unit": "SF", "unitCost": 4.25, "costType": "material" },
+    { "id": "12", "division": "09", "description": "Metal stud framing", "quantity": 8400, "unit": "SF", "unitCost": 3.10, "costType": "labor" },
+    { "id": "13", "division": "09", "description": "Taping, mud & finish (Level 4)", "quantity": 8400, "unit": "SF", "unitCost": 2.15, "costType": "labor" },
+    { "id": "14", "division": "09", "description": "Interior paint (2 coats)", "quantity": 9200, "unit": "SF", "unitCost": 1.85, "costType": "material" },
+    { "id": "15", "division": "09", "description": "Carpet tile (modular)", "quantity": 3600, "unit": "SF", "unitCost": 5.50, "costType": "material" },
+    { "id": "16", "division": "09", "description": "LVP flooring", "quantity": 1400, "unit": "SF", "unitCost": 7.25, "costType": "material" },
+    { "id": "17", "division": "09", "description": "Ceramic tile (restrooms)", "quantity": 480, "unit": "SF", "unitCost": 14.00, "costType": "material" },
+    { "id": "18", "division": "09", "description": "ACT ceiling grid & tile", "quantity": 4200, "unit": "SF", "unitCost": 4.75, "costType": "material" },
+    { "id": "19", "division": "15", "description": "HVAC ductwork modification", "quantity": 1, "unit": "LS", "unitCost": 28500.00, "costType": "subcontractor" },
+    { "id": "20", "division": "15", "description": "Plumbing rough-in (restrooms)", "quantity": 8, "unit": "EA", "unitCost": 1850.00, "costType": "subcontractor" },
+    { "id": "21", "division": "15", "description": "Fire sprinkler relocation", "quantity": 32, "unit": "EA", "unitCost": 425.00, "costType": "subcontractor" },
+    { "id": "22", "division": "16", "description": "Electrical panel upgrade", "quantity": 2, "unit": "EA", "unitCost": 4500.00, "costType": "subcontractor" },
+    { "id": "23", "division": "16", "description": "LED lighting fixtures", "quantity": 96, "unit": "EA", "unitCost": 285.00, "costType": "material" },
+    { "id": "24", "division": "16", "description": "Receptacles & switches", "quantity": 120, "unit": "EA", "unitCost": 145.00, "costType": "labor" },
+    { "id": "25", "division": "16", "description": "Data/comm cabling (Cat6A)", "quantity": 48, "unit": "EA", "unitCost": 225.00, "costType": "subcontractor" },
+    { "id": "26", "division": "01", "description": "Project supervision (8 wks)", "quantity": 320, "unit": "HR", "unitCost": 85.00, "costType": "labor" },
+    { "id": "27", "division": "01", "description": "Temporary protection & barriers", "quantity": 1, "unit": "LS", "unitCost": 3200.00, "costType": "material" },
+    { "id": "28", "division": "01", "description": "Permits & fees", "quantity": 1, "unit": "LS", "unitCost": 4800.00, "costType": "material" },
+    { "id": "29", "division": "01", "description": "Final cleaning", "quantity": 4200, "unit": "SF", "unitCost": 0.85, "costType": "labor" },
+    { "id": "30", "division": "01", "description": "Waste management & recycling", "quantity": 1, "unit": "LS", "unitCost": 2400.00, "costType": "equipment" }
+  ],
+  "markups": {
+    "overhead": 10,
+    "profit": 8,
+    "contingency": 7,
+    "bond": 1.5,
+    "salesTax": 0
+  }
+}

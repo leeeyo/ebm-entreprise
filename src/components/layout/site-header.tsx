@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useLayoutEffect, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Mail, MapPin, Phone } from "lucide-react";
+import { ChevronDown, LogIn, Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { contactContent } from "@/content/contact";
 import {
@@ -255,7 +255,27 @@ function HeaderMeta() {
   );
 }
 
-function HeaderCtas({ ctaBase }: { ctaBase: string }) {
+function LoginIconLink({ className }: { className?: string }) {
+  return (
+    <Button
+      variant="outline"
+      size="icon"
+      asChild
+      className={cn(
+        "size-10 shrink-0 border border-white/20 bg-white/5 text-zinc-100 shadow-none backdrop-blur-sm",
+        "hover:border-(--ebm-orange)/60 hover:bg-(--ebm-orange)/10 hover:text-white",
+        focusRingNav,
+        className,
+      )}
+    >
+      <Link href="/admin/login" aria-label="Connexion administrateur">
+        <LogIn className="size-4" aria-hidden />
+      </Link>
+    </Button>
+  );
+}
+
+function HeaderCtas({ ctaBase, showLogin }: { ctaBase: string; showLogin: boolean }) {
   return (
     <div className="flex shrink-0 items-center gap-2">
       <Button
@@ -283,6 +303,7 @@ function HeaderCtas({ ctaBase }: { ctaBase: string }) {
       >
         <Link href="/simulateur">Lancer le simulateur</Link>
       </Button>
+      {showLogin ? <LoginIconLink className="ml-1" /> : null}
     </div>
   );
 }
@@ -323,6 +344,7 @@ export function SiteHeader() {
   );
 
   const ctaBase = "h-11 px-4 text-sm font-semibold sm:h-11 sm:px-5";
+  const showLoginIcon = pathname === "/";
 
   return (
     <header
@@ -378,7 +400,7 @@ export function SiteHeader() {
         <HeaderMeta />
 
         <div className="hidden shrink-0 items-center md:flex">
-          <HeaderCtas ctaBase={ctaBase} />
+          <HeaderCtas ctaBase={ctaBase} showLogin={showLoginIcon} />
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
@@ -393,6 +415,7 @@ export function SiteHeader() {
           >
             <Link href="/simulateur">Simulateur</Link>
           </Button>
+          {showLoginIcon ? <LoginIconLink /> : null}
           <MobileNav
             homeBlend
             focusRingHero={focusRingNav}
