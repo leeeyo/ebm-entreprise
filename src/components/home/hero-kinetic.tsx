@@ -115,7 +115,7 @@ function HeroMedia({ mounted, motionOk }: HeroMediaProps) {
 function KineticH1({ text }: { text: string }) {
   const tokens = tokenizeH1(text);
   return (
-    <h1 className="font-heading mt-3.5 text-balance text-[2rem] font-semibold leading-[1.1] tracking-[-0.015em] text-foreground sm:text-[2.25rem] sm:leading-[1.08] md:text-[2.6rem] lg:text-[3rem] xl:text-[3.25rem]">
+    <h1 className="font-heading mt-3.5 text-balance text-[2.125rem] font-semibold leading-[1.1] tracking-[-0.015em] text-foreground sm:text-[2.375rem] sm:leading-[1.08] md:text-[2.75rem] lg:text-[3rem] xl:text-[3.25rem]">
       {tokens.map((raw, i) => {
         const isAccent = raw === ACCENT_WORD;
         return (
@@ -129,7 +129,7 @@ function KineticH1({ text }: { text: string }) {
                   <span className="relative inline-block align-baseline">
                     <span className="relative z-10">{raw}</span>
                     <span
-                      className="ebm-underline-draw absolute inset-x-0 bottom-[0.05em]"
+                      className="ebm-underline-draw ebm-underline-hero-soft absolute inset-x-0 bottom-[0.05em]"
                       aria-hidden
                     />
                   </span>
@@ -163,7 +163,7 @@ function MagneticCta({
       variant={variant}
       className={cn(
         variant === "default"
-          ? "shadow-md shadow-primary/15"
+          ? "shadow-md shadow-primary/10"
           : "border-foreground/25 bg-background/75",
         "transition-[box-shadow,background-color] duration-300 hover:shadow-lg",
       )}
@@ -192,23 +192,23 @@ export function HeroKinetic() {
 
   return (
     <section className="relative z-0 border-b pt-16 md:pt-20 lg:pt-32">
-      <div className="relative isolate min-h-[min(44rem,calc(100svh-4rem))] w-full overflow-hidden md:min-h-[min(46rem,calc(100svh-5rem))] lg:min-h-0 lg:h-[calc(100svh-8rem)] lg:max-h-224">
+      <div className="relative isolate flex min-h-[min(44rem,calc(100dvh-4rem))] w-full flex-col overflow-hidden md:min-h-[min(46rem,calc(100dvh-5rem))] lg:min-h-0 lg:h-[calc(100dvh-8rem)] lg:max-h-224">
         <HeroMedia key={String(motionOk)} mounted={mounted} motionOk={motionOk} />
 
         {/* Animated mesh overlay, sits above media but under scrim/copy. */}
         {motionOk ? (
           <div className="pointer-events-none absolute inset-0 z-3 overflow-hidden" aria-hidden>
-            <div className="ebm-mesh" />
+            <div className="ebm-mesh ebm-mesh--hero-soft" />
           </div>
         ) : null}
 
         {/* Readability scrim — one cohesive stack, darker on the copy side */}
         <div
-          className="pointer-events-none absolute inset-0 z-5 bg-linear-to-r from-background/80 via-background/45 to-transparent lg:via-background/25"
+          className="pointer-events-none absolute inset-0 z-5 bg-linear-to-r from-background/60 via-background/20 to-transparent lg:via-background/10"
           aria-hidden
         />
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-5 h-48 bg-linear-to-t from-background/60 to-transparent"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-5 h-48 bg-linear-to-t from-background/30 to-transparent"
           aria-hidden
         />
 
@@ -218,16 +218,16 @@ export function HeroKinetic() {
           aria-hidden
         />
 
-        {/* Copy */}
-        <div className="relative z-10 mx-auto flex h-full w-full max-w-[1920px] flex-col justify-center px-5 sm:px-6 lg:px-10 xl:px-14">
+        {/* Copy — flex-1 + justify-center so vertical centering works below lg (h-full on min-h parents is unreliable). */}
+        <div className="relative z-10 mx-auto flex w-full max-w-[1920px] flex-1 flex-col justify-center px-5 pb-28 pt-3 max-[380px]:pb-32 sm:px-6 sm:pb-29 md:pb-24 md:pt-0 lg:flex-none lg:h-full lg:min-h-0 lg:justify-center lg:px-10 lg:pb-0 lg:pt-0 xl:px-14">
           <div className="w-full max-w-[min(42rem,90vw)] lg:max-w-176">
             {/* Chapter number + eyebrow */}
             <div
               className="ebm-word flex items-center gap-3"
               style={{ animationDelay: "60ms" }}
             >
-              <span className="h-px w-8 bg-primary/50" aria-hidden />
-              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-primary sm:text-[0.75rem]">
+              <span className="h-px w-8 bg-primary/43" aria-hidden />
+              <p className="text-[0.75rem] font-semibold uppercase tracking-[0.28em] text-primary/88 sm:text-[0.8rem] lg:text-[0.75rem]">
                 Entreprise de construction
               </p>
             </div>
@@ -236,7 +236,7 @@ export function HeroKinetic() {
 
             {/* Supporting lead sentence */}
             <p
-              className="ebm-word mt-5 max-w-152 text-balance text-[0.95rem] leading-relaxed text-foreground/75 sm:mt-6 sm:text-base"
+              className="ebm-word mt-5 max-w-152 text-balance text-[1rem] leading-relaxed text-foreground/75 sm:mt-6 sm:text-[1.0625rem] lg:text-base"
               style={{ animationDelay: `${ctaDelay - 120}ms` }}
             >
               Quinze ans d&rsquo;expertise au service du bâtiment, du gros œuvre

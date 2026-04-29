@@ -8,12 +8,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 type HeroImageUploaderProps = {
-  scope: "services" | "projects";
+  scope: "services" | "projects" | "blogs";
   ownerSlug: string;
   initialSrc: string;
   initialAlt: string;
   persistServiceHero?: boolean;
   persistProjectCover?: boolean;
+  persistBlogCover?: boolean;
+  onImageChangeAction?: (image: { src: string; alt: string }) => void;
 };
 
 type UploadResponse = {
@@ -31,6 +33,8 @@ export function HeroImageUploader({
   initialAlt,
   persistServiceHero = false,
   persistProjectCover = false,
+  persistBlogCover = false,
+  onImageChangeAction,
 }: HeroImageUploaderProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const srcInputRef = useRef<HTMLInputElement>(null);
@@ -85,10 +89,24 @@ export function HeroImageUploader({
           throw new Error("Image uploadée, mais sauvegarde du header projet impossible.");
         }
       }
+      if (persistBlogCover && scope === "blogs") {
+        const persistRes = await fetch("/api/admin/blog-posts/cover", {
+          method: "PATCH",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            slug: ownerSlug,
+            coverImage: json.image,
+          }),
+        });
+        if (!persistRes.ok) {
+          throw new Error("Image uploadée, mais sauvegarde du header article impossible.");
+        }
+      }
       setSrc(json.image.src);
       setAlt(json.image.alt);
+      onImageChangeAction?.(json.image);
       toast.success(
-        persistServiceHero || persistProjectCover
+        persistServiceHero || persistProjectCover || persistBlogCover
           ? "Image hero sauvegardée."
           : "Image hero téléversée. Enregistrez la page pour publier ce changement.",
       );

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Send } from "lucide-react";
 import { toast } from "sonner";
+import { BrandedMascotState } from "@/components/brand/mascot-state";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +16,7 @@ function formValue(formData: FormData, key: string) {
 
 export function ContactForm() {
   const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [phone, setPhone] = useState("");
 
   function onPhoneChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -58,11 +60,31 @@ export function ContactForm() {
       toast.success("Votre demande a bien été envoyée.");
       form.reset();
       setPhone("");
+      setSubmitted(true);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Envoi impossible. Vous pouvez aussi nous appeler directement.");
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (submitted) {
+    return (
+      <div className="space-y-4 rounded-3xl border border-border/60 bg-card/85 p-4 shadow-sm backdrop-blur-sm sm:p-5">
+        <BrandedMascotState
+          kind="success"
+          eyebrow="Demande transmise"
+          title="Votre message est dans la salle des opérations."
+          description="L'équipe EBM reçoit votre demande avec les informations nécessaires pour vous répondre rapidement."
+          primaryAction={{ label: "Lancer le simulateur", href: "/simulateur" }}
+          variant="compact"
+          className="border-primary/20 shadow-none"
+        />
+        <Button type="button" variant="outline" onClick={() => setSubmitted(false)}>
+          Envoyer une autre demande
+        </Button>
+      </div>
+    );
   }
 
   return (

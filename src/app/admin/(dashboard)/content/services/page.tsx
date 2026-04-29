@@ -49,7 +49,7 @@ async function saveServicePage(formData: FormData) {
   const currentHeroSrc = current?.heroImage?.src ?? "";
   const shouldKeepCurrentLocalHero =
     currentHeroSrc.startsWith("/api/uploads/") &&
-    (!submittedHeroSrc || submittedHeroSrc === defaultHero.src || submittedHeroSrc.startsWith("http"));
+    (!submittedHeroSrc || submittedHeroSrc === defaultHero?.src || submittedHeroSrc.startsWith("http"));
   const heroImage = shouldKeepCurrentLocalHero && currentHeroSrc
     ? { src: currentHeroSrc, alt: current?.heroImage?.alt ?? payload.title }
     : payload.heroImage;

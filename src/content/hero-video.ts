@@ -1,8 +1,8 @@
 /** Desktop / large viewports — hero background video (H.264 MP4). */
-export const HERO_VIDEO_SRC = "/hero/residence-amira-hero.mp4" as const;
+export const HERO_VIDEO_SRC = "/hero/residence-amira-hero1.mp4" as const;
 
 /** Narrow viewports — lighter or portrait-cropped variant (see `<source media>` in hero). */
-export const HERO_VIDEO_MOBILE_SRC = "/hero/residence-amira-hero-mobile.mp4" as const;
+export const HERO_VIDEO_MOBILE_SRC = "/hero/ebm-hero-mobile.mp4" as const;
 
 /** Breakpoint (px) matching `source media` / preload: below = mobile asset, from here up = desktop asset. */
 export const HERO_VIDEO_LAYOUT_MIN_WIDTH_PX = 768 as const;

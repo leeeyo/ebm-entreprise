@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, Send } from "lucide-react";
 import { toast } from "sonner";
+import { BrandedMascotState } from "@/components/brand/mascot-state";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -190,9 +191,13 @@ export function AdvancedSimulator() {
 
   if (!settings) {
     return (
-      <div className="rounded-3xl border bg-card p-10 text-center text-muted-foreground">
-        Chargement du simulateur…
-      </div>
+      <BrandedMascotState
+        kind="loading"
+        eyebrow="Calculateur EBM"
+        title="Préparation de l'estimation."
+        description="Les paramètres 2026, zones et options sont en cours de chargement."
+        variant="compact"
+      />
     );
   }
 
@@ -661,6 +666,16 @@ function ResultStep({
           <ResultFact label="Zone" value={LOCATION_ZONE_LABELS[project.zone]} />
           <ResultFact label="Titre foncier" value={project.terrain === "oui" ? "Disponible" : "En cours"} />
         </div>
+        {estimateRevealed ? (
+          <BrandedMascotState
+            kind="success"
+            eyebrow="Estimation prête"
+            title="Le dossier est qualifié."
+            description="Vos hypothèses sont enregistrées pour que l'équipe puisse préparer un rappel précis."
+            variant="inline"
+            className="border-primary/20 shadow-none"
+          />
+        ) : null}
         <p className="text-sm leading-relaxed text-muted-foreground">
           Le visiteur garde une lecture simple. EBM reçoit aussi le détail technique généré automatiquement
           pour affiner le devis lors du rappel.

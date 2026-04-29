@@ -3,6 +3,7 @@ import { BadgeDollarSign, Inbox, Ruler, Sparkles } from "lucide-react";
 import { auth } from "@/auth";
 import { connectDB } from "@/lib/db";
 import { Lead } from "@/models/Lead";
+import { BrandedMascotState } from "@/components/brand/mascot-state";
 import { AdminMetricCard, AdminPageHeader } from "@/components/admin/admin-ui";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -74,8 +75,16 @@ export default async function AdminLeadsPage() {
           <TableBody>
             {leads.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center text-muted-foreground">
-                  Aucun lead pour le moment.
+                <TableCell colSpan={8} className="p-4">
+                  <BrandedMascotState
+                    kind="empty"
+                    eyebrow="Pipeline"
+                    title="Aucun lead pour le moment."
+                    description="Les demandes envoyées depuis le simulateur apparaîtront ici avec budget, surface et coordonnées."
+                    primaryAction={{ label: "Ouvrir le simulateur", href: "/simulateur" }}
+                    variant="inline"
+                    className="shadow-none"
+                  />
                 </TableCell>
               </TableRow>
             ) : (

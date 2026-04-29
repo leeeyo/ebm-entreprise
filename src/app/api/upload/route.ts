@@ -5,7 +5,7 @@ import { auth } from "@/auth";
 
 const ALLOWED_MIME_TYPES = new Set(["image/avif", "image/webp", "image/png", "image/jpeg"]);
 const MAX_FILE_SIZE = 6 * 1024 * 1024;
-const SCOPES = new Set(["services", "projects"]);
+const SCOPES = new Set(["services", "projects", "blogs"]);
 
 function safeSegment(value: string) {
   return value

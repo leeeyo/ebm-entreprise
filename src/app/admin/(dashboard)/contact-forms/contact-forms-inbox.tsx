@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Download, ExternalLink, Search } from "lucide-react";
 import { ContactEmailAction } from "@/components/admin/contact-email-action";
+import { BrandedMascotState } from "@/components/brand/mascot-state";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -212,8 +213,24 @@ export function ContactFormsInbox({ messages }: { messages: ContactSubmissionRec
             ))}
             {filteredMessages.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="py-8 text-center text-muted-foreground">
-                  Aucune demande ne correspond à votre recherche.
+                <TableCell colSpan={8} className="p-4">
+                  <BrandedMascotState
+                    kind={messages.length === 0 ? "contact" : "empty"}
+                    eyebrow="Inbox contact"
+                    title={
+                      messages.length === 0
+                        ? "Aucune demande reçue pour le moment."
+                        : "Aucune demande ne correspond à votre recherche."
+                    }
+                    description={
+                      messages.length === 0
+                        ? "Les messages envoyés depuis la page contact apparaîtront ici pour être triés, assignés et clôturés."
+                        : "Essayez un autre nom, email, sujet ou statut pour retrouver le bon dossier."
+                    }
+                    primaryAction={messages.length === 0 ? { label: "Voir la page contact", href: "/contact" } : undefined}
+                    variant="inline"
+                    className="shadow-none"
+                  />
                 </TableCell>
               </TableRow>
             ) : null}

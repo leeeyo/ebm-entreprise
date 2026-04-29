@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { CalendarDays, Tags } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -35,8 +36,19 @@ export default async function ActualiteDetailPage({ params }: Props) {
   return (
     <LazyMotionProvider>
       <article>
-        <header className="border-b bg-ebm-navy text-white">
-          <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
+        <header className="relative overflow-hidden border-b bg-ebm-navy text-white">
+          {post.coverImage?.src ? (
+            <Image
+              src={post.coverImage.src}
+              alt={post.coverImage.alt ?? post.title}
+              fill
+              priority
+              unoptimized
+              className="object-cover opacity-35"
+            />
+          ) : null}
+          <div className="absolute inset-0 bg-ebm-navy/78" />
+          <div className="relative mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
             <Link href="/actualites" className="text-sm text-white/70 transition hover:text-white">
               ← Actualités
             </Link>

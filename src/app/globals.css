@@ -211,6 +211,15 @@
   animation-delay: 0.9s;
 }
 
+/** Home hero only — barely softer underline so it stays on-brand without going grey. */
+.ebm-underline-draw.ebm-underline-hero-soft {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--ebm-orange) 92%, oklch(0.93 0.02 60)),
+    oklch(0.78 0.145 52)
+  );
+}
+
 /* ---------- Scroll cue ---------- */
 
 @keyframes ebm-scroll-cue {
@@ -252,6 +261,14 @@
   filter: blur(40px);
   will-change: transform;
   animation: ebm-mesh-drift 22s ease-in-out infinite alternate;
+}
+
+/** Home hero only — dialed-back warm blobs; cool blob unchanged. */
+.ebm-mesh.ebm-mesh--hero-soft {
+  background-image:
+    radial-gradient(40% 40% at 22% 28%, oklch(0.82 0.15 55 / 0.52), transparent 70%),
+    radial-gradient(36% 36% at 78% 68%, oklch(0.68 0.14 258 / 0.45), transparent 72%),
+    radial-gradient(30% 30% at 50% 85%, oklch(0.88 0.097 55 / 0.31), transparent 72%);
 }
 
 /* ---------- Infinite marquee ---------- */

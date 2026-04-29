@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Bell, CalendarDays, FileText } from "lucide-react";
 import { LazyMotionProvider } from "@/components/motion/lazy-motion-provider";
+import { BrandedMascotState } from "@/components/brand/mascot-state";
 import { CtaBand, PageHero, TrustStrip } from "@/components/marketing";
 import { Badge } from "@/components/ui/badge";
 import { listBlogPosts } from "@/lib/cms-content";
@@ -56,37 +58,50 @@ export default async function ActualitesPage() {
             <Link
               key={post.id}
               href={`/actualites/${post.slug}`}
-              className="group flex min-h-72 flex-col rounded-3xl border border-border/60 bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl"
+              className="group flex min-h-72 flex-col overflow-hidden rounded-3xl border border-border/60 bg-card shadow-sm transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl"
             >
-              <div className="mb-5 flex flex-wrap gap-2">
-                {(post.tags.length ? post.tags : ["Actualités"]).slice(0, 2).map((tag) => (
-                  <Badge key={tag} variant={index === 0 ? "default" : "outline"}>
-                    {tag}
-                  </Badge>
-                ))}
+              {post.coverImage?.src ? (
+                <Image
+                  src={post.coverImage.src}
+                  alt={post.coverImage.alt ?? post.title}
+                  width={900}
+                  height={520}
+                  unoptimized
+                  className="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              ) : null}
+              <div className="flex grow flex-col p-6">
+                <div className="mb-5 flex flex-wrap gap-2">
+                  {(post.tags.length ? post.tags : ["Actualités"]).slice(0, 2).map((tag) => (
+                    <Badge key={tag} variant={index === 0 ? "default" : "outline"}>
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+                <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+                  <CalendarDays className="size-3.5" />
+                  {formatDate(post.publishedAt)}
+                </p>
+                <h2 className="font-heading mt-4 text-2xl font-semibold tracking-tight">{post.title}</h2>
+                <p className="mt-4 line-clamp-4 text-sm leading-7 text-muted-foreground">{post.excerpt}</p>
+                <span className="mt-auto inline-flex items-center gap-2 pt-8 text-sm font-medium text-primary">
+                  Lire l'article
+                  <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
               </div>
-              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-                <CalendarDays className="size-3.5" />
-                {formatDate(post.publishedAt)}
-              </p>
-              <h2 className="font-heading mt-4 text-2xl font-semibold tracking-tight">{post.title}</h2>
-              <p className="mt-4 line-clamp-4 text-sm leading-7 text-muted-foreground">{post.excerpt}</p>
-              <span className="mt-auto inline-flex items-center gap-2 pt-8 text-sm font-medium text-primary">
-                Lire l'article
-                <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </span>
             </Link>
           ))}
         </div>
 
         {posts.length === 0 ? (
-          <div className="rounded-3xl border border-dashed bg-card p-10 text-center">
-            <FileText className="mx-auto size-10 text-primary" />
-            <h2 className="font-heading mt-4 text-2xl font-semibold">Aucune actualité publiée.</h2>
-            <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
-              Les articles passés en statut publié depuis l'administration apparaîtront automatiquement ici.
-            </p>
-          </div>
+          <BrandedMascotState
+            kind="empty"
+            eyebrow="Actualités"
+            title="Le carnet de chantier est encore vide."
+            description="Les articles passés en statut publié depuis l'administration apparaîtront automatiquement ici."
+            primaryAction={{ label: "Voir nos projets", href: "/projets" }}
+            variant="compact"
+          />
         ) : null}
 
         <div className="mt-12">

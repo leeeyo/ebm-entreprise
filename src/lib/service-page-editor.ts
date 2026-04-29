@@ -227,12 +227,13 @@ export function servicePayloadFromFormData(formData: FormData): ServicePageEdito
     const body = String(formData.get(`contentSections.${index}.body`) ?? "").trim();
     if (!title && !body) return null;
 
-    return {
-      eyebrow: String(formData.get(`contentSections.${index}.eyebrow`) ?? "").trim() || undefined,
+    const eyebrowRaw = String(formData.get(`contentSections.${index}.eyebrow`) ?? "").trim();
+    const base = {
       title,
       body,
       items: splitEditorLines(String(formData.get(`contentSections.${index}.items`) ?? "")),
     };
+    return eyebrowRaw ? { ...base, eyebrow: eyebrowRaw } : base;
   }).filter((section): section is ServiceContentSection => Boolean(section));
 
   const gallery = galleryPayloadFromFormData(formData);
