@@ -1,24 +1,9 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
 import { auth } from "@/auth";
-import { listServicePages, serializeServicePage, splitLines } from "@/lib/cms-content";
+import { listServicePages, serializeServicePage } from "@/lib/cms-content";
 import { connectDB } from "@/lib/db";
-import { CONTENT_STATUSES, ServicePage } from "@/models/ServicePage";
-
-const serviceSchema = z.object({
-  slug: z.string().trim().min(2),
-  navLabel: z.string().trim().min(2),
-  category: z.string().trim().optional(),
-  title: z.string().trim().min(2),
-  intro: z.string().trim().min(10),
-  bullets: z.string().default(""),
-  sections: z.string().default(""),
-  status: z.enum(CONTENT_STATUSES).default("published"),
-  seoTitle: z.string().trim().optional(),
-  seoDescription: z.string().trim().optional(),
-  ctaPrimaryLabel: z.string().trim().default("Demander un devis"),
-  ctaSecondaryLabel: z.string().trim().default("Lancer le simulateur"),
-});
+import { servicePayloadFromJson, servicePayloadToUpdate } from "@/lib/service-page-editor";
+import { ServicePage } from "@/models/ServicePage";
 
 export async function GET() {
   const session = await auth();
@@ -36,20 +21,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
 
-  const parsed = serviceSchema.safeParse(await req.json());
-  if (!parsed.success) {
+  const parsed = await req.json().then(servicePayloadFromJson).catch(() => null);
+  if (!parsed) {
     return NextResponse.json({ error: "Données invalides" }, { status: 400 });
   }
 
   await connectDB();
   const doc = await ServicePage.findOneAndUpdate(
-    { slug: parsed.data.slug },
+    { slug: parsed.slug },
     {
-      $set: {
-        ...parsed.data,
-        bullets: splitLines(parsed.data.bullets),
-        sections: splitLines(parsed.data.sections),
-      },
+      $set: servicePayloadToUpdate(parsed),
     },
     { upsert: true, returnDocument: "after" },
   );

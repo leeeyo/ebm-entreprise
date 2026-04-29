@@ -25,10 +25,10 @@ import {
   ImageBentoGrid,
   SectionHeading,
 } from "@/components/marketing";
-import { heroes, genericPageBento } from "@/content/media";
 import { genericServicePages } from "@/content/service-pages";
 import type { PageHeroProps } from "@/components/marketing";
 import type { ServicePageRecord } from "@/lib/cms-content";
+import { getDefaultServiceContentSections } from "@/lib/service-page-editor";
 
 const KEY_ICONS: Record<string, LucideIcon> = {
   "construction/immeubles-residences": Home,
@@ -51,27 +51,6 @@ const KEY_ICONS: Record<string, LucideIcon> = {
   "amenagements-exterieurs/pergola": Sparkles,
 };
 
-const KEY_HERO: Record<string, { src: string; alt: string }> = {
-  "construction/immeubles-residences": heroes.immeubles,
-  "renovation/maison-appartement": heroes.renovation,
-  "renovation/salle-de-bain": heroes.salleDeBain,
-  "fluide/chauffage": heroes.services,
-  "fluide/sanitaire": heroes.services,
-  "fluide/climatisation": heroes.services,
-  "electricite/courant-fort": heroes.services,
-  "electricite/courant-faible": heroes.services,
-  "electricite/maintenance-normes": heroes.services,
-  "menuiserie/aluminium": heroes.services,
-  "menuiserie/bois": heroes.services,
-  "menuiserie/peinture-decoratifs": heroes.services,
-  "menuiserie/etancheite-isolation": heroes.services,
-  "amenagements-exterieurs/terrasse": heroes.services,
-  "amenagements-exterieurs/jardin": heroes.services,
-  "amenagements-exterieurs/piscine": heroes.services,
-  "amenagements-exterieurs/abri-voiture": heroes.services,
-  "amenagements-exterieurs/pergola": heroes.services,
-};
-
 /** Three generic rotating icons for bullet rows without a dedicated icon. */
 const BULLET_ICON_ROTATION: LucideIcon[] = [CheckCircle2, TrendingUp, Sparkles];
 
@@ -81,14 +60,16 @@ export function GenericMarketingPage({ pageKey, page }: { pageKey: string; page?
     notFound();
   }
 
-  const hero: { src: string; alt: string } = KEY_HERO[pageKey] ?? heroes.services;
+  const hero = page?.heroImage?.src ? { src: page.heroImage.src, alt: page.heroImage.alt ?? data.title } : undefined;
   const primaryIcon = KEY_ICONS[pageKey] ?? CheckCircle2;
-  const bento = genericPageBento[pageKey];
   const primaryCtaLabel = page?.ctaPrimaryLabel ?? "Demander un devis";
   const secondaryCtaLabel = page?.ctaSecondaryLabel ?? "Lancer le simulateur";
+  const contentSections = page?.contentSections?.length ? page.contentSections : getDefaultServiceContentSections(pageKey, data.intro, data.bullets);
+  const galleryImages = page?.galleryImages ?? [];
+  const showGallery = page?.showImageGallery ?? galleryImages.length > 0;
 
   const heroProps: PageHeroProps = {
-    eyebrow: "Savoir-faire EBM",
+    eyebrow: page?.heroEyebrow ?? "Savoir-faire EBM",
     title: data.title,
     subtitle: data.intro,
     image: hero,
@@ -129,18 +110,52 @@ export function GenericMarketingPage({ pageKey, page }: { pageKey: string; page?
         </div>
       </section>
 
-      {bento && bento.length >= 5 ? (
+      {contentSections.length ? (
+        <section
+          className="cv-auto"
+          style={{ containIntrinsicSize: "auto 700px" }}
+        >
+          <SectionHeading
+            eyebrow={contentSections[0]?.eyebrow ?? "Méthode EBM"}
+            title={contentSections[0]?.title ?? "Une méthode claire pour chaque intervention."}
+            subtitle={contentSections[0]?.body ?? "Un cadrage technique, une exécution coordonnée et une réception documentée."}
+          />
+          {contentSections.length > 1 || contentSections.some((section) => section.items.length) ? (
+            <div className="mt-10 grid gap-5 md:grid-cols-2">
+              {contentSections.map((section) => (
+                <article key={section.title} className="rounded-3xl border border-border/60 bg-card/70 p-6 shadow-sm">
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">{section.eyebrow ?? "EBM"}</p>
+                  <h3 className="mt-3 font-heading text-xl font-semibold tracking-tight">{section.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-muted-foreground">{section.body}</p>
+                  {section.items.length ? (
+                    <ul className="mt-4 space-y-2 text-sm text-foreground/85">
+                      {section.items.map((item) => (
+                        <li key={item} className="flex gap-2">
+                          <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+
+      {showGallery && galleryImages && galleryImages.length > 0 ? (
         <section
           className="cv-auto"
           style={{ containIntrinsicSize: "auto 800px" }}
         >
           <SectionHeading
-            eyebrow="Aperçu"
-            title="En images"
-            subtitle="Des chantiers inspirés et des finitions soignées — un avant-goût de notre savoir-faire."
+            eyebrow={page?.galleryEyebrow ?? "Aperçu"}
+            title={page?.galleryTitle ?? "En images"}
+            subtitle={page?.gallerySubtitle ?? "Des chantiers inspirés et des finitions soignées — un avant-goût de notre savoir-faire."}
           />
           <div className="mt-10">
-            <ImageBentoGrid images={bento} />
+            <ImageBentoGrid images={galleryImages} />
           </div>
         </section>
       ) : null}

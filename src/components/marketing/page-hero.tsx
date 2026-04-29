@@ -56,7 +56,7 @@ function KineticHeading({ title, accent }: { title: string; accent?: string }) {
                   <span className="relative inline-block align-baseline">
                     <span className="relative z-10">{raw}</span>
                     <span
-                      className="ebm-underline-draw absolute inset-x-0 -bottom-[0.05em]"
+                      className="ebm-underline-draw absolute inset-x-0 bottom-[-0.05em]"
                       aria-hidden
                     />
                   </span>

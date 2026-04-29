@@ -14,7 +14,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { navSections, type NavChild, type NavSection } from "@/lib/navigation";
+import { navSections as defaultNavSections, type NavChild, type NavSection } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 import { MegaMenuContent } from "./mega-menu";
 import { MobileNav } from "./mobile-nav";
@@ -149,10 +149,12 @@ function NavLink({
 function DesktopNavMenu({
   id,
   triggerClass,
+  navSections,
   className,
 }: {
   id?: string;
   triggerClass: string;
+  navSections: NavSection[];
   className?: string;
 }) {
   const menuOpensOnHover = useSyncExternalStore(
@@ -308,7 +310,7 @@ function HeaderCtas({ ctaBase, showLogin }: { ctaBase: string; showLogin: boolea
   );
 }
 
-export function SiteHeader() {
+export function SiteHeader({ navSections = defaultNavSections }: { navSections?: NavSection[] }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
 
@@ -420,6 +422,7 @@ export function SiteHeader() {
             homeBlend
             focusRingHero={focusRingNav}
             focusRingSolid={focusRingNav}
+            navSections={navSections}
           />
         </div>
       </div>
@@ -436,6 +439,7 @@ export function SiteHeader() {
           <DesktopNavMenu
             id="navigation-principale"
             triggerClass={triggerClass}
+            navSections={navSections}
             className="flex h-full min-w-0 flex-1 items-stretch justify-center"
           />
         </div>

@@ -2,11 +2,11 @@ import { unstable_noStore as noStore } from "next/cache";
 import { connectDB } from "@/lib/db";
 import { contactContent } from "@/content/contact";
 import { genericServicePages } from "@/content/service-pages";
-import { navSections } from "@/lib/navigation";
+import type { EmbeddedGalleryImage } from "@/lib/embedded-gallery";
+import { getDefaultServicePage } from "@/lib/service-page-editor";
 import { projets as staticProjects } from "@/content/projets";
 import { getResidenceCover } from "@/content/residence-covers";
 import { BlogPost } from "@/models/BlogPost";
-import { ChantierAsset } from "@/models/ChantierAsset";
 import { ContactSubmission } from "@/models/ContactSubmission";
 import { FaqEntry } from "@/models/FaqEntry";
 import { Project } from "@/models/Project";
@@ -37,9 +37,17 @@ export type ServicePageRecord = {
   slug: string;
   navLabel: string;
   category?: string;
+  heroEyebrow: string;
+  heroImage?: { src?: string; alt?: string };
   title: string;
   intro: string;
   bullets: string[];
+  contentSections: { eyebrow?: string; title: string; body: string; items: string[] }[];
+  showImageGallery: boolean;
+  galleryEyebrow?: string;
+  galleryTitle?: string;
+  gallerySubtitle?: string;
+  galleryImages: EmbeddedGalleryImage[];
   sections: string[];
   faq: { question: string; answer: string }[];
   status: ContentStatus;
@@ -64,6 +72,11 @@ export type ProjectRecord = {
   status: ContentStatus;
   featured: boolean;
   coverImage?: { src?: string; alt?: string };
+  showImageGallery: boolean;
+  galleryEyebrow?: string;
+  galleryTitle?: string;
+  gallerySubtitle?: string;
+  galleryImages: EmbeddedGalleryImage[];
   seoTitle?: string;
   seoDescription?: string;
   sortOrder: number;
@@ -96,22 +109,6 @@ export type SiteSettingsRecord = {
   seoDescription: string;
   seoKeywords: string[];
   reassuranceItems: string[];
-};
-
-export type ChantierAssetRecord = {
-  id: string;
-  filename: string;
-  relativePath: string;
-  label?: string;
-  alt?: string;
-  caption?: string;
-  projectSlug?: string;
-  serviceSlug?: string;
-  gallery: string;
-  status: ContentStatus;
-  featured: boolean;
-  sortOrder: number;
-  createdAt?: string;
 };
 
 export type ContactSubmissionRecord = {
@@ -152,19 +149,23 @@ function splitLines(value: string) {
     .filter(Boolean);
 }
 
+function isUnsplashSrc(src?: string) {
+  return Boolean(src && /(^https?:)?\/\/images\.unsplash\.com\//i.test(src));
+}
+
+function sanitizeManagedImage<T extends { src?: string }>(image?: T) {
+  return image?.src && !isUnsplashSrc(image.src) ? image : undefined;
+}
+
+function sanitizeManagedGallery(images?: EmbeddedGalleryImage[]) {
+  return (images ?? []).filter((image) => image.src && !isUnsplashSrc(image.src));
+}
+
 export function splitCsv(value: string) {
   return value
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
-}
-
-function serviceNavMeta(slug: string) {
-  const children = navSections.flatMap((section) => section.children ?? []);
-  const publicHref = slug.startsWith("construction/") || slug.startsWith("renovation/")
-    ? `/${slug}`
-    : `/services/${slug}`;
-  return children.find((child) => child.href === publicHref);
 }
 
 export function serializeBlogPost(doc: DocumentLike<BlogPostRecord>): BlogPostRecord {
@@ -189,15 +190,24 @@ export function serializeBlogPost(doc: DocumentLike<BlogPostRecord>): BlogPostRe
 
 export function serializeServicePage(doc: DocumentLike<ServicePageRecord>): ServicePageRecord {
   const value = objectFromDoc(doc);
+  const defaults = getDefaultServicePage(value.slug);
   return {
     id: value._id.toString(),
     slug: value.slug,
-    navLabel: value.navLabel,
-    category: value.category,
+    navLabel: value.navLabel ?? defaults.navLabel,
+    category: value.category ?? defaults.category,
+    heroEyebrow: value.heroEyebrow ?? defaults.heroEyebrow,
+    heroImage: sanitizeManagedImage(value.heroImage),
     title: value.title,
     intro: value.intro,
-    bullets: value.bullets ?? [],
-    sections: value.sections ?? [],
+    bullets: value.bullets?.length ? value.bullets : defaults.bullets,
+    contentSections: value.contentSections?.length ? value.contentSections : defaults.contentSections,
+    showImageGallery: value.showImageGallery ?? defaults.showImageGallery,
+    galleryEyebrow: value.galleryEyebrow ?? defaults.galleryEyebrow,
+    galleryTitle: value.galleryTitle ?? defaults.galleryTitle,
+    gallerySubtitle: value.gallerySubtitle ?? defaults.gallerySubtitle,
+    galleryImages: sanitizeManagedGallery(value.galleryImages),
+    sections: value.sections ?? defaults.contentSections.map((section) => section.title),
     faq: value.faq ?? [],
     status: value.status,
     order: value.order ?? 0,
@@ -223,7 +233,12 @@ export function serializeProject(doc: DocumentLike<ProjectRecord>): ProjectRecor
     lots: value.lots,
     status: value.status,
     featured: Boolean(value.featured),
-    coverImage: value.coverImage,
+    coverImage: sanitizeManagedImage(value.coverImage),
+    showImageGallery: value.showImageGallery ?? true,
+    galleryEyebrow: value.galleryEyebrow ?? "Galerie",
+    galleryTitle: value.galleryTitle ?? "Quelques regards sur l'ouvrage.",
+    gallerySubtitle: value.gallerySubtitle ?? "Structures, volumes, finitions — la réalité du chantier en images.",
+    galleryImages: sanitizeManagedGallery(value.galleryImages),
     seoTitle: value.seoTitle,
     seoDescription: value.seoDescription,
     sortOrder: value.sortOrder ?? 0,
@@ -265,25 +280,6 @@ export function serializeSiteSettings(doc: DocumentLike<SiteSettingsRecord>): Si
   };
 }
 
-export function serializeChantierAsset(doc: DocumentLike<ChantierAssetRecord>): ChantierAssetRecord {
-  const value = objectFromDoc(doc);
-  return {
-    id: value._id.toString(),
-    filename: value.filename,
-    relativePath: value.relativePath,
-    label: value.label,
-    alt: value.alt,
-    caption: value.caption,
-    projectSlug: value.projectSlug,
-    serviceSlug: value.serviceSlug,
-    gallery: value.gallery ?? "chantiers",
-    status: value.status,
-    featured: Boolean(value.featured),
-    sortOrder: value.sortOrder ?? 0,
-    createdAt: dateString(value.createdAt),
-  };
-}
-
 export function serializeContactSubmission(doc: DocumentLike<ContactSubmissionRecord>): ContactSubmissionRecord {
   const value = objectFromDoc(doc);
   return {
@@ -305,24 +301,24 @@ export function serializeContactSubmission(doc: DocumentLike<ContactSubmissionRe
 
 export async function ensureServicePages() {
   await connectDB();
-  const count = await ServicePage.countDocuments();
-  if (count > 0) return;
+  const slugs = Array.from(new Set(["construction/villa", ...Object.keys(genericServicePages)]));
 
-  await ServicePage.insertMany(
-    Object.entries(genericServicePages).map(([slug, page], order) => {
-      const navMeta = serviceNavMeta(slug);
+  await ServicePage.bulkWrite(
+    slugs.map((slug, order) => {
+      const defaults = getDefaultServicePage(slug);
       return {
-        slug,
-        navLabel: navMeta?.title ?? page.title,
-        category: navMeta?.category,
-        title: page.title,
-        intro: page.intro,
-        bullets: page.bullets,
-        sections: ["Hero technique", "Points clés", "Preuves chantier", "FAQ service", "CTA devis"],
-        status: "published",
-        order,
-        seoTitle: `${page.title} | EBM Ben Mokhtar`,
-        seoDescription: page.intro,
+        updateOne: {
+          filter: { slug },
+          update: {
+            $setOnInsert: {
+              ...defaults,
+              sections: defaults.contentSections.map((section) => section.title),
+              status: "published",
+              order,
+            },
+          },
+          upsert: true,
+        },
       };
     }),
   );
@@ -361,6 +357,11 @@ export async function ensureProjects() {
         status: "published",
         featured: sortOrder < 3,
         coverImage: cover ?? undefined,
+        showImageGallery: true,
+        galleryEyebrow: "Galerie",
+        galleryTitle: "Quelques regards sur l'ouvrage.",
+        gallerySubtitle: "Structures, volumes, finitions — la réalité du chantier en images.",
+        galleryImages: [],
         seoTitle: `${project.title} | Réalisation EBM`,
         seoDescription: project.shortDescription,
         sortOrder,
@@ -483,14 +484,6 @@ export async function ensureSiteSettings() {
     });
   }
   return serializeSiteSettings(doc);
-}
-
-export async function listChantierAssets({ publishedOnly = false } = {}) {
-  noStore();
-  await connectDB();
-  const query = publishedOnly ? { status: "published" } : {};
-  const docs = await ChantierAsset.find(query).sort({ sortOrder: 1, createdAt: -1 });
-  return docs.map(serializeChantierAsset);
 }
 
 export async function listContactSubmissions() {

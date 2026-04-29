@@ -3,7 +3,6 @@ import type { ComponentType, ReactNode } from "react";
 import {
   BookOpenText,
   BriefcaseBusiness,
-  Building2,
   FileQuestion,
   FolderKanban,
   Home,
@@ -15,12 +14,12 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signOutAction } from "@/app/admin/actions";
+import Image from "next/image";
 
 const primaryNav = [
   { label: "Vue d'ensemble", href: "/admin", icon: Home },
   { label: "Leads simulateur", href: "/admin/leads", icon: Inbox },
   { label: "Demandes contact", href: "/admin/contact-forms", icon: BookOpenText },
-  { label: "Chantiers", href: "/admin/chantiers", icon: Building2 },
   { label: "Tarification", href: "/admin/settings", icon: SlidersHorizontal },
 ] as const;
 
@@ -39,18 +38,13 @@ export default function AdminDashboardLayout({ children }: { children: ReactNode
         <div className="flex h-full flex-col">
           <div className="border-b border-white/10 p-6">
             <Link href="/admin" className="flex items-center gap-3">
-              <span className="grid size-11 place-items-center rounded-2xl bg-primary font-heading text-lg font-semibold">
-                E
-              </span>
-              <span>
-                <span className="block font-heading text-lg font-semibold tracking-tight">EBM Admin</span>
-                <span className="block text-xs uppercase tracking-[0.28em] text-white/45">Control room</span>
-              </span>
+              <Image src="/logo-ebm.png" alt="EBM Ben Mokhtar" width={44} height={44} />
+              <span className="font-heading text-lg font-semibold tracking-tight">قاعة العمليات</span>
             </Link>
           </div>
           <div className="flex-1 space-y-7 overflow-y-auto p-4">
             <AdminNavGroup title="Opérations" items={primaryNav} />
-            <AdminNavGroup title="Website settings" items={contentNav} />
+            <AdminNavGroup title="Paramètres du site" items={contentNav} />
           </div>
           <div className="space-y-3 border-t border-white/10 p-4">
             <Button asChild variant="outline" className="w-full border-white/15 bg-white/5 text-white hover:bg-white/10">

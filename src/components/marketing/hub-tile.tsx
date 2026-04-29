@@ -12,7 +12,7 @@ export type HubTileProps = {
   href: string;
   title: string;
   description: string;
-  image: { src: string; alt: string };
+  image?: { src: string; alt: string };
   /** Optional meta tag (e.g. "Neuf", "Rénovation"). */
   tag?: string;
   /**
@@ -64,17 +64,21 @@ export function HubTile({
       )}
     >
       <div ref={mediaRef} className="relative aspect-16/10 overflow-hidden sm:aspect-video">
-        <m.div className="absolute inset-[-6%]" style={{ y }}>
-          <Image
-            src={image.src}
-            alt={image.alt}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw"
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-            loading={eager ? "eager" : "lazy"}
-            priority={eager}
-          />
-        </m.div>
+        {image ? (
+          <m.div className="absolute inset-[-6%]" style={{ y }}>
+            <Image
+              src={image.src}
+              alt={image.alt}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+              loading={eager ? "eager" : "lazy"}
+              priority={eager}
+            />
+          </m.div>
+        ) : (
+          <div className="absolute inset-0 bg-linear-to-br from-zinc-300 via-zinc-600 to-zinc-950" />
+        )}
         <div
           className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent"
           aria-hidden

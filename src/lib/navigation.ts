@@ -31,6 +31,11 @@ export type NavSection = {
   children?: NavChild[];
 };
 
+type ProjectNavItem = {
+  slug: string;
+  title: string;
+};
+
 export const navSections: NavSection[] = [
   { title: "Accueil", href: "/" },
   {
@@ -123,3 +128,19 @@ export const navSections: NavSection[] = [
   { title: "Actualités", href: "/actualites" },
   { title: "Contact", href: "/contact" },
 ];
+
+export function navSectionsWithProjects(projects: ProjectNavItem[]): NavSection[] {
+  const projectChildren = projects.map((project) => ({
+    title: project.title,
+    href: `/projets/${project.slug}`,
+  }));
+
+  return navSections.map((section) =>
+    section.title === "Nos projets"
+      ? {
+          ...section,
+          children: projectChildren.length ? projectChildren : section.children,
+        }
+      : section,
+  );
+}

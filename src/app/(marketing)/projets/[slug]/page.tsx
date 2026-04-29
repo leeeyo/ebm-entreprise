@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowRight, CalendarDays, Hammer, MapPin } from "lucide-react";
+import { ArrowRight, CalendarDays, Hammer, MapPin, RulerIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LazyMotionProvider } from "@/components/motion/lazy-motion-provider";
@@ -10,8 +10,7 @@ import {
   ProjetCover,
   SectionHeading,
 } from "@/components/marketing";
-import { bento } from "@/content/media";
-import { getProjectBySlug, listChantierAssets, listProjects } from "@/lib/cms-content";
+import { getProjectBySlug, listProjects } from "@/lib/cms-content";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -37,13 +36,8 @@ export default async function ProjetDetailPage({ params }: Props) {
   const cover = p.coverImage?.src ? { src: p.coverImage.src, alt: p.coverImage.alt ?? p.title } : null;
   const next = projects[(idx + 1) % projects.length];
   const nextCover = next?.coverImage?.src ? { src: next.coverImage.src, alt: next.coverImage.alt ?? next.title } : null;
-  const chantierAssets = (await listChantierAssets({ publishedOnly: true })).filter((asset) => asset.projectSlug === p.slug);
-  const galleryImages = chantierAssets.length >= 1
-    ? chantierAssets.map((asset) => ({
-        src: `/api/uploads/${asset.relativePath}`,
-        alt: asset.alt || asset.label || `${p.title} — chantier EBM`,
-      }))
-    : bento.projetGallery;
+  const galleryImages = p.galleryImages;
+  const showGallery = p.showImageGallery ?? galleryImages.length > 0;
 
   return (
     <LazyMotionProvider>
@@ -55,7 +49,7 @@ export default async function ProjetDetailPage({ params }: Props) {
           breadcrumb={{ href: "/projets", label: "Nos projets" }}
         />
       ) : (
-        <section className="flex min-h-[22rem] items-end bg-linear-to-br from-zinc-300 to-zinc-700 px-4 pb-10 sm:px-6 dark:from-zinc-800 dark:to-zinc-950">
+        <section className="flex min-h-88 items-end bg-linear-to-br from-zinc-300 to-zinc-700 px-4 pb-10 sm:px-6 dark:from-zinc-800 dark:to-zinc-950">
           <div className="mx-auto w-full max-w-6xl">
             <Link
               href="/projets"
@@ -78,9 +72,9 @@ export default async function ProjetDetailPage({ params }: Props) {
           <div className="min-w-0 space-y-6 text-pretty leading-relaxed text-foreground/90">
             <p className="text-lg text-muted-foreground">{p.shortDescription}</p>
             <p>{p.body || "Chantier résidentiel accompagné par EBM Ben Mokhtar, avec un pilotage complet du gros œuvre au second œuvre."}</p>
-            {chantierAssets.length === 0 ? (
+            {p.galleryImages.length === 0 && showGallery ? (
               <p className="text-sm text-muted-foreground">
-                Ajoutez des médias publiés liés à ce projet depuis l'administration pour remplacer la galerie par défaut.
+                Ajoutez des images intégrées à ce projet depuis l&apos;administration pour remplacer la galerie par défaut.
               </p>
             ) : null}
           </div>
@@ -128,9 +122,23 @@ export default async function ProjetDetailPage({ params }: Props) {
                   </span>
                   <div>
                     <dt className="text-xs uppercase tracking-wider text-muted-foreground">
-                      Statut
+                      Année
                     </dt>
-                    <dd className="mt-0.5 font-medium text-foreground">{p.status === "published" ? "Publié" : "Brouillon"}</dd>
+                    <dd className="mt-0.5 font-medium text-foreground">{p.year}</dd>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span
+                    className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20"
+                    aria-hidden
+                  >
+                    <RulerIcon className="size-4" />
+                  </span>
+                  <div>
+                    <dt className="text-xs uppercase tracking-wider text-muted-foreground">
+                      Surface
+                    </dt>
+                    <dd className="mt-0.5 font-medium text-foreground">{p.surface}</dd>
                   </div>
                 </div>
               </dl>
@@ -145,21 +153,23 @@ export default async function ProjetDetailPage({ params }: Props) {
         </div>
       </section>
 
-      <section
-        className="cv-auto border-t bg-muted/10 py-16 sm:py-20"
-        style={{ containIntrinsicSize: "auto 900px" }}
-      >
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <SectionHeading
-            eyebrow="Galerie"
-            title="Quelques regards sur l'ouvrage."
-            subtitle="Structures, volumes, finitions — la réalité du chantier en images."
-          />
-          <div className="mt-10">
-            <ImageBentoGrid images={galleryImages} />
+      {showGallery && galleryImages.length > 0 ? (
+        <section
+          className="cv-auto border-t bg-muted/10 py-16 sm:py-20"
+          style={{ containIntrinsicSize: "auto 900px" }}
+        >
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <SectionHeading
+              eyebrow={p.galleryEyebrow ?? "Galerie"}
+              title={p.galleryTitle ?? "Quelques regards sur l'ouvrage."}
+              subtitle={p.gallerySubtitle ?? "Structures, volumes, finitions — la réalité du chantier en images."}
+            />
+            <div className="mt-10">
+              <ImageBentoGrid images={galleryImages} />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       {next ? (
         <section
@@ -186,7 +196,7 @@ export default async function ProjetDetailPage({ params }: Props) {
             />
             <Link
               href="/projets"
-              className="group relative flex min-h-[18rem] items-end overflow-hidden rounded-3xl border border-border/55 bg-muted/40 p-8 transition-colors duration-300 hover:border-primary/30 sm:min-h-0"
+              className="group relative flex min-h-72 items-end overflow-hidden rounded-3xl border border-border/55 bg-muted/40 p-8 transition-colors duration-300 hover:border-primary/30 sm:min-h-0"
             >
               <div className="relative z-10">
                 <p className="text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-primary">

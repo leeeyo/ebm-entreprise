@@ -7,7 +7,7 @@ import {
   PageHero,
   SectionHeading,
 } from "@/components/marketing";
-import { bento, heroes } from "@/content/media";
+import { getPublishedServicePage, type ServicePageRecord } from "@/lib/cms-content";
 
 export const metadata: Metadata = {
   title: "Construction",
@@ -15,15 +15,20 @@ export const metadata: Metadata = {
     "Construction de villas et programmes immeubles & résidences en Tunisie — méthode EBM Ben Mokhtar.",
 };
 
+function dashboardImage(page: ServicePageRecord | null) {
+  const image = page?.heroImage?.src ? page.heroImage : page?.galleryImages[0];
+  return image?.src ? { src: image.src, alt: image.alt ?? page?.title ?? "Image EBM Ben Mokhtar" } : undefined;
+}
+
 const tiles = [
   {
+    slug: "construction/villa",
     href: "/construction/villa",
     title: "Construction villa",
     description:
       "Du gros œuvre aux finitions : villas sur mesure, suivi de chantier et références qualité.",
     tag: "Neuf résidentiel",
     icon: <HomeIcon className="size-5" />,
-    image: bento.villa[0],
     bullets: [
       "Étude et optimisation budgétaire",
       "Gros œuvre & second œuvre",
@@ -32,13 +37,13 @@ const tiles = [
     ],
   },
   {
+    slug: "construction/immeubles-residences",
     href: "/construction/immeubles-residences",
     title: "Immeubles & résidences",
     description:
       "Programmes collectifs, coordination technique et livraison conforme aux exigences du projet.",
     tag: "Programmes collectifs",
     icon: <Building2 className="size-5" />,
-    image: bento.immeubles[0],
     bullets: [
       "Structuration multi-logements",
       "Interfaces bureaux de contrôle",
@@ -48,7 +53,9 @@ const tiles = [
   },
 ];
 
-export default function ConstructionHubPage() {
+export default async function ConstructionHubPage() {
+  const servicePages = await Promise.all(tiles.map((tile) => getPublishedServicePage(tile.slug)));
+
   return (
     <LazyMotionProvider>
       <PageHero
@@ -56,7 +63,6 @@ export default function ConstructionHubPage() {
         title="Bâtir neuf, avec rigueur."
         accent="rigueur."
         subtitle="EBM accompagne vos projets neufs : villas individuelles et programmes résidentiels, avec une exécution structurée du gros œuvre au second œuvre."
-        image={heroes.construction}
         ctas={[
           { label: "Lancer votre projet", href: "/contact" },
           { label: "Estimer mon budget", href: "/simulateur", variant: "outline" },
@@ -74,7 +80,7 @@ export default function ConstructionHubPage() {
         />
         <div className="mt-10 grid gap-6 lg:grid-cols-2 lg:gap-8">
           {tiles.map((t, i) => (
-            <HubTile key={t.href} {...t} eager={i === 0} />
+            <HubTile key={t.href} {...t} image={dashboardImage(servicePages[i])} eager={i === 0} />
           ))}
         </div>
       </section>

@@ -7,7 +7,7 @@ import {
   PageHero,
   SectionHeading,
 } from "@/components/marketing";
-import { bento, heroes } from "@/content/media";
+import { listServicePages, type ServicePageRecord } from "@/lib/cms-content";
 import { groupNavChildren, navSections } from "@/lib/navigation";
 
 export const metadata: Metadata = {
@@ -21,13 +21,6 @@ const PILLAR_ICONS: Record<string, LucideIcon> = {
   Électricité: Zap,
   Menuiserie: Hammer,
   "Aménagements extérieurs": Palmtree,
-};
-
-const PILLAR_IMAGES: Record<string, { src: string; alt: string }> = {
-  Fluide: bento.services[1],
-  Électricité: bento.services[0],
-  Menuiserie: bento.services[2],
-  "Aménagements extérieurs": bento.services[4],
 };
 
 const PILLAR_HREF: Record<string, string> = {
@@ -48,10 +41,21 @@ const PILLAR_DESCRIPTION: Record<string, string> = {
     "Terrasses, jardins, piscines, pergolas et abris — des espaces extérieurs pensés pour durer.",
 };
 
-export default function ServicesHubPage() {
+function slugFromHref(href: string) {
+  return href.replace(/^\/services\//, "").replace(/^\//, "");
+}
+
+function dashboardImage(page?: ServicePageRecord) {
+  const image = page?.heroImage?.src ? page.heroImage : page?.galleryImages[0];
+  return image?.src ? { src: image.src, alt: image.alt ?? page?.title ?? "Image EBM Ben Mokhtar" } : undefined;
+}
+
+export default async function ServicesHubPage() {
   const section = navSections.find((s) => s.title === "Services");
   const children = section?.children ?? [];
   const groups = groupNavChildren(children);
+  const servicePages = await listServicePages();
+  const servicesBySlug = new Map(servicePages.map((page) => [page.slug, page]));
 
   return (
     <LazyMotionProvider>
@@ -60,7 +64,6 @@ export default function ServicesHubPage() {
         title="Nos métiers, votre chantier."
         accent="chantier."
         subtitle="Quatre pôles techniques coordonnés sur vos projets neufs ou de rénovation — exécutés par nos équipes internes."
-        image={heroes.services}
         ctas={[
           { label: "Parler à un expert", href: "/contact" },
           { label: "Estimer mon projet", href: "/simulateur", variant: "outline" },
@@ -80,7 +83,9 @@ export default function ServicesHubPage() {
           {groups
             .filter((g) => g.label)
             .map((g, i) => {
-              const image = PILLAR_IMAGES[g.label] ?? bento.services[0];
+              const imageSource = g.items
+                .map((item) => servicesBySlug.get(slugFromHref(item.href)))
+                .find((page) => page?.heroImage?.src || page?.galleryImages.length);
               const Icon = PILLAR_ICONS[g.label];
               return (
                 <HubTile
@@ -88,7 +93,7 @@ export default function ServicesHubPage() {
                   href={PILLAR_HREF[g.label] ?? "/services"}
                   title={g.label}
                   description={PILLAR_DESCRIPTION[g.label] ?? ""}
-                  image={image}
+                  image={dashboardImage(imageSource)}
                   tag={`${g.items.length} prestations`}
                   icon={Icon ? <Icon className="size-5" /> : undefined}
                   bullets={g.items.map((it) => it.title)}

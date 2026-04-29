@@ -7,7 +7,7 @@ import {
   PageHero,
   SectionHeading,
 } from "@/components/marketing";
-import { bento, heroes } from "@/content/media";
+import { getPublishedServicePage, type ServicePageRecord } from "@/lib/cms-content";
 
 export const metadata: Metadata = {
   title: "Rénovation",
@@ -15,15 +15,20 @@ export const metadata: Metadata = {
     "Rénovation maison, appartement et salles de bain en Tunisie — diagnostic, phasage et finitions EBM Ben Mokhtar.",
 };
 
+function dashboardImage(page: ServicePageRecord | null) {
+  const image = page?.heroImage?.src ? page.heroImage : page?.galleryImages[0];
+  return image?.src ? { src: image.src, alt: image.alt ?? page?.title ?? "Image EBM Ben Mokhtar" } : undefined;
+}
+
 const tiles = [
   {
+    slug: "renovation/maison-appartement",
     href: "/renovation/maison-appartement",
     title: "Maison & appartement",
     description:
       "Réhabilitation complète ou partielle : restructuration, second œuvre et respect de l'existant.",
     tag: "Rénovation globale",
     icon: <Home className="size-5" />,
-    image: bento.maisonAppartement[0],
     bullets: [
       "Diagnostic et phasage",
       "Coordination multi-corps d'état",
@@ -32,13 +37,13 @@ const tiles = [
     ],
   },
   {
+    slug: "renovation/salle-de-bain",
     href: "/renovation/salle-de-bain",
     title: "Salle de bain",
     description:
       "Étanchéité, réseaux, agencement et finitions pour une salle de bain durable et confortable.",
     tag: "Pièce par pièce",
     icon: <Droplets className="size-5" />,
-    image: bento.salleDeBain[0],
     bullets: [
       "Mise aux normes",
       "Étanchéité & réseaux",
@@ -48,7 +53,9 @@ const tiles = [
   },
 ];
 
-export default function RenovationHubPage() {
+export default async function RenovationHubPage() {
+  const servicePages = await Promise.all(tiles.map((tile) => getPublishedServicePage(tile.slug)));
+
   return (
     <LazyMotionProvider>
       <PageHero
@@ -56,7 +63,6 @@ export default function RenovationHubPage() {
         title="Rénover sans compromis."
         accent="compromis."
         subtitle="Valorisez votre bien avec des travaux maîtrisés : nous sécurisons l'existant, phasons les interventions et coordonnons les corps de métier."
-        image={heroes.renovation}
         ctas={[
           { label: "Parler de mon projet", href: "/contact" },
           { label: "Estimer mon budget", href: "/simulateur", variant: "outline" },
@@ -74,7 +80,7 @@ export default function RenovationHubPage() {
         />
         <div className="mt-10 grid gap-6 lg:grid-cols-2 lg:gap-8">
           {tiles.map((t, i) => (
-            <HubTile key={t.href} {...t} eager={i === 0} />
+            <HubTile key={t.href} {...t} image={dashboardImage(servicePages[i])} eager={i === 0} />
           ))}
         </div>
       </section>

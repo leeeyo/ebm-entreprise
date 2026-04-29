@@ -16,41 +16,48 @@ import {
   faqConstructionVilla,
   suiviSection,
 } from "@/content/construction-villa";
-import { bento, heroes } from "@/content/media";
+import { getPublishedServicePage } from "@/lib/cms-content";
+import { getDefaultServiceContentSections } from "@/lib/service-page-editor";
 
-export const metadata: Metadata = {
-  title: "Construction villa",
-  description:
-    "Construction de villa en Tunisie : méthode EBM, gros œuvre, second œuvre et finitions — entreprise BTP Ben Mokhtar.",
-};
+const PAGE_KEY = "construction/villa";
 
-// Pair each chantier step with a matching visual from the villa bento set.
-const STEP_IMAGES = [
-  // TODO: replace with real chantier photos
-  bento.villa[2], // étude / plan
-  bento.immeubles[3], // gros œuvre
-  bento.villa[3], // second œuvre
-  bento.villa[1], // finitions / salon
-];
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getPublishedServicePage(PAGE_KEY);
+  return {
+    title: page?.seoTitle ?? page?.title ?? "Construction villa",
+    description:
+      page?.seoDescription ??
+      page?.intro ??
+      "Construction de villa en Tunisie : méthode EBM, gros œuvre, second œuvre et finitions — entreprise BTP Ben Mokhtar.",
+  };
+}
 
-export default function ConstructionVillaPage() {
-  const steps = chantierSteps.map((s, idx) => ({
+export default async function ConstructionVillaPage() {
+  const page = await getPublishedServicePage(PAGE_KEY);
+  const dashboardImages = page?.galleryImages ?? [];
+  const contentSections = page?.contentSections?.length
+    ? page.contentSections
+    : getDefaultServiceContentSections(PAGE_KEY, constructionVillaAccroche, chantierSteps.map((step) => step.title));
+  const steps = contentSections.map((s, idx) => ({
     title: s.title,
     body: s.body,
-    image: STEP_IMAGES[idx] ?? bento.villa[0],
+    image: dashboardImages[idx],
   }));
+  const heroImage = page?.heroImage?.src ? { src: page.heroImage.src, alt: page.heroImage.alt ?? page.title } : undefined;
+  const galleryImages = dashboardImages;
+  const showGallery = page?.showImageGallery ?? galleryImages.length > 0;
 
   return (
     <LazyMotionProvider>
       <PageHero
-        eyebrow={constructionVillaHero.title}
-        title={constructionVillaHero.tagline}
+        eyebrow={page?.heroEyebrow ?? constructionVillaHero.title}
+        title={page?.title ?? constructionVillaHero.tagline}
         accent="Rigueur."
-        subtitle={constructionVillaAccroche}
-        image={heroes.villa}
+        subtitle={page?.intro ?? constructionVillaAccroche}
+        image={heroImage}
         ctas={[
-          { label: constructionVillaHero.cta, href: "/contact" },
-          { label: "Lancer le simulateur", href: "/simulateur", variant: "outline" },
+          { label: page?.ctaPrimaryLabel ?? constructionVillaHero.cta, href: "/contact" },
+          { label: page?.ctaSecondaryLabel ?? "Lancer le simulateur", href: "/simulateur", variant: "outline" },
         ]}
       />
 
@@ -68,21 +75,23 @@ export default function ConstructionVillaPage() {
         </div>
       </section>
 
-      <section
-        className="cv-auto border-t bg-muted/10 py-16 sm:py-20"
-        style={{ containIntrinsicSize: "auto 900px" }}
-      >
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <SectionHeading
-            eyebrow="En images"
-            title="Des villas pensées pour durer."
-            subtitle="Volumes, matériaux, finitions — un aperçu de ce que nous construisons."
-          />
-          <div className="mt-10">
-            <ImageBentoGrid images={bento.villa} />
+      {showGallery && galleryImages.length > 0 ? (
+        <section
+          className="cv-auto border-t bg-muted/10 py-16 sm:py-20"
+          style={{ containIntrinsicSize: "auto 900px" }}
+        >
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <SectionHeading
+              eyebrow={page?.galleryEyebrow ?? "En images"}
+              title={page?.galleryTitle ?? "Des villas pensées pour durer."}
+              subtitle={page?.gallerySubtitle ?? "Volumes, matériaux, finitions — un aperçu de ce que nous construisons."}
+            />
+            <div className="mt-10">
+              <ImageBentoGrid images={galleryImages} />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <section
         className="cv-auto mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20"

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 export type ShowcaseStep = {
   title: string;
   body: string;
-  image: { src: string; alt: string };
+  image?: { src: string; alt: string };
 };
 
 export type StickyShowcaseProps = {
@@ -54,56 +54,59 @@ export function StickyShowcase({
   }, [motionOk, steps.length]);
 
   const flip = imageSide === "right";
-  const currentImage = steps[active]?.image ?? steps[0].image;
+  const currentImage = steps[active]?.image ?? steps.find((step) => step.image)?.image;
 
   return (
     <div
       className={cn(
-        "grid gap-10 md:grid-cols-[minmax(0,0.55fr)_minmax(0,1fr)] md:gap-14",
-        flip && "md:grid-cols-[minmax(0,1fr)_minmax(0,0.55fr)]",
+        "grid gap-10 md:gap-14",
+        currentImage && "md:grid-cols-[minmax(0,0.55fr)_minmax(0,1fr)]",
+        currentImage && flip && "md:grid-cols-[minmax(0,1fr)_minmax(0,0.55fr)]",
         className,
       )}
     >
       {/* Sticky image column — desktop only */}
-      <div className={cn("hidden md:block", flip && "md:order-2")}>
-        <div className="sticky top-24">
-          <div className="relative aspect-4/5 overflow-hidden rounded-3xl border border-border/55 bg-muted shadow-sm">
-            <AnimatePresence mode="popLayout">
-              <m.div
-                key={currentImage.src}
-                initial={{ opacity: 0, scale: 1.04 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.02 }}
-                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute inset-0"
+      {currentImage ? (
+        <div className={cn("hidden md:block", flip && "md:order-2")}>
+          <div className="sticky top-24">
+            <div className="relative aspect-4/5 overflow-hidden rounded-3xl border border-border/55 bg-muted shadow-sm">
+              <AnimatePresence mode="popLayout">
+                <m.div
+                  key={currentImage.src}
+                  initial={{ opacity: 0, scale: 1.04 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.02 }}
+                  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={currentImage.src}
+                    alt={currentImage.alt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 40vw"
+                    className="object-cover"
+                    loading="lazy"
+                  />
+                </m.div>
+              </AnimatePresence>
+              <div
+                className="pointer-events-none absolute inset-x-0 bottom-0 flex gap-1.5 p-4"
+                aria-hidden
               >
-                <Image
-                  src={currentImage.src}
-                  alt={currentImage.alt}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 40vw"
-                  className="object-cover"
-                  loading="lazy"
-                />
-              </m.div>
-            </AnimatePresence>
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 flex gap-1.5 p-4"
-              aria-hidden
-            >
-              {steps.map((_, i) => (
-                <span
-                  key={i}
-                  className={cn(
-                    "h-1 flex-1 rounded-full bg-white/35 transition-all duration-500",
-                    i === active && "bg-white",
-                  )}
-                />
-              ))}
+                {steps.map((_, i) => (
+                  <span
+                    key={i}
+                    className={cn(
+                      "h-1 flex-1 rounded-full bg-white/35 transition-all duration-500",
+                      i === active && "bg-white",
+                    )}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : null}
 
       {/* Steps column */}
       <ol className={cn("space-y-8 md:space-y-16", flip && "md:order-1")}>
@@ -134,18 +137,20 @@ export function StickyShowcase({
                       {step.body}
                     </p>
                     {/* Inline image for mobile layout */}
-                    <div className="mt-5 md:hidden">
-                      <div className="relative aspect-4/3 overflow-hidden rounded-2xl border border-border/55 bg-muted">
-                        <Image
-                          src={step.image.src}
-                          alt={step.image.alt}
-                          fill
-                          sizes="100vw"
-                          className="object-cover"
-                          loading="lazy"
-                        />
+                    {step.image ? (
+                      <div className="mt-5 md:hidden">
+                        <div className="relative aspect-4/3 overflow-hidden rounded-2xl border border-border/55 bg-muted">
+                          <Image
+                            src={step.image.src}
+                            alt={step.image.alt}
+                            fill
+                            sizes="100vw"
+                            className="object-cover"
+                            loading="lazy"
+                          />
+                        </div>
                       </div>
-                    </div>
+                    ) : null}
                   </div>
                 </div>
               </Reveal>

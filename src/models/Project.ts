@@ -5,6 +5,7 @@ const ImageSchema = new Schema(
   {
     src: { type: String, trim: true },
     alt: { type: String, trim: true },
+    caption: { type: String, trim: true },
   },
   { _id: false },
 );
@@ -23,6 +24,11 @@ const ProjectSchema = new Schema(
     status: { type: String, enum: CONTENT_STATUSES, default: "published", index: true },
     featured: { type: Boolean, default: false },
     coverImage: ImageSchema,
+    showImageGallery: { type: Boolean, default: true },
+    galleryEyebrow: { type: String, default: "Galerie", trim: true },
+    galleryTitle: { type: String, default: "Quelques regards sur l'ouvrage.", trim: true },
+    gallerySubtitle: { type: String, trim: true },
+    galleryImages: [ImageSchema],
     seoTitle: { type: String, trim: true },
     seoDescription: { type: String, trim: true },
     sortOrder: { type: Number, default: 0 },

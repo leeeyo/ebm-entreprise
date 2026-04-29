@@ -14,20 +14,19 @@ import {
 import { AdminMetricCard, AdminPageHeader, AdminWorkspaceCard, EditorialPanel } from "@/components/admin/admin-ui";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { listBlogPosts, listChantierAssets, listContactSubmissions, listFaqEntries, listProjects, listServicePages } from "@/lib/cms-content";
+import { listBlogPosts, listContactSubmissions, listFaqEntries, listProjects, listServicePages } from "@/lib/cms-content";
 import { connectDB } from "@/lib/db";
 import { Lead } from "@/models/Lead";
 
 export default async function AdminHomePage() {
   await connectDB();
-  const [leadCount, contacts, posts, services, projects, faqs, assets] = await Promise.all([
+  const [leadCount, contacts, posts, services, projects, faqs] = await Promise.all([
     Lead.countDocuments(),
     listContactSubmissions(),
     listBlogPosts(),
     listServicePages(),
     listProjects(),
     listFaqEntries(),
-    listChantierAssets(),
   ]);
   const openContacts = contacts.filter((item) => item.status !== "closed").length;
   const publishedPosts = posts.filter((post) => post.status === "published").length;
@@ -36,6 +35,9 @@ export default async function AdminHomePage() {
     ...projects.filter((project) => project.status === "published"),
     ...faqs.filter((faq) => faq.status === "published"),
   ].length;
+  const embeddedImageCount =
+    services.reduce((total, service) => total + service.galleryImages.length, 0) +
+    projects.reduce((total, project) => total + project.galleryImages.length, 0);
 
   return (
     <div className="space-y-8">
@@ -64,8 +66,8 @@ export default async function AdminHomePage() {
         <AdminMetricCard
           icon={Building2}
           label="Preuve terrain"
-          value={`${assets.length} médias`}
-          detail="Médias de réalisations et avancement."
+          value={`${embeddedImageCount} images`}
+          detail="Galeries intégrées services/projets."
         />
         <AdminMetricCard
           icon={Phone}
@@ -91,23 +93,16 @@ export default async function AdminHomePage() {
           meta="Pricing"
         />
         <AdminWorkspaceCard
-          icon={Building2}
-          title="Photos chantiers"
-          description="Préparer le dépôt de visuels chantier et la mise à jour opérationnelle des galeries."
-          href="/admin/chantiers"
-          meta="Media"
-        />
-        <AdminWorkspaceCard
           icon={BriefcaseBusiness}
           title="Services"
-          description="Composer les pages construction, rénovation, fluides, électricité, menuiserie et extérieurs."
+          description="Composer les pages services et gérer leurs images locales intégrées."
           href="/admin/content/services"
           meta="Pages"
         />
         <AdminWorkspaceCard
           icon={FolderKanban}
           title="Projets"
-          description="Structurer les résidences, galeries, fiches références et témoignages liés aux réalisations."
+          description="Structurer les résidences, fiches références et galeries locales."
           href="/admin/content/projects"
           meta="Portfolio"
         />
@@ -122,7 +117,7 @@ export default async function AdminHomePage() {
 
       <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
         <EditorialPanel
-          title="Website settings à raccorder"
+          title="Paramètres du site à raccorder"
           description="Les écrans clés sont maintenant raccordés à MongoDB, avec les champs, états et parcours nécessaires au site public."
         >
           <div className="grid gap-3 sm:grid-cols-2">
@@ -130,7 +125,7 @@ export default async function AdminHomePage() {
               ["Services", "Slug, hero, sections, CTA, FAQ liée"],
               ["Projets", "Résidence, galerie, ville, chiffres clés"],
               ["FAQ", "Question, réponse, catégorie, page cible"],
-              ["Contact forms", "Inbox, statut, source, assignation"],
+              ["Demandes contact", "Inbox, statut, source, assignation"],
               ["Blog MD", "Markdown, SEO, tags, publication"],
               ["Site global", "Adresse, téléphones, email, horaires"],
             ].map(([title, copy]) => (

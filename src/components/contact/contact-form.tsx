@@ -84,10 +84,9 @@ export function ContactForm() {
             inputMode="numeric"
             pattern="\d{2} \d{3} \d{3}"
             maxLength={10}
-            placeholder="22 181 181"
+            placeholder="xx xxx xxx"
             title="Format attendu : xx xxx xxx"
           />
-          <p className="text-xs text-muted-foreground">Format attendu : 22 181 181</p>
         </div>
       </div>
       <div className="mt-4 grid gap-4 sm:grid-cols-2">

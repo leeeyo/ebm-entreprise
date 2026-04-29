@@ -6,7 +6,6 @@ import {
   ProjectCard,
   SectionHeading,
 } from "@/components/marketing";
-import { heroes } from "@/content/media";
 import { listProjects } from "@/lib/cms-content";
 
 export const metadata: Metadata = {
@@ -38,7 +37,6 @@ export default async function ProjetsIndexPage() {
         title="Nos projets, en lumière."
         accent="lumière."
         subtitle="Une sélection de résidences livrées et de chantiers en cours — chaque fiche illustre la méthode EBM."
-        image={heroes.projets}
         ctas={[
           { label: "Lancer mon projet", href: "/contact" },
           { label: "Estimer mon budget", href: "/simulateur", variant: "outline" },

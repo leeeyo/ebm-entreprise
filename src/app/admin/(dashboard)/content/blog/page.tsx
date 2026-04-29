@@ -68,7 +68,7 @@ export default async function AdminBlogContentPage() {
   return (
     <div className="space-y-8">
       <AdminPageHeader
-        eyebrow="Website settings / Blog MD"
+        eyebrow="Paramètres du site / Blog MD"
         title="Publier des actualités techniques avec un flux markdown propre."
         description="Articles branchés à MongoDB : contenu markdown, excerpt, tags, SEO, statut et aperçu éditorial."
         action={{ label: "Nouvel article" }}
@@ -132,7 +132,7 @@ export default async function AdminBlogContentPage() {
             <div className="flex flex-wrap gap-2">
               <Button type="submit">
                 <PenTool className="size-4" />
-                Enregistrer l'article
+                Enregistrer l&apos;article
               </Button>
               <Button type="button" variant="outline" asChild>
                 <a href={selected ? `/actualites/${selected.slug}` : "/actualites"}>

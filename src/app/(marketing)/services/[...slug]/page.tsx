@@ -14,8 +14,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "Page introuvable" };
   }
   return {
-    title: `${data.title} — EBM Ben Mokhtar`,
-    description: data.intro,
+    title: "seoTitle" in data && data.seoTitle ? data.seoTitle : `${data.title} — EBM Ben Mokhtar`,
+    description: "seoDescription" in data && data.seoDescription ? data.seoDescription : data.intro,
   };
 }
 

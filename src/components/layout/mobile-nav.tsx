@@ -19,7 +19,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { contactContent } from "@/content/contact";
-import { navSections, type NavSection } from "@/lib/navigation";
+import { navSections as defaultNavSections, type NavSection } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ *
@@ -37,6 +37,7 @@ type Props = {
   focusRingSolid: string;
   /** Pass a phone number to surface in the bottom rail. Optional. */
   phone?: string;
+  navSections?: NavSection[];
 };
 
 export function MobileNav({
@@ -44,6 +45,7 @@ export function MobileNav({
   focusRingHero,
   focusRingSolid,
   phone = contactContent.phoneDisplay,
+  navSections = defaultNavSections,
 }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -335,7 +337,7 @@ function MobileSection({
                   >
                     <span
                       className={cn(
-                        "absolute -left-[17px] top-1/2 h-0 w-[2px] -translate-y-1/2 rounded-full bg-(--ebm-orange)",
+                        "absolute left-[-17px] top-1/2 h-0 w-[2px] -translate-y-1/2 rounded-full bg-(--ebm-orange)",
                         "transition-[height] duration-300 ease-out",
                         "group-hover/sub:h-[60%] group-focus-visible/sub:h-[60%]",
                       )}
