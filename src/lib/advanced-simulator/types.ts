@@ -1,4 +1,4 @@
-import type { ArchitecturalStyle, BuildType, OfferTier } from "@/lib/simulator-pricing";
+import type { BuildType, OfferTier, TerrainTopography } from "@/lib/simulator-pricing";
 
 export type AdvancedCostType = "material" | "labor" | "equipment" | "subcontractor";
 
@@ -7,13 +7,18 @@ export type AdvancedUnit = "m²" | "ml" | "m³" | "u" | "jour" | "forfait" | "lo
 export type LocationZone = "grandTunis" | "coastal" | "interior" | "south";
 
 export type AdvancedProjectInput = {
-  style: ArchitecturalStyle;
   buildType: BuildType;
   offer: OfferTier;
   surfaceM2: number;
   location: string;
   zone: LocationZone;
   terrain: "oui" | "cours";
+  terrainTopography: TerrainTopography;
+  rooms: {
+    bedrooms: number;
+    bathrooms: number;
+    kitchens: number;
+  };
   options: {
     pool: boolean;
     basement: boolean;
@@ -47,17 +52,6 @@ export type AdvancedMarkups = {
   profit: number;
   contingency: number;
   tax: number;
-};
-
-export type AdvancedLineItemTemplate = {
-  id: string;
-  divisionId: string;
-  description: string;
-  unit: AdvancedUnit;
-  costType: AdvancedCostType;
-  budgetShare: number;
-  quantity: (surfaceM2: number) => number;
-  offers: OfferTier[];
 };
 
 export type AdvancedEstimateTotals = {

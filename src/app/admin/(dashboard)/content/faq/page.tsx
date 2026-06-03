@@ -45,7 +45,7 @@ export default async function AdminFaqContentPage() {
   return (
     <div className="space-y-8">
       <AdminPageHeader
-        eyebrow="Website settings / FAQ"
+        eyebrow="Paramètres du site / FAQ"
         title="Réduire les hésitations avant le devis."
         description="Questions fréquentes branchées à MongoDB, rattachées aux pages publiques et réutilisables par l'équipe commerciale."
         action={{ label: "Nouvelle question" }}

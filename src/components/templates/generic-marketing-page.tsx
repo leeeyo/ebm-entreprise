@@ -19,6 +19,7 @@ import {
   Wrench,
   Zap,
 } from "lucide-react";
+import { MetaViewContentTracker } from "@/components/analytics/meta-view-content-tracker";
 import { MarketingInnerPage } from "@/components/templates/marketing-inner-page";
 import {
   FeatureGrid,
@@ -96,6 +97,12 @@ export function GenericMarketingPage({ pageKey, page }: { pageKey: string; page?
 
   return (
     <MarketingInnerPage hero={heroProps}>
+      <MetaViewContentTracker
+        contentId={`service:${pageKey}`}
+        contentName={data.title}
+        contentCategory={page?.category ?? "service"}
+      />
+
       <section
         className="cv-auto"
         style={{ containIntrinsicSize: "auto 600px" }}

@@ -56,9 +56,9 @@ const QUANTITY_MODES: Array<{ value: SimulatorDecompositionItem["quantityMode"];
   { value: "fixed", label: "Quantité fixe" },
 ];
 const OFFER_OPTIONS: Array<{ value: SimulatorDecompositionItem["offers"][number]; label: string }> = [
-  { value: "grosOeuvre", label: "Gros œuvre" },
-  { value: "premium", label: "Premium" },
-  { value: "luxe", label: "Luxe" },
+  { value: "economique", label: "Économique" },
+  { value: "hautStanding", label: "Haut standing" },
+  { value: "prestige", label: "Prestige" },
 ];
 const SETTINGS_TABS = [
   { id: "base", label: "Base" },
@@ -157,47 +157,47 @@ export function SimulatorSettingsForm() {
           </FieldGroup>
 
           <FieldGroup
-            title="Offres commerciales"
-            description="Les offres filtrent les postes applicables ET appliquent ces multiplicateurs."
+            title="Style de villa"
+            description="Le style filtre les postes applicables ET applique ces multiplicateurs."
           >
             <NumberField
-              label="Gros œuvre"
+              label="Économique"
               step={0.01}
-              value={data.offerMultipliers.grosOeuvre}
+              value={data.offerMultipliers.economique}
               onChange={(value) =>
                 setData({
                   ...data,
-                  offerMultipliers: { ...data.offerMultipliers, grosOeuvre: value },
+                  offerMultipliers: { ...data.offerMultipliers, economique: value },
                 })
               }
             />
             <NumberField
-              label="Clé en main premium"
+              label="Haut standing"
               step={0.01}
-              value={data.offerMultipliers.premium}
+              value={data.offerMultipliers.hautStanding}
               onChange={(value) =>
                 setData({
                   ...data,
-                  offerMultipliers: { ...data.offerMultipliers, premium: value },
+                  offerMultipliers: { ...data.offerMultipliers, hautStanding: value },
                 })
               }
             />
             <NumberField
-              label="Clé en main luxe"
+              label="Prestige"
               step={0.01}
-              value={data.offerMultipliers.luxe}
+              value={data.offerMultipliers.prestige}
               onChange={(value) =>
                 setData({
                   ...data,
-                  offerMultipliers: { ...data.offerMultipliers, luxe: value },
+                  offerMultipliers: { ...data.offerMultipliers, prestige: value },
                 })
               }
             />
           </FieldGroup>
 
           <FieldGroup
-            title="Structure et style"
-            description="Ajustements selon la complexité constructive et le parti architectural."
+            title="Structure et topographie"
+            description="Ajustements selon la complexité constructive et le relief du terrain."
           >
             <NumberField
               label="Plain-pied"
@@ -227,24 +227,35 @@ export function SimulatorSettingsForm() {
               }
             />
             <NumberField
-              label="Style moderne"
+              label="Terrain plat"
               step={0.01}
-              value={data.styleMultipliers.moderne}
+              value={data.topographyMultipliers.flat}
               onChange={(value) =>
                 setData({
                   ...data,
-                  styleMultipliers: { ...data.styleMultipliers, moderne: value },
+                  topographyMultipliers: { ...data.topographyMultipliers, flat: value },
                 })
               }
             />
             <NumberField
-              label="Style méditerranéen"
+              label="Pente légère"
               step={0.01}
-              value={data.styleMultipliers.mediterraneenne}
+              value={data.topographyMultipliers.slightSlope}
               onChange={(value) =>
                 setData({
                   ...data,
-                  styleMultipliers: { ...data.styleMultipliers, mediterraneenne: value },
+                  topographyMultipliers: { ...data.topographyMultipliers, slightSlope: value },
+                })
+              }
+            />
+            <NumberField
+              label="Pente forte"
+              step={0.01}
+              value={data.topographyMultipliers.steepSlope}
+              onChange={(value) =>
+                setData({
+                  ...data,
+                  topographyMultipliers: { ...data.topographyMultipliers, steepSlope: value },
                 })
               }
             />
@@ -327,6 +338,51 @@ export function SimulatorSettingsForm() {
                 setData({
                   ...data,
                   optionUnitPrices: { ...data.optionUnitPrices, gardenTndPerM2: value },
+                })
+              }
+            />
+          </FieldGroup>
+
+          <FieldGroup
+            title="Configuration sur-mesure"
+            description="Prix par pièce ajoutés selon le nombre de chambres, salles de bain et cuisines déclaré par le visiteur."
+          >
+            <NumberField
+              label="Chambre (TND / unité)"
+              min={0}
+              step={50}
+              value={data.roomUnitPrices.bedroomTndPerUnit}
+              hint="Finitions et appareillage par chambre."
+              onChange={(value) =>
+                setData({
+                  ...data,
+                  roomUnitPrices: { ...data.roomUnitPrices, bedroomTndPerUnit: value },
+                })
+              }
+            />
+            <NumberField
+              label="Salle de bain (TND / unité)"
+              min={0}
+              step={50}
+              value={data.roomUnitPrices.bathroomTndPerUnit}
+              hint="Plomberie, sanitaires et faïence par salle de bain."
+              onChange={(value) =>
+                setData({
+                  ...data,
+                  roomUnitPrices: { ...data.roomUnitPrices, bathroomTndPerUnit: value },
+                })
+              }
+            />
+            <NumberField
+              label="Cuisine (TND / unité)"
+              min={0}
+              step={50}
+              value={data.roomUnitPrices.kitchenTndPerUnit}
+              hint="Alimentation, évacuation et raccordements par cuisine."
+              onChange={(value) =>
+                setData({
+                  ...data,
+                  roomUnitPrices: { ...data.roomUnitPrices, kitchenTndPerUnit: value },
                 })
               }
             />
@@ -432,7 +488,7 @@ function DecompositionEditor({
         quantityMode: "surface",
         quantityValue: 1,
         unitCostTnd: 0,
-        offers: ["premium", "luxe"],
+        offers: ["hautStanding", "prestige"],
       },
     ]);
   }
@@ -610,7 +666,7 @@ function PreviewPanel({
             onChange={(surfaceM2) => onProjectChange({ ...project, surfaceM2 })}
           />
           <SelectField
-            label="Offre"
+            label="Style de villa"
             value={project.offer}
             options={OFFER_OPTIONS}
             onChange={(offer) =>
@@ -705,7 +761,7 @@ function SettingsSnapshot({ data }: { data: SimulatorSettingsSnapshot }) {
       </CardHeader>
       <CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <MiniStat label="Base" value={`${data.baseTndPerM2.toLocaleString("fr-TN")} TND / m²`} />
-        <MiniStat label="Premium" value={`x${data.offerMultipliers.premium}`} />
+        <MiniStat label="Haut standing" value={`x${data.offerMultipliers.hautStanding}`} />
         <MiniStat label="Piscine" value={`${data.optionUnitPrices.poolTndPerM2.toLocaleString("fr-TN")} TND / m²`} />
         <MiniStat label="Marge + imprévus" value={`${percentValue(data.advancedMarkups.profit + data.advancedMarkups.contingency)}%`} />
       </CardContent>

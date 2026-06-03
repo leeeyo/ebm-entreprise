@@ -4,26 +4,13 @@ export const simulateurPage = {
     "Un outil d'aide à la décision basé sur les coûts réels du marché tunisien en 2026. Obtenez une première évaluation technique pour votre future construction.",
   reassurance: "Estimation gratuite, sans engagement et confidentielle.",
   steps: {
-    design: "Style et structure",
-    dimensions: "Structure et dimensions",
-    offre: "Votre offre",
+    projet: "Type et standing",
+    terrain: "Terrain et dimensions",
+    configuration: "Configuration sur-mesure",
     equipements: "Équipements",
     resultat: "Estimation",
   },
 };
-
-export const styleCards = [
-  {
-    id: "moderne" as const,
-    title: "Villa Moderne",
-    description: "Lignes épurées et larges baies vitrées.",
-  },
-  {
-    id: "mediterraneenne" as const,
-    title: "Villa Méditerranéenne",
-    description: "Charme intemporel et arcades.",
-  },
-] as const;
 
 export const typeCards = [
   { id: "plainPied" as const, title: "Plain-pied" },
@@ -33,21 +20,79 @@ export const typeCards = [
 
 export const offerCards = [
   {
-    id: "grosOeuvre" as const,
-    title: "Gros Œuvre Seul",
-    description: "La structure brute avec la rigueur d'ingénierie Ben Mokhtar.",
+    id: "economique" as const,
+    title: "Économique",
+    description: "Finitions fonctionnelles et matériaux fiables pour maîtriser le budget.",
   },
   {
-    id: "premium" as const,
-    title: "Clé en Main Premium",
-    description: "Prêt à habiter : carrelage de premier choix, sanitaires et boiseries.",
+    id: "hautStanding" as const,
+    title: "Haut standing",
+    description: "Prestations soignées : carrelage de premier choix, sanitaires et boiseries de qualité.",
   },
   {
-    id: "luxe" as const,
-    title: "Clé en Main Luxe",
-    description: "Domotique, marbre, climatisation centrale et finitions d'exception.",
+    id: "prestige" as const,
+    title: "Prestige",
+    description: "Le summum : marbre, domotique, climatisation centrale et finitions d'exception.",
   },
 ] as const;
+
+export const topographyOptions = [
+  {
+    id: "flat" as const,
+    title: "Plat",
+    description: "Terrain de niveau, terrassement minimal.",
+  },
+  {
+    id: "slightSlope" as const,
+    title: "Pente légère",
+    description: "Léger dénivelé nécessitant des reprises de niveau.",
+  },
+  {
+    id: "steepSlope" as const,
+    title: "Pente forte",
+    description: "Fort dénivelé : fondations et soutènement renforcés.",
+  },
+] as const;
+
+export const roomConfigFields = [
+  {
+    id: "bedrooms" as const,
+    label: "Chambres",
+    hint: "Nombre de chambres à coucher.",
+    short: "ch.",
+    min: 0,
+    max: 12,
+  },
+  {
+    id: "bathrooms" as const,
+    label: "Salles de bain",
+    hint: "Salles de bain et salles d'eau à équiper.",
+    short: "s. de bain",
+    min: 1,
+    max: 10,
+  },
+  {
+    id: "kitchens" as const,
+    label: "Cuisines",
+    hint: "Cuisines à raccorder et équiper.",
+    short: "cuisine(s)",
+    min: 1,
+    max: 5,
+  },
+] as const;
+
+/** Readable labels for the standing tier. */
+export const offerDisplayLabels: Record<string, string> = {
+  economique: "Économique",
+  hautStanding: "Haut standing",
+  prestige: "Prestige",
+};
+
+export const topographyDisplayLabels: Record<string, string> = {
+  flat: "Terrain plat",
+  slightSlope: "Pente légère",
+  steepSlope: "Pente forte",
+};
 
 export const optionItems = [
   { id: "pool" as const, label: "Piscine à débordement" },

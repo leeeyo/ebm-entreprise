@@ -48,6 +48,11 @@ export function SiteFooter() {
             indicative via simulateur).
           </p>
         </div>
+        <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
+          <Link className="underline underline-offset-4" href="/confidentialite">
+            Confidentialité
+          </Link>
+        </div>
       </div>
     </footer>
   );

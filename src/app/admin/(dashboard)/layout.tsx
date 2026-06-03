@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ComponentType, ReactNode } from "react";
 import {
+  Activity,
   BookOpenText,
   BriefcaseBusiness,
   FileQuestion,
@@ -20,6 +21,7 @@ const primaryNav = [
   { label: "Vue d'ensemble", href: "/admin", icon: Home },
   { label: "Leads simulateur", href: "/admin/leads", icon: Inbox },
   { label: "Demandes contact", href: "/admin/contact-forms", icon: BookOpenText },
+  { label: "Meta CAPI", href: "/admin/meta", icon: Activity },
   { label: "Tarification", href: "/admin/settings", icon: SlidersHorizontal },
 ] as const;
 

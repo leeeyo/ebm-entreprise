@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle2, Send } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Minus, Plus, Send } from "lucide-react";
 import { toast } from "sonner";
 import { BrandedMascotState } from "@/components/brand/mascot-state";
 import { Badge } from "@/components/ui/badge";
@@ -22,25 +22,72 @@ import {
   formatTnd,
 } from "@/lib/advanced-simulator/pricing";
 import type { AdvancedProjectInput } from "@/lib/advanced-simulator/types";
-import { calculateCta, offerCards, simulateurPage, styleCards, typeCards } from "@/content/simulateur";
+import {
+  calculateCta,
+  offerCards,
+  offerDisplayLabels,
+  roomConfigFields,
+  simulateurPage,
+  topographyDisplayLabels,
+  topographyOptions,
+  typeCards,
+} from "@/content/simulateur";
 import { cn } from "@/lib/utils";
 import type { SimulatorSettingsSnapshot } from "@/types/simulator";
+import {
+  createMetaEventId,
+  getMetaClientContext,
+  sendMetaCapiClientEvent,
+} from "@/lib/meta-client-events";
+import {
+  buildMetaAdvancedMatching,
+  isMetaPixelEnabled,
+  reinitMetaPixelWithAdvancedMatching,
+  trackMetaCustom,
+  trackMetaLead,
+} from "@/lib/meta-pixel";
 
 const STEPS = [
-  "Projet",
-  simulateurPage.steps.dimensions,
-  simulateurPage.steps.offre,
+  simulateurPage.steps.projet,
+  simulateurPage.steps.terrain,
+  simulateurPage.steps.configuration,
   simulateurPage.steps.equipements,
   simulateurPage.steps.resultat,
 ];
 
 const MIN_SURFACE_M2 = 80;
 const MAX_SURFACE_M2 = 1000;
-const STORAGE_KEY = "ebm-simulateur-progress-v2";
+const STORAGE_KEY = "ebm-simulateur-progress-v3";
+
+const BUILD_TYPE_VALUES: AdvancedProjectInput["buildType"][] = ["plainPied", "r1", "r2"];
+const OFFER_VALUES: AdvancedProjectInput["offer"][] = ["economique", "hautStanding", "prestige"];
+const TOPOGRAPHY_VALUES: AdvancedProjectInput["terrainTopography"][] = [
+  "flat",
+  "slightSlope",
+  "steepSlope",
+];
+const TERRAIN_VALUES: AdvancedProjectInput["terrain"][] = ["oui", "cours"];
+const ZONE_VALUES: AdvancedProjectInput["zone"][] = ["grandTunis", "coastal", "interior", "south"];
+
+type RoomKey = (typeof roomConfigFields)[number]["id"];
+
+const ROOM_LIMITS = Object.fromEntries(
+  roomConfigFields.map((field) => [field.id, { min: field.min, max: field.max }]),
+) as Record<RoomKey, { min: number; max: number }>;
 
 function clampNumber(value: number, min: number, max: number) {
   if (!Number.isFinite(value)) return min;
   return Math.min(max, Math.max(min, value));
+}
+
+function pickEnum<T extends string>(value: unknown, allowed: readonly T[], fallback: T): T {
+  return allowed.includes(value as T) ? (value as T) : fallback;
+}
+
+function clampRoom(value: unknown, limit: { min: number; max: number }) {
+  const parsed = Math.round(Number(value));
+  if (!Number.isFinite(parsed)) return limit.min;
+  return Math.min(limit.max, Math.max(limit.min, parsed));
 }
 
 type StoredProgress = {
@@ -57,11 +104,28 @@ function restoreProject(value: unknown): AdvancedProjectInput {
 
   const options = isRecord(value.options) ? value.options : {};
   const optionSurfaces = isRecord(value.optionSurfaces) ? value.optionSurfaces : {};
+  const rooms = isRecord(value.rooms) ? value.rooms : {};
+  const location =
+    typeof value.location === "string" ? value.location : DEFAULT_ADVANCED_PROJECT.location;
+  const matchedZone = LOCATION_OPTIONS.find((option) => option.label === location)?.zone;
 
   return {
-    ...DEFAULT_ADVANCED_PROJECT,
-    ...value,
+    buildType: pickEnum(value.buildType, BUILD_TYPE_VALUES, DEFAULT_ADVANCED_PROJECT.buildType),
+    offer: pickEnum(value.offer, OFFER_VALUES, DEFAULT_ADVANCED_PROJECT.offer),
     surfaceM2: clampNumber(Number(value.surfaceM2), MIN_SURFACE_M2, MAX_SURFACE_M2),
+    location,
+    zone: matchedZone ?? pickEnum(value.zone, ZONE_VALUES, DEFAULT_ADVANCED_PROJECT.zone),
+    terrain: pickEnum(value.terrain, TERRAIN_VALUES, DEFAULT_ADVANCED_PROJECT.terrain),
+    terrainTopography: pickEnum(
+      value.terrainTopography,
+      TOPOGRAPHY_VALUES,
+      DEFAULT_ADVANCED_PROJECT.terrainTopography,
+    ),
+    rooms: {
+      bedrooms: clampRoom(rooms.bedrooms, ROOM_LIMITS.bedrooms),
+      bathrooms: clampRoom(rooms.bathrooms, ROOM_LIMITS.bathrooms),
+      kitchens: clampRoom(rooms.kitchens, ROOM_LIMITS.kitchens),
+    },
     options: {
       pool: Boolean(options.pool),
       basement: Boolean(options.basement),
@@ -78,6 +142,14 @@ function restoreProject(value: unknown): AdvancedProjectInput {
   };
 }
 
+function splitFullName(value: string) {
+  const parts = value.trim().split(/\s+/).filter(Boolean);
+  return {
+    firstName: parts[0] ?? "",
+    lastName: parts.length > 1 ? parts.slice(1).join(" ") : "",
+  };
+}
+
 export function AdvancedSimulator() {
   const [settings, setSettings] = useState<SimulatorSettingsSnapshot | null>(null);
   const [step, setStep] = useState(0);
@@ -91,6 +163,7 @@ export function AdvancedSimulator() {
   const [submittedLeadId, setSubmittedLeadId] = useState<string | null>(null);
   const [serverEstimateTnd, setServerEstimateTnd] = useState<number | null>(null);
   const [progressRestored, setProgressRestored] = useState(false);
+  const simulationStartedTracked = useRef(false);
 
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
@@ -139,6 +212,32 @@ export function AdvancedSimulator() {
   );
   const contactIsComplete = name.trim().length > 1 && email.includes("@") && phone.trim().length >= 5;
 
+  function trackSimulationStarted() {
+    if (!isMetaPixelEnabled()) return;
+    if (simulationStartedTracked.current) return;
+    simulationStartedTracked.current = true;
+
+    const eventId = createMetaEventId("simulation_started");
+    const payload = {
+      eventId,
+      contentId: "simulateur:devis",
+      contentName: "Simulateur de devis EBM",
+      contentCategory: "simulateur",
+      customData: {
+        build_type: project.buildType,
+        offer: project.offer,
+        surface_m2: project.surfaceM2,
+        location_zone: project.zone,
+      },
+    };
+
+    trackMetaCustom("SimulationStarted", payload);
+    sendMetaCapiClientEvent({
+      eventName: "SimulationStarted",
+      ...payload,
+    });
+  }
+
   async function submitLead(e: FormEvent) {
     e.preventDefault();
     if (submittedLeadId && estimateRevealed) {
@@ -151,6 +250,7 @@ export function AdvancedSimulator() {
     }
     setSubmitting(true);
     try {
+      const meta = getMetaClientContext();
       const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -163,6 +263,7 @@ export function AdvancedSimulator() {
             project,
             notes,
           },
+          meta,
         }),
       });
       if (!res.ok) throw new Error();
@@ -172,6 +273,36 @@ export function AdvancedSimulator() {
       }
       if (typeof result.estimateTnd === "number") {
         setServerEstimateTnd(result.estimateTnd);
+      }
+      if (typeof result.id === "string") {
+        const { firstName, lastName } = splitFullName(name);
+        const value =
+          typeof result.estimateTnd === "number" ? result.estimateTnd : Math.round(totals.total);
+
+        reinitMetaPixelWithAdvancedMatching(
+          buildMetaAdvancedMatching({
+            email,
+            phone,
+            firstName,
+            lastName,
+            city: project.location,
+            country: "tn",
+          }),
+        );
+        trackMetaLead({
+          eventId: result.id,
+          value,
+          contentId: "simulateur:devis",
+          contentName: "Estimation simulateur EBM",
+          contentCategory: "simulateur",
+          customData: {
+            lead_source: "simulator",
+            build_type: project.buildType,
+            offer: project.offer,
+            surface_m2: project.surfaceM2,
+            location_zone: project.zone,
+          },
+        });
       }
       setEstimateRevealed(true);
       toast.success("Merci — votre estimation est prête.");
@@ -183,6 +314,7 @@ export function AdvancedSimulator() {
   }
 
   function updateProject(nextProject: AdvancedProjectInput) {
+    trackSimulationStarted();
     setEstimateRevealed(false);
     setSubmittedLeadId(null);
     setServerEstimateTnd(null);
@@ -232,7 +364,7 @@ export function AdvancedSimulator() {
 
           {step === 0 && <ProjectStep project={project} onChange={updateProject} />}
           {step === 1 && <DimensionsStep project={project} onChange={updateProject} />}
-          {step === 2 && <OfferStep project={project} onChange={updateProject} />}
+          {step === 2 && <ConfigurationStep project={project} onChange={updateProject} />}
           {step === 3 && <OptionsStep project={project} onChange={updateProject} />}
           {step === 4 && (
             <ResultStep
@@ -288,7 +420,13 @@ export function AdvancedSimulator() {
               Retour
             </Button>
             {step < 4 ? (
-              <Button type="button" onClick={() => setStep((current) => Math.min(4, current + 1))}>
+              <Button
+                type="button"
+                onClick={() => {
+                  trackSimulationStarted();
+                  setStep((current) => Math.min(4, current + 1));
+                }}
+              >
                 {step === 3 ? calculateCta : "Continuer"}
                 <ArrowRight className="size-4" />
               </Button>
@@ -333,20 +471,6 @@ function ProjectStep({ project, onChange }: StepProps) {
   return (
     <div className="space-y-8">
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold">Quel style souhaitez-vous ?</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {styleCards.map((style) => (
-            <ChoiceCard
-              key={style.id}
-              active={project.style === style.id}
-              title={style.title}
-              description={style.description}
-              onClick={() => onChange({ ...project, style: style.id })}
-            />
-          ))}
-        </div>
-      </section>
-      <section className="space-y-3">
         <h2 className="text-lg font-semibold">Quel type de construction ?</h2>
         <div className="grid gap-3 sm:grid-cols-3">
           {typeCards.map((type) => (
@@ -358,6 +482,20 @@ function ProjectStep({ project, onChange }: StepProps) {
             >
               {type.title}
             </Button>
+          ))}
+        </div>
+      </section>
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold">Quel style de villa ?</h2>
+        <div className="grid gap-4 md:grid-cols-3">
+          {offerCards.map((offer) => (
+            <ChoiceCard
+              key={offer.id}
+              active={project.offer === offer.id}
+              title={offer.title}
+              description={offer.description}
+              onClick={() => onChange({ ...project, offer: offer.id })}
+            />
           ))}
         </div>
       </section>
@@ -475,24 +613,102 @@ function DimensionsStep({ project, onChange }: StepProps) {
           </div>
         </div>
       </div>
+      <section className="space-y-3">
+        <Label>Topographie du terrain</Label>
+        <div className="grid gap-2 sm:grid-cols-3">
+          {topographyOptions.map((option) => (
+            <Button
+              key={option.id}
+              type="button"
+              variant={project.terrainTopography === option.id ? "default" : "outline"}
+              onClick={() => onChange({ ...project, terrainTopography: option.id })}
+            >
+              {option.title}
+            </Button>
+          ))}
+        </div>
+        <p className="text-xs text-muted-foreground">
+          {topographyOptions.find((option) => option.id === project.terrainTopography)?.description}
+        </p>
+      </section>
     </div>
   );
 }
 
-function OfferStep({ project, onChange }: StepProps) {
+function ConfigurationStep({ project, onChange }: StepProps) {
+  function updateRoom(id: RoomKey, value: number) {
+    const limit = ROOM_LIMITS[id];
+    const next = Math.min(limit.max, Math.max(limit.min, value));
+    onChange({ ...project, rooms: { ...project.rooms, [id]: next } });
+  }
+
   return (
-    <div className="space-y-3">
-      <h2 className="text-lg font-semibold">Choisissez le niveau de prestation</h2>
-      <div className="grid gap-4 md:grid-cols-3">
-        {offerCards.map((offer) => (
-          <ChoiceCard
-            key={offer.id}
-            active={project.offer === offer.id}
-            title={offer.title}
-            description={offer.description}
-            onClick={() => onChange({ ...project, offer: offer.id })}
+    <div className="space-y-4">
+      <div className="space-y-1">
+        <h2 className="text-lg font-semibold">Configuration sur-mesure</h2>
+        <p className="text-sm text-muted-foreground">
+          Précisez la composition du logement. Ces volumes ajustent la plomberie, les sanitaires et les
+          finitions estimées.
+        </p>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-3">
+        {roomConfigFields.map((field) => (
+          <Stepper
+            key={field.id}
+            label={field.label}
+            hint={field.hint}
+            value={project.rooms[field.id]}
+            min={field.min}
+            max={field.max}
+            onChange={(value) => updateRoom(field.id, value)}
           />
         ))}
+      </div>
+    </div>
+  );
+}
+
+function Stepper({
+  label,
+  hint,
+  value,
+  min,
+  max,
+  onChange,
+}: {
+  label: string;
+  hint: string;
+  value: number;
+  min: number;
+  max: number;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <div className="rounded-2xl border bg-card p-4">
+      <p className="font-medium">{label}</p>
+      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{hint}</p>
+      <div className="mt-3 flex items-center justify-between gap-3">
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          aria-label={`Diminuer : ${label}`}
+          disabled={value <= min}
+          onClick={() => onChange(value - 1)}
+        >
+          <Minus className="size-4" />
+        </Button>
+        <span className="min-w-8 text-center text-2xl font-semibold tabular-nums">{value}</span>
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          aria-label={`Augmenter : ${label}`}
+          disabled={value >= max}
+          onClick={() => onChange(value + 1)}
+        >
+          <Plus className="size-4" />
+        </Button>
       </div>
     </div>
   );
@@ -635,6 +851,10 @@ function ResultStep({
   onNotesChange,
 }: ResultStepProps) {
   const displayedTotal = serverEstimateTnd ?? total;
+  const { bedrooms, bathrooms, kitchens } = project.rooms;
+  const roomsSummary = `${bedrooms} ch. · ${bathrooms} s. de bain · ${kitchens} cuisine${
+    kitchens > 1 ? "s" : ""
+  }`;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
@@ -662,6 +882,9 @@ function ResultStep({
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           <ResultFact label="Projet" value={`${project.surfaceM2} m² à ${project.location}`} />
+          <ResultFact label="Style de villa" value={offerDisplayLabels[project.offer]} />
+          <ResultFact label="Configuration" value={roomsSummary} />
+          <ResultFact label="Topographie" value={topographyDisplayLabels[project.terrainTopography]} />
           <ResultFact label="Base technique" value={estimateRevealed ? formatTnd(directCost) : "Calculée"} />
           <ResultFact label="Zone" value={LOCATION_ZONE_LABELS[project.zone]} />
           <ResultFact label="Titre foncier" value={project.terrain === "oui" ? "Disponible" : "En cours"} />

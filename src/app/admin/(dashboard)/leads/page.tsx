@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BadgeDollarSign, Inbox, Ruler, Sparkles } from "lucide-react";
 import { auth } from "@/auth";
+import { offerDisplayLabels } from "@/content/simulateur";
 import { connectDB } from "@/lib/db";
 import { Lead } from "@/models/Lead";
 import { BrandedMascotState } from "@/components/brand/mascot-state";
@@ -29,7 +30,8 @@ function getSimulationSummary(simulation: unknown) {
   const totals = isRecord(simulation.totals) ? simulation.totals : {};
   const surface = typeof project.surfaceM2 === "number" ? `${project.surfaceM2} m²` : "Surface non précisée";
   const location = typeof project.location === "string" ? project.location : "Emplacement non précisé";
-  const offer = typeof project.offer === "string" ? project.offer : "offre";
+  const offer =
+    typeof project.offer === "string" ? offerDisplayLabels[project.offer] ?? project.offer : "offre";
 
   return {
     project: `${surface} — ${location}`,

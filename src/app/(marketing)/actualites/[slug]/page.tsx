@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CalendarDays, Tags } from "lucide-react";
 import { notFound } from "next/navigation";
+import { MetaViewContentTracker } from "@/components/analytics/meta-view-content-tracker";
 import { LazyMotionProvider } from "@/components/motion/lazy-motion-provider";
 import { CtaBand } from "@/components/marketing";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +36,12 @@ export default async function ActualiteDetailPage({ params }: Props) {
 
   return (
     <LazyMotionProvider>
+      <MetaViewContentTracker
+        contentId={`article:${post.slug}`}
+        contentName={post.title}
+        contentCategory="actualite"
+      />
+
       <article>
         <header className="relative overflow-hidden border-b bg-ebm-navy text-white">
           {post.coverImage?.src ? (

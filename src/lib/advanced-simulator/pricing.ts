@@ -21,10 +21,10 @@ export function getProjectDirectBudget(
   const base = settings.baseTndPerM2 * project.surfaceM2;
   const typeMultiplier = settings.typeMultipliers[project.buildType] ?? 1;
   const offerMultiplier = settings.offerMultipliers[project.offer] ?? 1;
-  const styleMultiplier = settings.styleMultipliers[project.style] ?? 1;
+  const topographyMultiplier = settings.topographyMultipliers[project.terrainTopography] ?? 1;
   const locationMultiplier = settings.locationMultipliers[project.zone] ?? 1;
 
-  return base * typeMultiplier * offerMultiplier * styleMultiplier * locationMultiplier;
+  return base * typeMultiplier * offerMultiplier * topographyMultiplier * locationMultiplier;
 }
 
 export function createDefaultLineItems(
@@ -50,7 +50,11 @@ export function createDefaultLineItems(
       };
     });
 
-  return [...baseItems, ...createOptionLineItems(project, settings)];
+  return [
+    ...baseItems,
+    ...createRoomLineItems(project, settings),
+    ...createOptionLineItems(project, settings),
+  ];
 }
 
 function getProjectAdjustmentFactor(
@@ -60,10 +64,10 @@ function getProjectAdjustmentFactor(
   const baseScale = settings.baseTndPerM2 / DEFAULT_SIMULATOR_SETTINGS.baseTndPerM2;
   const typeMultiplier = settings.typeMultipliers[project.buildType] ?? 1;
   const offerMultiplier = settings.offerMultipliers[project.offer] ?? 1;
-  const styleMultiplier = settings.styleMultipliers[project.style] ?? 1;
+  const topographyMultiplier = settings.topographyMultipliers[project.terrainTopography] ?? 1;
   const locationMultiplier = settings.locationMultipliers[project.zone] ?? 1;
 
-  return baseScale * typeMultiplier * offerMultiplier * styleMultiplier * locationMultiplier;
+  return baseScale * typeMultiplier * offerMultiplier * topographyMultiplier * locationMultiplier;
 }
 
 function getConfiguredQuantity(
@@ -74,6 +78,55 @@ function getConfiguredQuantity(
   if (mode === "fixed") return Math.max(1, value);
   if (mode === "surfaceMultiplier") return Math.max(1, Math.round(surfaceM2 * value));
   return Math.max(1, surfaceM2);
+}
+
+function createRoomLineItems(
+  project: AdvancedProjectInput,
+  settings: SimulatorSettingsSnapshot,
+): AdvancedLineItem[] {
+  const items: AdvancedLineItem[] = [];
+  const rooms = project.rooms ?? { bedrooms: 0, bathrooms: 0, kitchens: 0 };
+  const bedrooms = Math.max(0, Math.round(rooms.bedrooms ?? 0));
+  const bathrooms = Math.max(0, Math.round(rooms.bathrooms ?? 0));
+  const kitchens = Math.max(0, Math.round(rooms.kitchens ?? 0));
+
+  if (bathrooms > 0) {
+    items.push({
+      id: "rooms-bathrooms",
+      divisionId: "plumbing",
+      description: "Salles de bain — plomberie, sanitaires et faïence",
+      quantity: bathrooms,
+      unit: "u",
+      unitCostTnd: settings.roomUnitPrices.bathroomTndPerUnit,
+      costType: "subcontractor",
+    });
+  }
+
+  if (kitchens > 0) {
+    items.push({
+      id: "rooms-kitchens",
+      divisionId: "plumbing",
+      description: "Cuisines — alimentation, évacuation et raccordements",
+      quantity: kitchens,
+      unit: "u",
+      unitCostTnd: settings.roomUnitPrices.kitchenTndPerUnit,
+      costType: "subcontractor",
+    });
+  }
+
+  if (bedrooms > 0) {
+    items.push({
+      id: "rooms-bedrooms",
+      divisionId: "finishes",
+      description: "Chambres — finitions et appareillage",
+      quantity: bedrooms,
+      unit: "u",
+      unitCostTnd: settings.roomUnitPrices.bedroomTndPerUnit,
+      costType: "material",
+    });
+  }
+
+  return items;
 }
 
 function createOptionLineItems(

@@ -51,7 +51,7 @@ export default async function AdminSiteSettingsPage() {
   return (
     <div className="space-y-8">
       <AdminPageHeader
-        eyebrow="Website settings / Site global"
+        eyebrow="Paramètres du site / Site global"
         title="Centraliser les informations de confiance du site."
         description="Coordonnées, horaires, textes globaux, SEO par défaut et messages de réassurance maintenant persistés en base."
         action={{ label: "Paramètres actifs" }}

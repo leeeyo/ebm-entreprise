@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Send } from "lucide-react";
 import { toast } from "sonner";
 import { BrandedMascotState } from "@/components/brand/mascot-state";
@@ -8,6 +8,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  createMetaEventId,
+  getMetaClientContext,
+  sendMetaCapiClientEvent,
+} from "@/lib/meta-client-events";
+import {
+  buildMetaAdvancedMatching,
+  isMetaPixelEnabled,
+  reinitMetaPixelWithAdvancedMatching,
+  trackMetaContact,
+  trackMetaCustom,
+} from "@/lib/meta-pixel";
 
 function formValue(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -18,11 +30,40 @@ export function ContactForm() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [phone, setPhone] = useState("");
+  const formStartedTracked = useRef(false);
 
   function onPhoneChange(event: React.ChangeEvent<HTMLInputElement>) {
     const digits = event.currentTarget.value.replace(/\D/g, "").slice(0, 8);
     const formatted = [digits.slice(0, 2), digits.slice(2, 5), digits.slice(5, 8)].filter(Boolean).join(" ");
     setPhone(formatted);
+  }
+
+  function trackContactFormStarted() {
+    if (!isMetaPixelEnabled()) return;
+    if (formStartedTracked.current) return;
+    formStartedTracked.current = true;
+
+    const eventId = createMetaEventId("contact_form_started");
+    const payload = {
+      eventId,
+      contentId: "contact:form",
+      contentName: "Formulaire de contact EBM",
+      contentCategory: "contact",
+    };
+
+    trackMetaCustom("ContactFormStarted", payload);
+    sendMetaCapiClientEvent({
+      eventName: "ContactFormStarted",
+      ...payload,
+    });
+  }
+
+  function splitFullName(value: string) {
+    const parts = value.trim().split(/\s+/).filter(Boolean);
+    return {
+      firstName: parts[0] ?? "",
+      lastName: parts.length > 1 ? parts.slice(1).join(" ") : "",
+    };
   }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -38,17 +79,22 @@ export function ContactForm() {
 
     setSubmitting(true);
     try {
+      const meta = getMetaClientContext();
+      const name = formValue(formData, "name");
+      const email = formValue(formData, "email");
+      const serviceInterest = formValue(formData, "serviceInterest");
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          name: formValue(formData, "name"),
-          email: formValue(formData, "email"),
+          name,
+          email,
           phone: phoneValue,
           subject: formValue(formData, "subject"),
-          serviceInterest: formValue(formData, "serviceInterest"),
+          serviceInterest,
           message: formValue(formData, "message"),
           sourcePage: "/contact",
+          meta,
         }),
       });
 
@@ -58,6 +104,30 @@ export function ContactForm() {
       }
 
       toast.success("Votre demande a bien été envoyée.");
+      const metaResult = (await response.json().catch(() => null)) as { id?: string } | null;
+      if (metaResult?.id) {
+        const { firstName, lastName } = splitFullName(name);
+        reinitMetaPixelWithAdvancedMatching(
+          buildMetaAdvancedMatching({
+            email,
+            phone: phoneValue,
+            firstName,
+            lastName,
+            country: "tn",
+          }),
+        );
+        trackMetaContact({
+          eventId: metaResult.id,
+          contentId: "contact:form",
+          contentName: "Demande contact EBM",
+          contentCategory: "contact",
+          customData: {
+            lead_source: "contact_form",
+            service_interest: serviceInterest,
+          },
+        });
+      }
+
       form.reset();
       setPhone("");
       setSubmitted(true);
@@ -88,7 +158,11 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="rounded-3xl border border-border/60 bg-card/85 p-5 shadow-sm backdrop-blur-sm sm:p-6">
+    <form
+      onSubmit={onSubmit}
+      onFocusCapture={trackContactFormStarted}
+      className="rounded-3xl border border-border/60 bg-card/85 p-5 shadow-sm backdrop-blur-sm sm:p-6"
+    >
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="contact-name">Nom complet</Label>

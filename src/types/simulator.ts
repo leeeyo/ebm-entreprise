@@ -8,16 +8,16 @@ export type SimulatorDecompositionItem = {
   quantityMode: "fixed" | "surface" | "surfaceMultiplier";
   quantityValue: number;
   unitCostTnd: number;
-  offers: Array<"grosOeuvre" | "premium" | "luxe">;
+  offers: Array<"economique" | "hautStanding" | "prestige">;
 };
 
 /** Serializable snapshot for pricing (API + client). */
 export type SimulatorSettingsSnapshot = {
   baseTndPerM2: number;
   offerMultipliers: {
-    grosOeuvre: number;
-    premium: number;
-    luxe: number;
+    economique: number;
+    hautStanding: number;
+    prestige: number;
   };
   typeMultipliers: {
     plainPied: number;
@@ -29,9 +29,10 @@ export type SimulatorSettingsSnapshot = {
     basement: number;
     garden: number;
   };
-  styleMultipliers: {
-    moderne: number;
-    mediterraneenne: number;
+  topographyMultipliers: {
+    flat: number;
+    slightSlope: number;
+    steepSlope: number;
   };
   advancedMarkups: {
     overhead: number;
@@ -49,6 +50,11 @@ export type SimulatorSettingsSnapshot = {
     poolTndPerM2: number;
     basementTndPerM2: number;
     gardenTndPerM2: number;
+  };
+  roomUnitPrices: {
+    bedroomTndPerUnit: number;
+    bathroomTndPerUnit: number;
+    kitchenTndPerUnit: number;
   };
   decompositionItems: SimulatorDecompositionItem[];
 };

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Lock, ShieldCheck, Timer } from "lucide-react";
+import { MetaViewContentTracker } from "@/components/analytics/meta-view-content-tracker";
 import { LazyMotionProvider } from "@/components/motion/lazy-motion-provider";
 import { PageHero, TrustStrip } from "@/components/marketing";
 import { AdvancedSimulator } from "@/components/simulateur/advanced-simulator";
@@ -20,6 +21,12 @@ const TRUST_ITEMS = [
 export default function SimulateurPage() {
   return (
     <LazyMotionProvider>
+      <MetaViewContentTracker
+        contentId="simulateur:devis"
+        contentName="Simulateur de devis EBM"
+        contentCategory="simulateur"
+      />
+
       <PageHero
         eyebrow="Simulateur EBM"
         title={simulateurPage.title}

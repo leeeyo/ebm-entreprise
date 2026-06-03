@@ -11,7 +11,7 @@ export const DEFAULT_DECOMPOSITION_ITEMS: SimulatorDecompositionItem[] = [
     quantityMode: "fixed",
     quantityValue: 1,
     unitCostTnd: 14500,
-    offers: ["grosOeuvre", "premium", "luxe"],
+    offers: ["economique", "hautStanding", "prestige"],
   },
   {
     id: "foundations",
@@ -23,7 +23,7 @@ export const DEFAULT_DECOMPOSITION_ITEMS: SimulatorDecompositionItem[] = [
     quantityMode: "surface",
     quantityValue: 1,
     unitCostTnd: 360,
-    offers: ["grosOeuvre", "premium", "luxe"],
+    offers: ["economique", "hautStanding", "prestige"],
   },
   {
     id: "frame",
@@ -35,7 +35,7 @@ export const DEFAULT_DECOMPOSITION_ITEMS: SimulatorDecompositionItem[] = [
     quantityMode: "surface",
     quantityValue: 1,
     unitCostTnd: 420,
-    offers: ["grosOeuvre", "premium", "luxe"],
+    offers: ["economique", "hautStanding", "prestige"],
   },
   {
     id: "masonry-walls",
@@ -47,7 +47,7 @@ export const DEFAULT_DECOMPOSITION_ITEMS: SimulatorDecompositionItem[] = [
     quantityMode: "surfaceMultiplier",
     quantityValue: 1.35,
     unitCostTnd: 165,
-    offers: ["grosOeuvre", "premium", "luxe"],
+    offers: ["economique", "hautStanding", "prestige"],
   },
   {
     id: "waterproofing",
@@ -59,7 +59,7 @@ export const DEFAULT_DECOMPOSITION_ITEMS: SimulatorDecompositionItem[] = [
     quantityMode: "surfaceMultiplier",
     quantityValue: 0.45,
     unitCostTnd: 95,
-    offers: ["premium", "luxe"],
+    offers: ["hautStanding", "prestige"],
   },
   {
     id: "electrical",
@@ -71,7 +71,7 @@ export const DEFAULT_DECOMPOSITION_ITEMS: SimulatorDecompositionItem[] = [
     quantityMode: "surface",
     quantityValue: 1,
     unitCostTnd: 145,
-    offers: ["premium", "luxe"],
+    offers: ["hautStanding", "prestige"],
   },
   {
     id: "plumbing",
@@ -83,7 +83,7 @@ export const DEFAULT_DECOMPOSITION_ITEMS: SimulatorDecompositionItem[] = [
     quantityMode: "fixed",
     quantityValue: 1,
     unitCostTnd: 18500,
-    offers: ["premium", "luxe"],
+    offers: ["hautStanding", "prestige"],
   },
   {
     id: "hvac",
@@ -95,7 +95,7 @@ export const DEFAULT_DECOMPOSITION_ITEMS: SimulatorDecompositionItem[] = [
     quantityMode: "surface",
     quantityValue: 1,
     unitCostTnd: 135,
-    offers: ["luxe"],
+    offers: ["prestige"],
   },
   {
     id: "aluminium",
@@ -107,7 +107,7 @@ export const DEFAULT_DECOMPOSITION_ITEMS: SimulatorDecompositionItem[] = [
     quantityMode: "surfaceMultiplier",
     quantityValue: 0.28,
     unitCostTnd: 950,
-    offers: ["premium", "luxe"],
+    offers: ["hautStanding", "prestige"],
   },
   {
     id: "flooring",
@@ -119,7 +119,7 @@ export const DEFAULT_DECOMPOSITION_ITEMS: SimulatorDecompositionItem[] = [
     quantityMode: "surface",
     quantityValue: 1,
     unitCostTnd: 175,
-    offers: ["premium", "luxe"],
+    offers: ["hautStanding", "prestige"],
   },
   {
     id: "paint",
@@ -131,7 +131,7 @@ export const DEFAULT_DECOMPOSITION_ITEMS: SimulatorDecompositionItem[] = [
     quantityMode: "surfaceMultiplier",
     quantityValue: 2.8,
     unitCostTnd: 32,
-    offers: ["premium", "luxe"],
+    offers: ["hautStanding", "prestige"],
   },
   {
     id: "outdoor-basic",
@@ -143,16 +143,16 @@ export const DEFAULT_DECOMPOSITION_ITEMS: SimulatorDecompositionItem[] = [
     quantityMode: "fixed",
     quantityValue: 1,
     unitCostTnd: 12000,
-    offers: ["premium", "luxe"],
+    offers: ["hautStanding", "prestige"],
   },
 ];
 
 export const DEFAULT_SIMULATOR_SETTINGS: SimulatorSettingsSnapshot = {
   baseTndPerM2: 1800,
   offerMultipliers: {
-    grosOeuvre: 1,
-    premium: 1.25,
-    luxe: 1.5,
+    economique: 1,
+    hautStanding: 1.25,
+    prestige: 1.5,
   },
   typeMultipliers: {
     plainPied: 1,
@@ -164,9 +164,10 @@ export const DEFAULT_SIMULATOR_SETTINGS: SimulatorSettingsSnapshot = {
     basement: 0.12,
     garden: 0.05,
   },
-  styleMultipliers: {
-    moderne: 1,
-    mediterraneenne: 1.03,
+  topographyMultipliers: {
+    flat: 1,
+    slightSlope: 1.05,
+    steepSlope: 1.12,
   },
   advancedMarkups: {
     overhead: 0.08,
@@ -184,6 +185,11 @@ export const DEFAULT_SIMULATOR_SETTINGS: SimulatorSettingsSnapshot = {
     poolTndPerM2: 1450,
     basementTndPerM2: 1250,
     gardenTndPerM2: 220,
+  },
+  roomUnitPrices: {
+    bedroomTndPerUnit: 2200,
+    bathroomTndPerUnit: 6500,
+    kitchenTndPerUnit: 9000,
   },
   decompositionItems: DEFAULT_DECOMPOSITION_ITEMS,
 };
@@ -213,9 +219,9 @@ export function normalizeSimulatorSettingsSnapshot(
       value.typeMultipliers,
     ),
     optionAdds: mergeNumberDefaults(DEFAULT_SIMULATOR_SETTINGS.optionAdds, value.optionAdds),
-    styleMultipliers: mergeNumberDefaults(
-      DEFAULT_SIMULATOR_SETTINGS.styleMultipliers,
-      value.styleMultipliers,
+    topographyMultipliers: mergeNumberDefaults(
+      DEFAULT_SIMULATOR_SETTINGS.topographyMultipliers,
+      value.topographyMultipliers,
     ),
     advancedMarkups: mergeNumberDefaults(
       DEFAULT_SIMULATOR_SETTINGS.advancedMarkups,
@@ -228,6 +234,10 @@ export function normalizeSimulatorSettingsSnapshot(
     optionUnitPrices: mergeNumberDefaults(
       DEFAULT_SIMULATOR_SETTINGS.optionUnitPrices,
       value.optionUnitPrices,
+    ),
+    roomUnitPrices: mergeNumberDefaults(
+      DEFAULT_SIMULATOR_SETTINGS.roomUnitPrices,
+      value.roomUnitPrices,
     ),
     decompositionItems: normalizeDecompositionItems(value.decompositionItems),
   };
@@ -272,12 +282,17 @@ function isValidQuantityMode(value: unknown): value is SimulatorDecompositionIte
   return ["fixed", "surface", "surfaceMultiplier"].includes(String(value));
 }
 
+const OFFER_KEYS: SimulatorDecompositionItem["offers"] = ["economique", "hautStanding", "prestige"];
+
 function normalizeOffers(value: unknown): SimulatorDecompositionItem["offers"] {
-  if (!Array.isArray(value)) return ["grosOeuvre", "premium", "luxe"];
-  const offers = value.filter((offer): offer is SimulatorDecompositionItem["offers"][number] =>
-    ["grosOeuvre", "premium", "luxe"].includes(String(offer)),
-  );
-  return offers.length > 0 ? offers : ["grosOeuvre", "premium", "luxe"];
+  const fallback: SimulatorDecompositionItem["offers"] = OFFER_KEYS;
+  if (!Array.isArray(value)) return fallback;
+  const offers = value
+    .filter((offer): offer is SimulatorDecompositionItem["offers"][number] =>
+      OFFER_KEYS.includes(offer as SimulatorDecompositionItem["offers"][number]),
+    );
+  const unique = Array.from(new Set(offers));
+  return unique.length > 0 ? unique : fallback;
 }
 
 function mergeNumberDefaults<T extends Record<string, number>>(

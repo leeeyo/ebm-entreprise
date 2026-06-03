@@ -2,16 +2,15 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { connectDB } from "@/lib/db";
-import { normalizeSimulatorSettingsSnapshot } from "@/lib/simulator-settings-defaults";
-import { SimulatorSettings, type SimulatorSettingsDoc } from "@/models/SimulatorSettings";
+import { SimulatorSettings, settingsDocToSnapshot } from "@/models/SimulatorSettings";
 
 const patchSchema = z.object({
   baseTndPerM2: z.number().positive().optional(),
   offerMultipliers: z
     .object({
-      grosOeuvre: z.number().positive(),
-      premium: z.number().positive(),
-      luxe: z.number().positive(),
+      economique: z.number().positive(),
+      hautStanding: z.number().positive(),
+      prestige: z.number().positive(),
     })
     .optional(),
   typeMultipliers: z
@@ -28,10 +27,11 @@ const patchSchema = z.object({
       garden: z.number().min(0),
     })
     .optional(),
-  styleMultipliers: z
+  topographyMultipliers: z
     .object({
-      moderne: z.number().positive(),
-      mediterraneenne: z.number().positive(),
+      flat: z.number().positive(),
+      slightSlope: z.number().positive(),
+      steepSlope: z.number().positive(),
     })
     .optional(),
   advancedMarkups: z
@@ -57,6 +57,13 @@ const patchSchema = z.object({
       gardenTndPerM2: z.number().min(0),
     })
     .optional(),
+  roomUnitPrices: z
+    .object({
+      bedroomTndPerUnit: z.number().min(0),
+      bathroomTndPerUnit: z.number().min(0),
+      kitchenTndPerUnit: z.number().min(0),
+    })
+    .optional(),
   decompositionItems: z
     .array(
       z.object({
@@ -69,54 +76,11 @@ const patchSchema = z.object({
         quantityMode: z.enum(["fixed", "surface", "surfaceMultiplier"]),
         quantityValue: z.number().min(0),
         unitCostTnd: z.number().min(0),
-        offers: z.array(z.enum(["grosOeuvre", "premium", "luxe"])).min(1),
+        offers: z.array(z.enum(["economique", "hautStanding", "prestige"])).min(1),
       }),
     )
     .optional(),
 });
-
-function toSnapshot(doc: SimulatorSettingsDoc) {
-  return normalizeSimulatorSettingsSnapshot({
-    baseTndPerM2: doc.baseTndPerM2,
-    offerMultipliers: {
-      grosOeuvre: doc.offerMultipliers?.grosOeuvre,
-      premium: doc.offerMultipliers?.premium,
-      luxe: doc.offerMultipliers?.luxe,
-    },
-    typeMultipliers: {
-      plainPied: doc.typeMultipliers?.plainPied,
-      r1: doc.typeMultipliers?.r1,
-      r2: doc.typeMultipliers?.r2,
-    },
-    optionAdds: {
-      pool: doc.optionAdds?.pool,
-      basement: doc.optionAdds?.basement,
-      garden: doc.optionAdds?.garden,
-    },
-    styleMultipliers: {
-      moderne: doc.styleMultipliers?.moderne,
-      mediterraneenne: doc.styleMultipliers?.mediterraneenne,
-    },
-    advancedMarkups: {
-      overhead: doc.advancedMarkups?.overhead,
-      profit: doc.advancedMarkups?.profit,
-      contingency: doc.advancedMarkups?.contingency,
-      tax: doc.advancedMarkups?.tax,
-    },
-    locationMultipliers: {
-      grandTunis: doc.locationMultipliers?.grandTunis,
-      coastal: doc.locationMultipliers?.coastal,
-      interior: doc.locationMultipliers?.interior,
-      south: doc.locationMultipliers?.south,
-    },
-    optionUnitPrices: {
-      poolTndPerM2: doc.optionUnitPrices?.poolTndPerM2,
-      basementTndPerM2: doc.optionUnitPrices?.basementTndPerM2,
-      gardenTndPerM2: doc.optionUnitPrices?.gardenTndPerM2,
-    },
-    decompositionItems: doc.decompositionItems,
-  });
-}
 
 export async function GET() {
   const session = await auth();
@@ -128,7 +92,7 @@ export async function GET() {
   if (!doc) {
     doc = await SimulatorSettings.create({});
   }
-  return NextResponse.json(toSnapshot(doc));
+  return NextResponse.json(settingsDocToSnapshot(doc));
 }
 
 export async function PATCH(req: Request) {
@@ -147,5 +111,5 @@ export async function PATCH(req: Request) {
     { $set: parsed.data },
     { upsert: true, returnDocument: "after" },
   );
-  return NextResponse.json(toSnapshot(doc!));
+  return NextResponse.json(settingsDocToSnapshot(doc!));
 }

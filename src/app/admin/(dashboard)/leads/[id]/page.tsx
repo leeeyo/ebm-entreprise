@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { offerDisplayLabels, topographyDisplayLabels } from "@/content/simulateur";
 import { ADVANCED_DIVISIONS } from "@/lib/advanced-simulator/defaults";
 import { connectDB } from "@/lib/db";
 import { Lead } from "@/models/Lead";
@@ -58,18 +59,30 @@ function getNestedRecord(parent: Record<string, unknown>, key: string) {
   return isRecord(value) ? value : {};
 }
 
+function offerLabel(value: unknown) {
+  return typeof value === "string" ? offerDisplayLabels[value] ?? value : "—";
+}
+
+function topographyLabel(value: unknown) {
+  return typeof value === "string" ? topographyDisplayLabels[value] ?? value : "—";
+}
+
 function getProjectRows(project: Record<string, unknown>): DisplayRow[] {
   const options = getNestedRecord(project, "options");
   const optionSurfaces = getNestedRecord(project, "optionSurfaces");
+  const rooms = getNestedRecord(project, "rooms");
 
   return [
-    { label: "Style architectural", value: stringifyValue(project.style) },
     { label: "Type de construction", value: stringifyValue(project.buildType) },
-    { label: "Offre", value: stringifyValue(project.offer) },
+    { label: "Style de villa", value: offerLabel(project.offer) },
+    { label: "Topographie du terrain", value: topographyLabel(project.terrainTopography) },
     { label: "Surface à bâtir", value: `${stringifyValue(project.surfaceM2)} m²` },
     { label: "Emplacement", value: stringifyValue(project.location) },
     { label: "Zone tarifaire", value: stringifyValue(project.zone) },
     { label: "Titre foncier", value: project.terrain === "oui" ? "Disponible" : "En cours" },
+    { label: "Chambres", value: stringifyValue(rooms.bedrooms) },
+    { label: "Salles de bain", value: stringifyValue(rooms.bathrooms) },
+    { label: "Cuisines", value: stringifyValue(rooms.kitchens) },
     { label: "Piscine", value: options.pool ? `${stringifyValue(optionSurfaces.poolM2)} m²` : "Non" },
     { label: "Sous-sol / garage", value: options.basement ? `${stringifyValue(optionSurfaces.basementM2)} m²` : "Non" },
     { label: "Jardin / clôtures", value: options.garden ? `${stringifyValue(optionSurfaces.gardenM2)} m²` : "Non" },
@@ -197,7 +210,7 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
       <div className="grid gap-4 md:grid-cols-3">
         <MetricCard icon={Ruler} label="Surface" value={`${stringifyValue(project.surfaceM2)} m²`} />
         <MetricCard icon={MapPin} label="Emplacement" value={stringifyValue(project.location)} />
-        <MetricCard icon={Sparkles} label="Offre" value={stringifyValue(project.offer)} />
+        <MetricCard icon={Sparkles} label="Standing" value={offerLabel(project.offer)} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
@@ -238,8 +251,14 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
                 value={lead.pricingVersion ?? snapshotValue(simulation.pricingVersion)}
               />
               <InfoTile label="Base TND / m²" value={snapshotTnd(settingsSnapshot.baseTndPerM2)} />
-              <InfoTile label="Premium" value={`x${snapshotValue(snapshotOfferMultipliers.premium)}`} />
-              <InfoTile label="Luxe" value={`x${snapshotValue(snapshotOfferMultipliers.luxe)}`} />
+              <InfoTile
+                label="Haut standing"
+                value={`x${snapshotValue(snapshotOfferMultipliers.hautStanding)}`}
+              />
+              <InfoTile
+                label="Prestige"
+                value={`x${snapshotValue(snapshotOfferMultipliers.prestige)}`}
+              />
             </CardContent>
           </Card>
 

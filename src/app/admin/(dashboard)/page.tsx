@@ -1,4 +1,5 @@
 import {
+  Activity,
   BookOpenText,
   BriefcaseBusiness,
   Building2,
@@ -17,11 +18,13 @@ import { Button } from "@/components/ui/button";
 import { listBlogPosts, listContactSubmissions, listFaqEntries, listProjects, listServicePages } from "@/lib/cms-content";
 import { connectDB } from "@/lib/db";
 import { Lead } from "@/models/Lead";
+import { MetaCapiEvent } from "@/models/MetaCapiEvent";
 
 export default async function AdminHomePage() {
   await connectDB();
-  const [leadCount, contacts, posts, services, projects, faqs] = await Promise.all([
+  const [leadCount, metaFailureCount, contacts, posts, services, projects, faqs] = await Promise.all([
     Lead.countDocuments(),
+    MetaCapiEvent.countDocuments({ status: { $ne: "success" } }),
     listContactSubmissions(),
     listBlogPosts(),
     listServicePages(),
@@ -112,6 +115,13 @@ export default async function AdminHomePage() {
           description="Rédiger des actualités en MD avec aperçu éditorial, SEO et statut de publication."
           href="/admin/content/blog"
           meta="MD"
+        />
+        <AdminWorkspaceCard
+          icon={Activity}
+          title="Meta Pixel + CAPI"
+          description="Contrôler la configuration Pixel/CAPI et les derniers envois serveur pour Lead et Contact."
+          href="/admin/meta"
+          meta={`${metaFailureCount} alertes`}
         />
       </div>
 

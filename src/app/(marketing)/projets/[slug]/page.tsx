@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ArrowRight, CalendarDays, Hammer, MapPin, RulerIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { MetaViewContentTracker } from "@/components/analytics/meta-view-content-tracker";
 import { LazyMotionProvider } from "@/components/motion/lazy-motion-provider";
 import {
   CtaBand,
@@ -41,6 +42,12 @@ export default async function ProjetDetailPage({ params }: Props) {
 
   return (
     <LazyMotionProvider>
+      <MetaViewContentTracker
+        contentId={`project:${p.slug}`}
+        contentName={p.title}
+        contentCategory="projet"
+      />
+
       {cover ? (
         <ProjetCover
           src={cover.src}
