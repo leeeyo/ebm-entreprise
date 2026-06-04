@@ -9,12 +9,14 @@ import {
 } from "@/components/marketing";
 import { listServicePages, type ServicePageRecord } from "@/lib/cms-content";
 import { groupNavChildren, navSections } from "@/lib/navigation";
+import { buildSeoMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildSeoMetadata({
   title: "Services",
   description:
     "Fluides, électricité, menuiserie et aménagements extérieurs — l'offre technique EBM Ben Mokhtar en Tunisie.",
-};
+  path: "/services",
+});
 
 const PILLAR_ICONS: Record<string, LucideIcon> = {
   Fluide: Droplets,

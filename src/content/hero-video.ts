@@ -8,7 +8,7 @@ export const HERO_VIDEO_MOBILE_SRC = "/hero/ebm-hero-mobile.mp4" as const;
 export const HERO_VIDEO_LAYOUT_MIN_WIDTH_PX = 768 as const;
 
 const RESIDENCE_AMIRA_COVER =
-  `/residences/${encodeURIComponent("Résidence Amira.png")}` as const;
+  `/residences/${encodeURIComponent("Résidence Amira.webp")}` as const;
 
 /** Poster until the hero video starts playing. */
 export const HERO_FALLBACK_IMAGE_SRC = RESIDENCE_AMIRA_COVER;

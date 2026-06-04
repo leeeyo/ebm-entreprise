@@ -3,12 +3,13 @@ import { notFound } from "next/navigation";
 import { GenericMarketingPage } from "@/components/templates/generic-marketing-page";
 import { genericServicePages } from "@/content/service-pages";
 import { getPublishedServicePage, type ServicePageRecord } from "@/lib/cms-content";
+import { buildSeoMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string[] }> };
 
 type StaticServiceCopy = (typeof genericServicePages)[string];
 
-function metadataForServicePage(data: ServicePageRecord | StaticServiceCopy): Pick<Metadata, "title" | "description"> {
+function metadataForServicePage(data: ServicePageRecord | StaticServiceCopy): { title: string; description: string } {
   const seoTitle = "seoTitle" in data ? data.seoTitle : undefined;
   const seoDescription = "seoDescription" in data ? data.seoDescription : undefined;
   const title =
@@ -18,14 +19,30 @@ function metadataForServicePage(data: ServicePageRecord | StaticServiceCopy): Pi
   return { title, description };
 }
 
+function heroImageSrc(data: ServicePageRecord | StaticServiceCopy) {
+  if (!("heroImage" in data) || !data.heroImage || typeof data.heroImage !== "object") {
+    return undefined;
+  }
+  return "src" in data.heroImage && typeof data.heroImage.src === "string"
+    ? data.heroImage.src
+    : undefined;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const key = slug.join("/");
   const data = (await getPublishedServicePage(key)) ?? genericServicePages[key];
   if (!data) {
-    return { title: "Page introuvable" };
+    return {
+      ...buildSeoMetadata({ title: "Page introuvable", path: `/services/${key}` }),
+      robots: { index: false, follow: false },
+    };
   }
-  return metadataForServicePage(data);
+  return buildSeoMetadata({
+    ...metadataForServicePage(data),
+    path: `/services/${key}`,
+    image: heroImageSrc(data),
+  });
 }
 
 export default async function ServiceCatchAllPage({ params }: Props) {

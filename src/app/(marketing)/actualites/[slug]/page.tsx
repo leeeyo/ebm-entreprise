@@ -9,17 +9,26 @@ import { CtaBand } from "@/components/marketing";
 import { Badge } from "@/components/ui/badge";
 import { MarkdownContent } from "@/components/marketing/markdown-content";
 import { getBlogPostBySlug } from "@/lib/cms-content";
+import { buildSeoMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug, { publishedOnly: true });
-  if (!post) return { title: "Actualité introuvable" };
-  return {
+  if (!post) {
+    return {
+      ...buildSeoMetadata({ title: "Actualité introuvable", path: `/actualites/${slug}` }),
+      robots: { index: false, follow: false },
+    };
+  }
+  return buildSeoMetadata({
     title: post.seoTitle ?? post.title,
     description: post.seoDescription ?? post.excerpt,
-  };
+    path: `/actualites/${post.slug}`,
+    image: post.coverImage?.src,
+    type: "article",
+  });
 }
 
 function formatDate(value?: string) {

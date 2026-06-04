@@ -7,12 +7,14 @@ import { BrandedMascotState } from "@/components/brand/mascot-state";
 import { CtaBand, PageHero, TrustStrip } from "@/components/marketing";
 import { Badge } from "@/components/ui/badge";
 import { listBlogPosts } from "@/lib/cms-content";
+import { buildSeoMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildSeoMetadata({
   title: "Actualités",
   description:
     "Actualités EBM Ben Mokhtar — chantiers, réalisations et informations entreprise.",
-};
+  path: "/actualites",
+});
 
 const TRUST_ITEMS = [
   {

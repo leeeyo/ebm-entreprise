@@ -20,6 +20,7 @@ import {
   trackMetaContact,
   trackMetaCustom,
 } from "@/lib/meta-pixel";
+import { trackGaEvent } from "@/lib/google-analytics";
 
 function formValue(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -39,9 +40,14 @@ export function ContactForm() {
   }
 
   function trackContactFormStarted() {
-    if (!isMetaPixelEnabled()) return;
     if (formStartedTracked.current) return;
     formStartedTracked.current = true;
+
+    trackGaEvent("contact_form_started", {
+      content_category: "contact",
+    });
+
+    if (!isMetaPixelEnabled()) return;
 
     const eventId = createMetaEventId("contact_form_started");
     const payload = {
@@ -104,6 +110,10 @@ export function ContactForm() {
       }
 
       toast.success("Votre demande a bien été envoyée.");
+      trackGaEvent("generate_lead", {
+        lead_source: "contact_form",
+        service_interest: serviceInterest,
+      });
       const metaResult = (await response.json().catch(() => null)) as { id?: string } | null;
       if (metaResult?.id) {
         const { firstName, lastName } = splitFullName(name);

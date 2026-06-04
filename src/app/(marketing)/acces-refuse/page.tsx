@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import { BrandedMascotState } from "@/components/brand/mascot-state";
+import { buildSeoMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Accès refusé",
-  description: "Zone réservée EBM Ben Mokhtar.",
+  ...buildSeoMetadata({
+    title: "Accès refusé",
+    description: "Zone réservée EBM Ben Mokhtar.",
+    path: "/acces-refuse",
+  }),
+  robots: { index: false, follow: false },
 };
 
 export default function AccessRefusedPage() {

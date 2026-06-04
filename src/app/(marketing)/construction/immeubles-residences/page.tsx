@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { LazyMotionProvider } from "@/components/motion/lazy-motion-provider";
 import {
   CtaBand,
+  FaqAccordion,
   ImageBentoGrid,
   PageHero,
   SectionHeading,
   StickyShowcase,
 } from "@/components/marketing";
 import { getPublishedServicePage } from "@/lib/cms-content";
+import { buildSeoMetadata } from "@/lib/seo";
 import { getDefaultServiceContentSections } from "@/lib/service-page-editor";
 
 const defaultSteps = [
@@ -33,10 +35,12 @@ const PAGE_KEY = "construction/immeubles-residences";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPublishedServicePage(PAGE_KEY);
-  return {
+  return buildSeoMetadata({
     title: page?.seoTitle ?? page?.title ?? "Construction Immeubles & résidences",
     description: page?.seoDescription ?? page?.intro ?? "Construction d'immeubles et de résidences avec coordination technique EBM.",
-  };
+    path: "/construction/immeubles-residences",
+    image: page?.heroImage?.src,
+  });
 }
 
 export default async function ConstructionImmeublesPage() {
@@ -57,6 +61,7 @@ export default async function ConstructionImmeublesPage() {
   const heroImage = page?.heroImage?.src ? { src: page.heroImage.src, alt: page.heroImage.alt ?? page.title } : undefined;
   const galleryImages = dashboardImages;
   const showGallery = page?.showImageGallery ?? galleryImages.length > 0;
+  const faqItems = (page?.faq ?? []).map((item) => ({ q: item.question, a: item.answer }));
 
   return (
     <LazyMotionProvider>
@@ -99,6 +104,24 @@ export default async function ConstructionImmeublesPage() {
             />
             <div className="mt-10">
               <ImageBentoGrid images={galleryImages} />
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {faqItems.length ? (
+        <section
+          className="cv-auto mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20"
+          style={{ containIntrinsicSize: "auto 700px" }}
+        >
+          <div className="grid gap-10 md:grid-cols-[minmax(0,0.4fr)_minmax(0,1fr)] md:gap-14">
+            <SectionHeading
+              eyebrow="FAQ"
+              title="Questions fréquentes."
+              subtitle="Les réponses aux questions les plus courantes sur nos programmes collectifs."
+            />
+            <div>
+              <FaqAccordion items={faqItems} />
             </div>
           </div>
         </section>

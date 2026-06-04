@@ -4,18 +4,14 @@ export const homeHero = {
   ctaSecondary: "Consulter nos Réalisations",
 };
 
-/**
- * `image.src` : placeholders Unsplash (licence Unsplash). Remplacez par des fichiers
- * locaux, p.ex. `/domaines/gros-oeuvre.webp`, une fois vos visuels dans `/public`.
- */
 export const domaines = [
   {
     title: "Gros Œuvre & Structure",
     description:
       "La maîtrise du béton et de la solidité pour garantir la pérennité de chaque ouvrage.",
     image: {
-      src: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=80",
-      alt: "Coulage de béton et équipes sur un chantier de gros œuvre.",
+      src: "/domaines/gros-oeuvre.webp",
+      alt: "Coulage de béton et structure sur un chantier de gros œuvre EBM.",
     },
   },
   {
@@ -23,7 +19,7 @@ export const domaines = [
     description:
       "Une prise en charge totale, assurant une cohérence parfaite entre les plans et la réalité.",
     image: {
-      src: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1600&q=80",
+      src: "/domaines/cle-en-main.webp",
       alt: "Résidence contemporaine livrée clé en main, volumes et façades finies.",
     },
   },
@@ -32,8 +28,8 @@ export const domaines = [
     description:
       "Valoriser l'existant avec les techniques de construction les plus modernes.",
     image: {
-      src: "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=1600&q=80",
-      alt: "Rénovation intérieure : chantier propre et finitions soignées.",
+      src: "/domaines/renovation.webp",
+      alt: "Rénovation et extension : chantier propre et finitions soignées.",
     },
   },
   {
@@ -41,8 +37,8 @@ export const domaines = [
     description:
       "Travaux de haute technicité nécessitant un parc matériel de pointe et un savoir-faire spécifique.",
     image: {
-      src: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=1600&q=80",
-      alt: "Ingénieur en contrôle technique et équipement de précision sur chantier.",
+      src: "/domaines/specialises.webp",
+      alt: "Ouvrage spécialisé et équipement de précision sur chantier EBM.",
     },
   },
 ] as const;

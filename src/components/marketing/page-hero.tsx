@@ -91,6 +91,7 @@ export function PageHero({
   className,
 }: PageHeroProps) {
   const wordCount = tokens(title).length;
+  const hasImage = Boolean(image);
   const heightClass = compact
     ? "min-h-[18rem] sm:min-h-[22rem] lg:min-h-[24rem]"
     : "min-h-[26rem] sm:min-h-[32rem] lg:min-h-[36rem]";
@@ -116,22 +117,35 @@ export function PageHero({
         <div className="absolute inset-0 z-0 bg-linear-to-br from-muted/60 to-background" aria-hidden />
       )}
 
-      {/* Animated mesh overlay */}
-      <div className="pointer-events-none absolute inset-0 z-1 overflow-hidden" aria-hidden>
-        <div className="ebm-mesh" />
-      </div>
+      {/* Animated mesh overlay — skipped over photos so the image stays crisp */}
+      {!hasImage ? (
+        <div className="pointer-events-none absolute inset-0 z-1 overflow-hidden" aria-hidden>
+          <div className="ebm-mesh" />
+        </div>
+      ) : null}
 
-      {/* Readability scrims */}
+      {/* Readability scrims — lighter when a photo is present */}
       <div
-        className="pointer-events-none absolute inset-0 z-2 bg-linear-to-r from-background/80 via-background/55 to-background/25 sm:via-background/40"
+        className={cn(
+          "pointer-events-none absolute inset-0 z-2 bg-linear-to-r",
+          hasImage
+            ? "from-background/65 via-background/15 to-transparent sm:via-background/10"
+            : "from-background/80 via-background/55 to-background/25 sm:via-background/40",
+        )}
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 z-3 h-[min(32%,12rem)] bg-linear-to-b from-background/25 to-transparent"
+        className={cn(
+          "pointer-events-none absolute inset-x-0 top-0 z-3 h-[min(32%,12rem)] bg-linear-to-b to-transparent",
+          hasImage ? "from-background/15" : "from-background/25",
+        )}
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-3 h-[min(28%,10rem)] bg-linear-to-t from-background/30 to-transparent"
+        className={cn(
+          "pointer-events-none absolute inset-x-0 bottom-0 z-3 h-[min(28%,10rem)] bg-linear-to-t to-transparent",
+          hasImage ? "from-background/15" : "from-background/30",
+        )}
         aria-hidden
       />
 

@@ -12,17 +12,25 @@ import {
   SectionHeading,
 } from "@/components/marketing";
 import { getProjectBySlug, listProjects } from "@/lib/cms-content";
+import { buildSeoMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const p = await getProjectBySlug(slug, { publishedOnly: true });
-  if (!p) return { title: "Projet" };
-  return {
+  if (!p) {
+    return {
+      ...buildSeoMetadata({ title: "Projet introuvable", path: `/projets/${slug}` }),
+      robots: { index: false, follow: false },
+    };
+  }
+  return buildSeoMetadata({
     title: p.seoTitle ?? p.title,
     description: p.seoDescription ?? p.shortDescription,
-  };
+    path: `/projets/${p.slug}`,
+    image: p.coverImage?.src,
+  });
 }
 
 export default async function ProjetDetailPage({ params }: Props) {

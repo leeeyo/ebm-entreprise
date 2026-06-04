@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import { Providers } from "@/components/providers";
+import { getSiteOrigin } from "@/lib/site-url";
+import { buildSeoMetadata, DEFAULT_SEO_TITLE, SEO_SITE_NAME } from "@/lib/seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,35 +21,15 @@ const outfit = Outfit({
   display: "swap",
 });
 
-function metadataBaseUrl(): URL {
-  const auth = process.env.AUTH_URL?.trim();
-  const vercel = process.env.VERCEL_URL?.trim();
-
-  const candidate =
-    auth ||
-    (vercel ? `https://${vercel}` : null) ||
-    "http://localhost:3090";
-
-  const normalized =
-    candidate.startsWith("http://") || candidate.startsWith("https://")
-      ? candidate
-      : `https://${candidate}`;
-
-  try {
-    return new URL(normalized);
-  } catch {
-    return new URL("http://localhost:3090");
-  }
-}
+const rootSeo = buildSeoMetadata({ path: "/" });
 
 export const metadata: Metadata = {
-  metadataBase: metadataBaseUrl(),
+  ...rootSeo,
+  metadataBase: new URL(getSiteOrigin()),
   title: {
-    default: "EBM Ben Mokhtar — Entreprise de construction Tunisie",
-    template: "%s | EBM Ben Mokhtar",
+    default: DEFAULT_SEO_TITLE,
+    template: `%s | ${SEO_SITE_NAME}`,
   },
-  description:
-    "Construction bâtiment Tunisie, génie civil et projets clé en main. Entreprise BTP Ben Mokhtar — simulateur de budget et réalisations.",
 };
 
 export default function RootLayout({

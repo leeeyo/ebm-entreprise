@@ -17,19 +17,22 @@ import {
   suiviSection,
 } from "@/content/construction-villa";
 import { getPublishedServicePage } from "@/lib/cms-content";
+import { buildSeoMetadata } from "@/lib/seo";
 import { getDefaultServiceContentSections } from "@/lib/service-page-editor";
 
 const PAGE_KEY = "construction/villa";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPublishedServicePage(PAGE_KEY);
-  return {
+  return buildSeoMetadata({
     title: page?.seoTitle ?? page?.title ?? "Construction villa",
     description:
       page?.seoDescription ??
       page?.intro ??
       "Construction de villa en Tunisie : méthode EBM, gros œuvre, second œuvre et finitions — entreprise BTP Ben Mokhtar.",
-  };
+    path: "/construction/villa",
+    image: page?.heroImage?.src,
+  });
 }
 
 export default async function ConstructionVillaPage() {
@@ -46,6 +49,9 @@ export default async function ConstructionVillaPage() {
   const heroImage = page?.heroImage?.src ? { src: page.heroImage.src, alt: page.heroImage.alt ?? page.title } : undefined;
   const galleryImages = dashboardImages;
   const showGallery = page?.showImageGallery ?? galleryImages.length > 0;
+  const faqItems = page?.faq?.length
+    ? page.faq.map((item) => ({ q: item.question, a: item.answer }))
+    : [...faqConstructionVilla];
 
   return (
     <LazyMotionProvider>
@@ -104,7 +110,7 @@ export default async function ConstructionVillaPage() {
             subtitle={suiviSection.text}
           />
           <div>
-            <FaqAccordion items={[...faqConstructionVilla]} />
+            <FaqAccordion items={faqItems} />
           </div>
         </div>
       </section>

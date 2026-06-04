@@ -5,12 +5,14 @@ import { LazyMotionProvider } from "@/components/motion/lazy-motion-provider";
 import { PageHero, TrustStrip } from "@/components/marketing";
 import { AdvancedSimulator } from "@/components/simulateur/advanced-simulator";
 import { simulateurPage } from "@/content/simulateur";
+import { buildSeoMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildSeoMetadata({
   title: "Simulateur de devis",
   description:
     "Estimez le budget de votre projet en 2 minutes — coûts indicatifs basés sur le marché tunisien 2026.",
-};
+  path: "/simulateur",
+});
 
 const TRUST_ITEMS = [
   { icon: Timer, label: "Estimation en 2 minutes", hint: "Formulaire requis pour recevoir le prix" },

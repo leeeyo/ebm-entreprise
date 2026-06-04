@@ -46,6 +46,7 @@ import {
   trackMetaCustom,
   trackMetaLead,
 } from "@/lib/meta-pixel";
+import { trackGaEvent, trackGaGenerateLead } from "@/lib/google-analytics";
 
 const STEPS = [
   simulateurPage.steps.projet,
@@ -213,9 +214,17 @@ export function AdvancedSimulator() {
   const contactIsComplete = name.trim().length > 1 && email.includes("@") && phone.trim().length >= 5;
 
   function trackSimulationStarted() {
-    if (!isMetaPixelEnabled()) return;
     if (simulationStartedTracked.current) return;
     simulationStartedTracked.current = true;
+
+    trackGaEvent("simulation_started", {
+      build_type: project.buildType,
+      offer: project.offer,
+      surface_m2: project.surfaceM2,
+      location_zone: project.zone,
+    });
+
+    if (!isMetaPixelEnabled()) return;
 
     const eventId = createMetaEventId("simulation_started");
     const payload = {
@@ -278,6 +287,15 @@ export function AdvancedSimulator() {
         const { firstName, lastName } = splitFullName(name);
         const value =
           typeof result.estimateTnd === "number" ? result.estimateTnd : Math.round(totals.total);
+
+        trackGaGenerateLead({
+          value,
+          leadSource: "simulator",
+          build_type: project.buildType,
+          offer: project.offer,
+          surface_m2: project.surfaceM2,
+          location_zone: project.zone,
+        });
 
         reinitMetaPixelWithAdvancedMatching(
           buildMetaAdvancedMatching({

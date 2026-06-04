@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Activity, Database, Mail, ShieldCheck } from "lucide-react";
 import { PageHero, SectionHeading } from "@/components/marketing";
+import { buildSeoMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildSeoMetadata({
   title: "Confidentialité",
   description:
     "Politique de confidentialité EBM Ben Mokhtar : données de contact, simulateur, Meta Pixel et Conversions API.",
-};
+  path: "/confidentialite",
+});
 
 const dataUses = [
   {

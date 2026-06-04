@@ -15,13 +15,15 @@ import {
   HERO_VIDEO_MOBILE_SRC,
   HERO_VIDEO_SRC,
 } from "@/content/hero-video";
+import { buildSeoMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildSeoMetadata({
   title: "EBM Ben Mokhtar — Construction & génie civil en Tunisie",
   description:
     "Entreprise de construction Tunisie : gros œuvre, projets clé en main, rénovation. Estimez votre budget avec notre simulateur — prix construction m² Tunisie (indicatif).",
-};
+  path: "/",
+});
 
 export default function HomePage() {
   return (

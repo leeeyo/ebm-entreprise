@@ -7,12 +7,14 @@ import {
   SectionHeading,
 } from "@/components/marketing";
 import { listProjects } from "@/lib/cms-content";
+import { buildSeoMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildSeoMetadata({
   title: "Nos projets",
   description:
     "Résidences et réalisations EBM Ben Mokhtar — construction résidentielle et projets clé en main en Tunisie.",
-};
+  path: "/projets",
+});
 
 // Static chips (visual only for now — no client-side filtering yet).
 const CHIPS = ["Tous les projets", "Résidentiel", "Clé en main", "Programmes livrés"] as const;

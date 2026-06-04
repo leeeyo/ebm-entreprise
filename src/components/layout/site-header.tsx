@@ -346,7 +346,8 @@ export function SiteHeader({ navSections = defaultNavSections }: { navSections?:
   );
 
   const ctaBase = "h-11 px-4 text-sm font-semibold sm:h-11 sm:px-5";
-  const showLoginIcon = pathname === "/";
+  // Admin login entry point is available on every public page.
+  const showLoginIcon = true;
 
   return (
     <header

@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { MetaPixelBootstrap } from "@/components/analytics/meta-pixel-bootstrap";
 import { ThirdPartyAnalytics } from "@/components/analytics/third-party-analytics";
 import { MarketingMain } from "@/components/layout/marketing-main";
@@ -13,6 +14,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
 
   return (
     <>
+      <GoogleAnalytics />
       <MetaPixelBootstrap />
       <Suspense fallback={null}>
         <ThirdPartyAnalytics />

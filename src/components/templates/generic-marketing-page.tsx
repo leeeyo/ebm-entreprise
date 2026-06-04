@@ -22,6 +22,7 @@ import {
 import { MetaViewContentTracker } from "@/components/analytics/meta-view-content-tracker";
 import { MarketingInnerPage } from "@/components/templates/marketing-inner-page";
 import {
+  FaqAccordion,
   FeatureGrid,
   ImageBentoGrid,
   SectionHeading,
@@ -68,6 +69,7 @@ export function GenericMarketingPage({ pageKey, page }: { pageKey: string; page?
   const contentSections = page?.contentSections?.length ? page.contentSections : getDefaultServiceContentSections(pageKey, data.intro, data.bullets);
   const galleryImages = page?.galleryImages ?? [];
   const showGallery = page?.showImageGallery ?? galleryImages.length > 0;
+  const faqItems = (page?.faq ?? []).map((item) => ({ q: item.question, a: item.answer }));
 
   const heroProps: PageHeroProps = {
     eyebrow: page?.heroEyebrow ?? "Savoir-faire EBM",
@@ -163,6 +165,24 @@ export function GenericMarketingPage({ pageKey, page }: { pageKey: string; page?
           />
           <div className="mt-10">
             <ImageBentoGrid images={galleryImages} />
+          </div>
+        </section>
+      ) : null}
+
+      {faqItems.length ? (
+        <section
+          className="cv-auto"
+          style={{ containIntrinsicSize: "auto 600px" }}
+        >
+          <div className="grid gap-10 md:grid-cols-[minmax(0,0.4fr)_minmax(0,1fr)] md:gap-14">
+            <SectionHeading
+              eyebrow="FAQ"
+              title="Questions fréquentes."
+              subtitle="Les réponses aux questions les plus courantes sur cette prestation."
+            />
+            <div>
+              <FaqAccordion items={faqItems} />
+            </div>
           </div>
         </section>
       ) : null}

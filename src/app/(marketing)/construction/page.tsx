@@ -8,12 +8,14 @@ import {
   SectionHeading,
 } from "@/components/marketing";
 import { getPublishedServicePage, type ServicePageRecord } from "@/lib/cms-content";
+import { buildSeoMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildSeoMetadata({
   title: "Construction",
   description:
     "Construction de villas et programmes immeubles & résidences en Tunisie — méthode EBM Ben Mokhtar.",
-};
+  path: "/construction",
+});
 
 function dashboardImage(page: ServicePageRecord | null) {
   const image = page?.heroImage?.src ? page.heroImage : page?.galleryImages[0];

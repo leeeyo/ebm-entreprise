@@ -21,12 +21,14 @@ import {
 import { Reveal } from "@/components/home/reveal";
 import { ContactForm } from "@/components/contact/contact-form";
 import { ensureSiteSettings, type SiteSettingsRecord } from "@/lib/cms-content";
+import { buildSeoMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildSeoMetadata({
   title: "Contact",
   description:
     "Contactez EBM Ben Mokhtar — Ariana, Tunisie. Téléphone 22 181 181, email contact@ebm-entreprise.tn.",
-};
+  path: "/contact",
+});
 
 function getContactLinks(settings: SiteSettingsRecord) {
   return {
