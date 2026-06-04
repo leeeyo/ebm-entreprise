@@ -3,7 +3,7 @@
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment, useRef, useState, useSyncExternalStore } from "react";
+import { Fragment, useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import { homeHero } from "@/content/home";
 import {
@@ -51,7 +51,6 @@ function HeroMedia({ mounted, motionOk }: HeroMediaProps) {
   const showVideo = mounted && motionOk;
   const [videoActive, setVideoActive] = useState(false);
   const [ended, setEnded] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   const posterVisible = !motionOk || !showVideo || (!videoActive && !ended);
 
@@ -83,18 +82,14 @@ function HeroMedia({ mounted, motionOk }: HeroMediaProps) {
             aria-hidden
           />
           <video
-            ref={videoRef}
             className={cn(
               "absolute inset-0 z-2 h-full w-full object-cover transition-opacity duration-500 ease-out",
               ended ? "opacity-0" : videoActive ? "opacity-100" : "opacity-0",
             )}
+            autoPlay
             muted
             playsInline
-            preload="auto"
-            onCanPlay={() => {
-              const el = videoRef.current;
-              if (el) void el.play().catch(() => {});
-            }}
+            preload="metadata"
             onPlaying={() => setVideoActive(true)}
             onEnded={() => setEnded(true)}
             aria-label="Présentation vidéo des réalisations EBM Ben Mokhtar"
