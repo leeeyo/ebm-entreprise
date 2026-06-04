@@ -60,7 +60,6 @@ src/
 ├── hooks/, types/
 scripts/seed.ts             # Upsert admin user + default SimulatorSettings doc (key: "default")
 public/, uploads/           # uploads/ created at runtime, not committed
-advanced-simulator/         # Out-of-build prototype (excluded in tsconfig)
 ```
 
 **Data flow — simulator submission** (`POST /api/leads`):
@@ -119,11 +118,10 @@ External services: MongoDB; OVH SMTP (optional); Unsplash images allow-listed in
 
 - **Pricing is server-authoritative.** `/api/leads` recomputes totals from the persisted `SimulatorSettings` — don't refactor it to trust client-submitted `estimateTnd`. Each Lead embeds a full `settingsSnapshot` + `pricingVersion` so historic estimates remain reproducible after admins change prices.
 - **`SimulatorSettings` is a singleton** keyed `key: "default"`. The seed and the leads route both `findOneAndUpdate` / `findOne` against that key — keep it.
-- **`advanced-simulator/` at the repo root is excluded in `tsconfig.json`** (it's a prototype). The active engine is `src/lib/advanced-simulator/`.
+- **The active simulator engine is `src/lib/advanced-simulator/`.** The public wizard and server-side lead pricing share this implementation.
 - **NextAuth v5 is in beta** (`5.0.0-beta.30`). API surface differs from v4 — middleware uses the `auth(req => …)` wrapper exported from `src/auth.ts`, and the file is named `proxy.ts` (not `middleware.ts`) — verify Next.js still picks this up if you touch routing config.
 - **HMR-safe Mongoose**: don't call `mongoose.connect` directly elsewhere; use `connectDB()` so the dev cache on `globalThis.mongooseCache` keeps working.
 - **Nodemailer override**: `package.json` pins `nodemailer ^8.0.5` and `uuid ^13` via `overrides` — bumping either may need an explicit override update.
 - **Uploads are local-disk only.** No S3/CDN. Behind nginx/Caddy in prod, raise `client_max_body_size` for image uploads, and back up `UPLOAD_DIR` together with Mongo.
-- **README.md is UTF-16-encoded** (looks spaced-out when read raw). Don't rewrite it as UTF-8 without preserving intent.
 - **Performance budget**: <2s perceived load is a product requirement. Prefer WebP, semantic H1/H2/H3, image alt text — see AGENTS.md SEO section.
 - **Brand colors and CTA presence on every page** are non-negotiable per AGENTS.md once the layout exists.
