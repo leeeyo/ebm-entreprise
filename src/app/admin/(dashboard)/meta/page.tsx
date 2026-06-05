@@ -167,28 +167,28 @@ export default async function AdminMetaDiagnosticsPage() {
             icon={Activity}
             label="Pixel navigateur"
             value={configuredLabel(Boolean(publicPixelId))}
-            detail="NEXT_PUBLIC_META_PIXEL_ID contrôle le Pixel côté navigateur."
+            detail="Suit les visiteurs directement depuis le site web."
             ok={Boolean(publicPixelId)}
           />
           <ConfigStatus
             icon={KeyRound}
             label="CAPI serveur"
             value={configuredLabel(Boolean(serverPixelId && accessToken))}
-            detail="META_PIXEL_ID peut remplacer le Pixel ID serveur, META_ACCESS_TOKEN est requis."
+            detail="Envoie les conversions à Meta depuis le serveur, plus fiable."
             ok={Boolean(serverPixelId && accessToken)}
           />
           <ConfigStatus
             icon={Settings}
             label="Test Events"
             value={testEventCode ? "Actif" : "Inactif"}
-            detail="META_TEST_EVENT_CODE envoie les conversions dans Events Manager Test Events."
+            detail="Mode test qui affiche les conversions en direct dans Events Manager."
             ok={Boolean(testEventCode)}
           />
           <ConfigStatus
             icon={CheckCircle2}
             label="Kill switch"
             value={trackingDisabled ? "Actif" : "Inactif"}
-            detail="META_TRACKING_DISABLED ou NEXT_PUBLIC_META_TRACKING_DISABLED coupe Pixel et CAPI."
+            detail="Interrupteur qui coupe entièrement le suivi Meta quand il est activé."
             ok={!trackingDisabled}
           />
         </div>
