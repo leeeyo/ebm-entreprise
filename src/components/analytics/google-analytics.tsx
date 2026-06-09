@@ -1,17 +1,27 @@
-import { GoogleAnalytics as NextGoogleAnalytics } from "@next/third-parties/google";
-import { getGaMeasurementId, isGoogleAnalyticsEnabled } from "@/lib/google-analytics";
+import { Suspense } from "react";
+import { GoogleAnalyticsClient } from "@/components/analytics/google-analytics-client";
+import { isValidGaMeasurementId } from "@/lib/google-analytics";
+import {
+  getGaMeasurementId,
+  isGaDebugModeEnabled,
+  isGaTrackingDisabled,
+} from "@/lib/google-analytics-env";
 
 /**
- * Loads the GA4 gtag.js tag via the official @next/third-parties component
- * (deferred, non-blocking, Core Web Vitals friendly). Automatic pageview
- * tracking on client-side navigations is handled by the component itself.
+ * Loads the GA4 gtag.js tag with an explicit local bootstrap. Pageviews are
+ * sent by the client component on App Router URL changes so production tracking
+ * does not depend on GA4 Enhanced Measurement settings.
  *
  * Mounted only inside the (marketing) route group so the admin back-office is
  * never tracked, mirroring the Meta Pixel setup.
  */
 export function GoogleAnalytics() {
   const gaId = getGaMeasurementId();
-  if (!gaId || !isGoogleAnalyticsEnabled()) return null;
+  if (!isValidGaMeasurementId(gaId) || isGaTrackingDisabled()) return null;
 
-  return <NextGoogleAnalytics gaId={gaId} />;
+  return (
+    <Suspense fallback={null}>
+      <GoogleAnalyticsClient measurementId={gaId} debugMode={isGaDebugModeEnabled()} />
+    </Suspense>
+  );
 }

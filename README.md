@@ -87,7 +87,7 @@ Required application variables:
 Optional integrations:
 
 - SMTP: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`
-- Google Analytics: `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_GA_DISABLED`
+- Google Analytics: prefer server-side `GA_MEASUREMENT_ID`, `GA_DISABLED`, `GA_DEBUG`; `NEXT_PUBLIC_GA_*` remains supported for compatibility
 - Meta: `NEXT_PUBLIC_META_PIXEL_ID`, `META_PIXEL_ID`, `META_ACCESS_TOKEN`, and related tracking flags
 - Upload storage: `UPLOAD_DIR`, defaulting to `./uploads`
 
