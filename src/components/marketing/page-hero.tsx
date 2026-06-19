@@ -129,7 +129,7 @@ export function PageHero({
         className={cn(
           "pointer-events-none absolute inset-0 z-2 bg-linear-to-r",
           hasImage
-            ? "from-background/65 via-background/15 to-transparent sm:via-background/10"
+            ? "from-background/82 via-background/38 to-transparent sm:via-background/24"
             : "from-background/80 via-background/55 to-background/25 sm:via-background/40",
         )}
         aria-hidden
@@ -169,7 +169,10 @@ export function PageHero({
           <KineticHeading title={title} accent={accent} />
           {subtitle ? (
             <p
-              className="ebm-word mt-5 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg"
+              className={cn(
+                "ebm-word mt-5 text-pretty text-base leading-relaxed sm:text-lg",
+                hasImage ? "max-w-2xl text-foreground/90" : "text-muted-foreground",
+              )}
               style={{ animationDelay: `${160 + wordCount * 60}ms` }}
             >
               {subtitle}
