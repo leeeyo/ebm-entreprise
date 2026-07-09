@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { BMGroupFooterBadge } from "@/components/bm-group-footer-badge";
 
 export function SiteFooter() {
   return (
@@ -21,6 +22,9 @@ export function SiteFooter() {
               <p className="text-sm text-muted-foreground">
                 Construction, rénovation et projets clé en main en Tunisie.
               </p>
+              <div className="mt-4">
+                <BMGroupFooterBadge />
+              </div>
             </div>
           </div>
           <div className="flex flex-wrap gap-2">

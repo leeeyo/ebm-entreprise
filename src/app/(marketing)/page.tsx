@@ -1,4 +1,5 @@
 import { HeroKinetic } from "@/components/home/hero-kinetic";
+import { BMGroupGateway } from "@/components/bm-group-gateway";
 import {
   LandingDomaines,
   LandingPourquoi,
@@ -31,6 +32,7 @@ export default function HomePage() {
       <ProcessTimeline />
       <LandingRealisations />
       <LandingTemoignages />
+      <BMGroupGateway />
       <LandingSimulateurTeaser />
     </LazyMotionProvider>
   );
