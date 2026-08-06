@@ -52,7 +52,6 @@ async function createProject(formData: FormData) {
     {
       $setOnInsert: {
         slug,
-        title,
         ...projectInput,
         status,
         featured: formData.get("featured") === "on",
