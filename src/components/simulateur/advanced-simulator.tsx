@@ -166,7 +166,6 @@ export function AdvancedSimulator() {
   const [submittedLeadId, setSubmittedLeadId] = useState<string | null>(null);
   const [serverEstimateTnd, setServerEstimateTnd] = useState<number | null>(null);
   const [progressRestored, setProgressRestored] = useState(false);
-  const [progressStorageEnabled, setProgressStorageEnabled] = useState(true);
   const simulationStartedTracked = useRef(false);
 
   useEffect(() => {
@@ -189,14 +188,14 @@ export function AdvancedSimulator() {
   }, []);
 
   useEffect(() => {
-    if (!progressRestored || !progressStorageEnabled) return;
+    if (!progressRestored) return;
     const payload: StoredProgress = {
       step,
       project,
       savedAt: Date.now(),
     };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-  }, [progressRestored, progressStorageEnabled, project, step]);
+  }, [progressRestored, project, step]);
 
   useEffect(() => {
     fetch("/api/simulator/settings")
@@ -342,26 +341,10 @@ export function AdvancedSimulator() {
 
   function updateProject(nextProject: AdvancedProjectInput) {
     trackSimulationStarted();
-    setProgressStorageEnabled(true);
     setEstimateRevealed(false);
     setSubmittedLeadId(null);
     setServerEstimateTnd(null);
     setProject(nextProject);
-  }
-
-  function clearSimulation() {
-    window.localStorage.removeItem(STORAGE_KEY);
-    setProgressStorageEnabled(false);
-    setStep(0);
-    setProject(DEFAULT_ADVANCED_PROJECT);
-    setName("");
-    setEmail("");
-    setPhone("");
-    setNotes("");
-    setEstimateRevealed(false);
-    setSubmittedLeadId(null);
-    setServerEstimateTnd(null);
-    toast.success("La progression enregistrée sur cet appareil a été effacée.");
   }
 
   if (!settings) {
@@ -394,13 +377,6 @@ export function AdvancedSimulator() {
               <p className="mt-1 text-xs text-white/60">
                 Progression conservée 30 jours sur cet appareil
               </p>
-              <button
-                type="button"
-                className="mt-2 text-xs text-white/75 underline underline-offset-4 transition-colors hover:text-white"
-                onClick={clearSimulation}
-              >
-                Effacer ma simulation
-              </button>
             </div>
           </div>
           <div className="mt-6 h-2 overflow-hidden rounded-full bg-white/15">
@@ -483,18 +459,9 @@ export function AdvancedSimulator() {
                 <ArrowRight className="size-4" />
               </Button>
             ) : (
-              <div className="flex flex-wrap gap-2">
-                <Button type="button" variant="outline" onClick={() => setStep(0)}>
-                  Modifier mon projet
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={clearSimulation}
-                >
-                  Effacer ma simulation
-                </Button>
-              </div>
+              <Button type="button" variant="outline" onClick={() => setStep(0)}>
+                Modifier mon projet
+              </Button>
             )}
           </div>
         </CardContent>
