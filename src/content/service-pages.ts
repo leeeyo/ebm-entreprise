@@ -1,7 +1,7 @@
 /** Generic service / subpage copy (cahier lists topics; body kept concise). */
 export const genericServicePages: Record<string, { title: string; intro: string; bullets: string[] }> = {
   "construction/immeubles-residences": {
-    title: "Construction Immeubles & résidences",
+    title: "Construction immeubles et résidences",
     intro:
       "Programmes résidentiels et ouvrages collectifs avec coordination technique, respect des normes et pilotage des délais.",
     bullets: [
@@ -75,7 +75,7 @@ export const genericServicePages: Record<string, { title: string; intro: string;
     bullets: ["Choix des essences et finitions", "Pose précise", "Entretien recommandé"],
   },
   "menuiserie/peinture-decoratifs": {
-    title: "Peinture & Décoratifs",
+    title: "Peinture et décoratifs",
     intro:
       "Finitions décoratives et préparation des supports pour un rendu durable et soigné.",
     bullets: ["Préparation des supports", "Cycles de peinture", "Détails et finitions"],

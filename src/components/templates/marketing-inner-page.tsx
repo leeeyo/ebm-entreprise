@@ -32,7 +32,7 @@ export type MarketingInnerPageProps = LegacyProps | HeroProps;
 const DEFAULT_CLOSING: NonNullable<CommonProps["closingCta"]> = {
   eyebrow: "Passons à l'action",
   title: "Prêt à lancer votre projet ?",
-  body: "Parlons budget, planning et méthode — notre équipe vous répond sous 48 h.",
+  body: "Parlons budget, planning et méthode — notre équipe étudie votre demande et revient vers vous.",
   primary: { label: "Demander un devis", href: "/contact" },
   secondary: { label: "Lancer le simulateur", href: "/simulateur" },
 };

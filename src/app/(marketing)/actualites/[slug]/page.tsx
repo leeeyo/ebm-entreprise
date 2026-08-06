@@ -9,7 +9,8 @@ import { CtaBand } from "@/components/marketing";
 import { Badge } from "@/components/ui/badge";
 import { MarkdownContent } from "@/components/marketing/markdown-content";
 import { getBlogPostBySlug } from "@/lib/cms-content";
-import { buildSeoMetadata } from "@/lib/seo";
+import { absoluteSiteUrl, buildSeoMetadata } from "@/lib/seo";
+import { JsonLd, breadcrumbJsonLd } from "@/components/seo/json-ld";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -45,6 +46,27 @@ export default async function ActualiteDetailPage({ params }: Props) {
 
   return (
     <LazyMotionProvider>
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Accueil", url: absoluteSiteUrl("/") },
+            { name: "Actualités", url: absoluteSiteUrl("/actualites") },
+            { name: post.title, url: absoluteSiteUrl(`/actualites/${post.slug}`) },
+          ]),
+          {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: post.title,
+            description: post.excerpt,
+            mainEntityOfPage: absoluteSiteUrl(`/actualites/${post.slug}`),
+            ...(post.publishedAt ? { datePublished: post.publishedAt } : {}),
+            ...(post.updatedAt ? { dateModified: post.updatedAt } : {}),
+            ...(post.coverImage?.src ? { image: absoluteSiteUrl(post.coverImage.src) } : {}),
+            author: { "@type": "Organization", name: post.authorName || "EBM Ben Mokhtar" },
+            publisher: { "@type": "Organization", name: "EBM Ben Mokhtar" },
+          },
+        ]}
+      />
       <MetaViewContentTracker
         contentId={`article:${post.slug}`}
         contentName={post.title}
@@ -94,7 +116,7 @@ export default async function ActualiteDetailPage({ params }: Props) {
 
       <CtaBand
         eyebrow="Besoin d'une estimation ?"
-        title="Transformez la lecture en premier cadrage projet."
+        title="Transformez cette lecture en premier cadrage de votre projet."
         body="Le simulateur donne une première fourchette, puis l'équipe EBM affine avec vous."
         primary={{ label: "Lancer le simulateur", href: "/simulateur" }}
         secondary={{ label: "Contacter EBM", href: "/contact" }}

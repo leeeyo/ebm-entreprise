@@ -7,6 +7,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { listProjects } from "@/lib/cms-content";
 import { navSectionsWithProjects } from "@/lib/navigation";
+import { TrackingConsentBanner } from "@/components/analytics/tracking-consent-banner";
 
 export default async function MarketingLayout({ children }: { children: React.ReactNode }) {
   const projects = await listProjects({ publishedOnly: true });
@@ -28,6 +29,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
       <SiteHeader navSections={navSections} />
       <MarketingMain>{children}</MarketingMain>
       <SiteFooter />
+      <TrackingConsentBanner />
     </>
   );
 }

@@ -5,8 +5,8 @@ export const CONTACT_SUBMISSION_STATUSES = ["new", "read", "callback", "assigned
 const ContactSubmissionSchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
-    email: { type: String, required: true, trim: true, lowercase: true },
-    phone: { type: String, required: true, trim: true },
+    email: { type: String, default: "", trim: true, lowercase: true },
+    phone: { type: String, default: "", trim: true },
     subject: { type: String, required: true, trim: true },
     serviceInterest: { type: String, trim: true },
     message: { type: String, required: true, trim: true },

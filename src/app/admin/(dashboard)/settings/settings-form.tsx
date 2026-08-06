@@ -344,7 +344,7 @@ export function SimulatorSettingsForm() {
           </FieldGroup>
 
           <FieldGroup
-            title="Configuration sur-mesure"
+            title="Configuration sur mesure"
             description="Prix par pièce ajoutés selon le nombre de chambres, salles de bain et cuisines déclaré par le visiteur."
           >
             <NumberField

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { BMGroupFooterBadge } from "@/components/bm-group-footer-badge";
+import { TrackingPreferencesButton } from "@/components/analytics/tracking-preferences-button";
 
 export function SiteFooter() {
   return (
@@ -48,14 +49,18 @@ export function SiteFooter() {
             </p>
           </div>
           <p className="text-xs text-muted-foreground sm:max-w-xs sm:text-right">
-            Entreprise de construction Tunisie — génie civil — prix construction m² Tunisie (estimation
-            indicative via simulateur).
+            EBM accompagne les projets de construction, de rénovation et d'aménagement en Tunisie. Le
+            simulateur fournit une estimation indicative, à confirmer par un devis.
           </p>
         </div>
         <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
           <Link className="underline underline-offset-4" href="/confidentialite">
             Confidentialité
           </Link>
+          <Link className="underline underline-offset-4" href="/a-propos">
+            À propos
+          </Link>
+          <TrackingPreferencesButton />
         </div>
       </div>
     </footer>

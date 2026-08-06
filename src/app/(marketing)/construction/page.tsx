@@ -13,7 +13,7 @@ import { buildSeoMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildSeoMetadata({
   title: "Construction",
   description:
-    "Construction de villas et programmes immeubles & résidences en Tunisie — méthode EBM Ben Mokhtar.",
+    "Construction de villas, d'immeubles et de résidences en Tunisie — méthode EBM Ben Mokhtar.",
   path: "/construction",
 });
 
@@ -33,7 +33,7 @@ const tiles = [
     icon: <HomeIcon className="size-5" />,
     bullets: [
       "Étude et optimisation budgétaire",
-      "Gros œuvre & second œuvre",
+      "Gros œuvre et second œuvre",
       "Finitions de prestige",
       "Livraison clé en main",
     ],
@@ -41,7 +41,7 @@ const tiles = [
   {
     slug: "construction/immeubles-residences",
     href: "/construction/immeubles-residences",
-    title: "Immeubles & résidences",
+    title: "Immeubles et résidences",
     description:
       "Programmes collectifs, coordination technique et livraison conforme aux exigences du projet.",
     tag: "Programmes collectifs",
@@ -49,7 +49,7 @@ const tiles = [
     bullets: [
       "Structuration multi-logements",
       "Interfaces bureaux de contrôle",
-      "Respect des délais & normes",
+      "Suivi des délais et des exigences du projet",
       "Livraison maîtrisée",
     ],
   },
@@ -90,7 +90,7 @@ export default async function ConstructionHubPage() {
       <CtaBand
         eyebrow="Prêt à démarrer ?"
         title="Un projet neuf en tête ?"
-        body="Partagez-nous vos plans ou votre idée — nous revenons vers vous avec une première lecture technique sous 48 h."
+        body="Partagez-nous vos plans ou votre idée pour recevoir une première lecture technique."
         primary={{ label: "Demander un devis", href: "/contact" }}
         secondary={{ label: "Voir nos projets", href: "/projets" }}
       />

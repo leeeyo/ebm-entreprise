@@ -10,9 +10,9 @@ import { domaines } from "@/content/home";
 import { cn } from "@/lib/utils";
 
 const DOMAIN_ICONS: Record<string, LucideIcon> = {
-  "Gros Œuvre & Structure": Building2,
+  "Gros œuvre et structure": Building2,
   "Projets Clé en Main": Layers,
-  "Rénovation & Extension": Hammer,
+  "Rénovation et extension": Hammer,
   "Ouvrages Spécialisés": Box,
 };
 

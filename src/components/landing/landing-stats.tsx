@@ -42,7 +42,7 @@ function AnimatedNumber({
   startDelayMs: number;
   motionOk: boolean;
 }) {
-  const [display, setDisplay] = useState(0);
+  const [display, setDisplay] = useState(value);
   const [landed, setLanded] = useState(false);
 
   useEffect(() => {

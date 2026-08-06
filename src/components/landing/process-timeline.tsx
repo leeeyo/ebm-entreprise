@@ -41,7 +41,7 @@ const STEPS: Step[] = [
   },
   {
     title: "SAV",
-    body: "Accompagnement, garantie décennale et interventions.",
+    body: "Réception, suivi et interventions selon les conditions du projet.",
     Icon: Headphones,
   },
 ];

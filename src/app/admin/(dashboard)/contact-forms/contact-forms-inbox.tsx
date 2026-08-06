@@ -180,7 +180,7 @@ export function ContactFormsInbox({ messages }: { messages: ContactSubmissionRec
                 </TableCell>
                 <TableCell>
                   <div className="font-medium">{message.name}</div>
-                  <div className="mt-1 text-xs text-muted-foreground">{message.email}</div>
+                  <div className="mt-1 text-xs text-muted-foreground">{message.email || message.phone}</div>
                 </TableCell>
                 <TableCell>{message.serviceInterest ?? message.sourcePage}</TableCell>
                 <TableCell className="max-w-72">
@@ -194,13 +194,15 @@ export function ContactFormsInbox({ messages }: { messages: ContactSubmissionRec
                 <TableCell className="text-sm text-muted-foreground">{formatDate(message.createdAt)}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    <ContactEmailAction
-                      email={message.email}
-                      subject={message.subject}
-                      label="Email"
-                      size="sm"
-                      variant="outline"
-                    />
+                    {message.email ? (
+                      <ContactEmailAction
+                        email={message.email}
+                        subject={message.subject}
+                        label="E-mail"
+                        size="sm"
+                        variant="outline"
+                      />
+                    ) : null}
                     <Button type="button" size="sm" asChild>
                       <Link href={`/admin/contact-forms/${message.id}`}>
                         Ouvrir

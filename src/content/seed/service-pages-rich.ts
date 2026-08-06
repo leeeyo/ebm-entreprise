@@ -52,7 +52,7 @@ const RICH: RichInput[] = [
   {
     slug: "fluide/chauffage",
     navLabel: "Chauffage",
-    category: "Fluide",
+    category: "Fluides",
     heroFile: "fluide-chauffage.webp",
     heroAlt: "Installation de chauffage par EBM : chaudière et réseau de distribution.",
     title: "Chauffage : installation et mise en service en Tunisie",
@@ -91,7 +91,7 @@ const RICH: RichInput[] = [
   {
     slug: "fluide/sanitaire",
     navLabel: "Sanitaire",
-    category: "Fluide",
+    category: "Fluides",
     heroFile: "fluide-sanitaire.webp",
     heroAlt: "Installation sanitaire par EBM : réseaux de distribution et d'évacuation.",
     title: "Sanitaire : réseaux et appareillage en Tunisie",
@@ -130,7 +130,7 @@ const RICH: RichInput[] = [
   {
     slug: "fluide/climatisation",
     navLabel: "Climatisation",
-    category: "Fluide",
+    category: "Fluides",
     heroFile: "fluide-climatisation.webp",
     heroAlt: "Installation de climatisation par EBM : unité intérieure et groupe extérieur.",
     title: "Climatisation : confort thermique en Tunisie",
@@ -143,7 +143,7 @@ const RICH: RichInput[] = [
         title: "Le bon équipement, bien posé",
         body:
           "Nous dimensionnons la solution selon les surfaces, l'exposition et l'usage, puis assurons une pose propre des unités et des liaisons.",
-        items: ["Mono ou multi-split selon besoins", "Liaisons frigorifiques", "Évacuation des condensats"],
+        items: ["Mono ou multisplit selon les besoins", "Liaisons frigorifiques", "Évacuation des condensats"],
       },
       {
         eyebrow: "Exploitation",
@@ -292,7 +292,7 @@ const RICH: RichInput[] = [
     title: "Menuiserie aluminium en Tunisie",
     intro:
       "Menuiseries aluminium pour la performance, la durabilité et une esthétique contemporaine.",
-    bullets: ["Prise de côtes précise", "Fourniture et pose", "Finitions et ajustements", "Performance et durabilité"],
+    bullets: ["Prise de cotes précise", "Fourniture et pose", "Finitions et ajustements", "Performance et durabilité"],
     contentSections: [
       {
         eyebrow: "Approche EBM",
@@ -344,7 +344,7 @@ const RICH: RichInput[] = [
         eyebrow: "Durabilité",
         title: "Pose et entretien",
         body:
-          "Une pose précise et des conseils d'entretien garantissent la tenue de vos ouvrages bois dans le temps.",
+          "Une pose soignée et des conseils d'entretien contribuent à la bonne tenue des ouvrages bois dans le temps.",
         items: [],
       },
     ],
@@ -363,11 +363,11 @@ const RICH: RichInput[] = [
   },
   {
     slug: "menuiserie/peinture-decoratifs",
-    navLabel: "Peinture & Décoratifs",
+    navLabel: "Peinture et décoratifs",
     category: "Menuiserie",
     heroFile: "menuiserie-peinture-decoratif.webp",
     heroAlt: "Travaux de peinture et finitions décoratives réalisés par EBM.",
-    title: "Peinture & finitions décoratives en Tunisie",
+    title: "Peinture et finitions décoratives en Tunisie",
     intro:
       "Finitions décoratives et préparation des supports pour un rendu durable et soigné.",
     bullets: ["Préparation des supports", "Cycles de peinture", "Enduits et décoratifs", "Détails et finitions"],
@@ -416,7 +416,7 @@ const RICH: RichInput[] = [
         title: "Protéger l'ouvrage dans la durée",
         body:
           "Étanchéité des toitures et terrasses, traitement des points singuliers et isolation : nous protégeons votre bâtiment contre l'eau et les déperditions.",
-        items: ["Étanchéité toitures / terrasses", "Traitement des points singuliers", "Isolation thermique"],
+        items: ["Étanchéité des toitures et des terrasses", "Traitement des points singuliers", "Isolation thermique"],
       },
       {
         eyebrow: "Qualité",

@@ -1,12 +1,12 @@
 export const simulateurPage = {
-  title: "Estimez le Budget de votre Projet en 2 Minutes.",
+  title: "Estimez le budget de votre projet en 2 minutes.",
   subtitle:
-    "Un outil d'aide à la décision basé sur les coûts réels du marché tunisien en 2026. Obtenez une première évaluation technique pour votre future construction.",
+    "Un outil d'aide à la décision qui fournit une première estimation indicative. Le montant final dépendra de l'étude technique et du devis.",
   reassurance: "Estimation gratuite, sans engagement et confidentielle.",
   steps: {
     projet: "Type et standing",
     terrain: "Terrain et dimensions",
-    configuration: "Configuration sur-mesure",
+    configuration: "Configuration sur mesure",
     equipements: "Équipements",
     resultat: "Estimation",
   },
@@ -14,8 +14,8 @@ export const simulateurPage = {
 
 export const typeCards = [
   { id: "plainPied" as const, title: "Plain-pied" },
-  { id: "r1" as const, title: "Étage R+1" },
-  { id: "r2" as const, title: "Étage R+2" },
+  { id: "r1" as const, title: "R+1" },
+  { id: "r2" as const, title: "R+2" },
 ] as const;
 
 export const offerCards = [
@@ -97,7 +97,7 @@ export const topographyDisplayLabels: Record<string, string> = {
 export const optionItems = [
   { id: "pool" as const, label: "Piscine à débordement" },
   { id: "basement" as const, label: "Sous-sol / Garage" },
-  { id: "garden" as const, label: "Jardin paysager & Clôtures" },
+  { id: "garden" as const, label: "Jardin paysager et clôtures" },
 ] as const;
 
 export const calculateCta = "Calculer l'estimation de mon projet";

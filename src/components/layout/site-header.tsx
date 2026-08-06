@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useLayoutEffect, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
-import { ChevronDown, LogIn, Mail, MapPin, Phone } from "lucide-react";
+import { ChevronDown, Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { contactContent } from "@/content/contact";
 import {
@@ -207,7 +207,7 @@ function HeaderMeta() {
     "group/meta inline-flex items-center gap-2 text-[0.75rem] font-medium leading-none text-zinc-300 transition-colors hover:text-white";
   const iconWrap =
     "inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-(--ebm-orange) transition-colors group-hover/meta:border-(--ebm-orange)/45 group-hover/meta:bg-(--ebm-orange)/10";
-  const divider = "hidden h-6 w-px bg-white/10 xl:inline-block";
+  const divider = "hidden h-6 w-px bg-white/10 2xl:inline-block";
 
   return (
     <div
@@ -246,7 +246,7 @@ function HeaderMeta() {
       <span className={divider} aria-hidden />
 
       <span
-        className={cn(itemBase, "pointer-events-none hidden cursor-default xl:inline-flex")}
+        className={cn(itemBase, "pointer-events-none hidden cursor-default 2xl:inline-flex")}
       >
         <span className={iconWrap}>
           <MapPin className="size-3.5" aria-hidden />
@@ -257,27 +257,7 @@ function HeaderMeta() {
   );
 }
 
-function LoginIconLink({ className }: { className?: string }) {
-  return (
-    <Button
-      variant="outline"
-      size="icon"
-      asChild
-      className={cn(
-        "size-10 shrink-0 border border-white/20 bg-white/5 text-zinc-100 shadow-none backdrop-blur-sm",
-        "hover:border-(--ebm-orange)/60 hover:bg-(--ebm-orange)/10 hover:text-white",
-        focusRingNav,
-        className,
-      )}
-    >
-      <Link href="/admin/login" aria-label="Connexion administrateur">
-        <LogIn className="size-4" aria-hidden />
-      </Link>
-    </Button>
-  );
-}
-
-function HeaderCtas({ ctaBase, showLogin }: { ctaBase: string; showLogin: boolean }) {
+function HeaderCtas({ ctaBase }: { ctaBase: string }) {
   return (
     <div className="flex shrink-0 items-center gap-2">
       <Button
@@ -305,7 +285,6 @@ function HeaderCtas({ ctaBase, showLogin }: { ctaBase: string; showLogin: boolea
       >
         <Link href="/simulateur">Lancer le simulateur</Link>
       </Button>
-      {showLogin ? <LoginIconLink className="ml-1" /> : null}
     </div>
   );
 }
@@ -346,9 +325,6 @@ export function SiteHeader({ navSections = defaultNavSections }: { navSections?:
   );
 
   const ctaBase = "h-11 px-4 text-sm font-semibold sm:h-11 sm:px-5";
-  // Admin login entry point is available on every public page.
-  const showLoginIcon = true;
-
   return (
     <header
       className={cn(
@@ -403,7 +379,7 @@ export function SiteHeader({ navSections = defaultNavSections }: { navSections?:
         <HeaderMeta />
 
         <div className="hidden shrink-0 items-center md:flex">
-          <HeaderCtas ctaBase={ctaBase} showLogin={showLoginIcon} />
+          <HeaderCtas ctaBase={ctaBase} />
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
@@ -418,7 +394,6 @@ export function SiteHeader({ navSections = defaultNavSections }: { navSections?:
           >
             <Link href="/simulateur">Simulateur</Link>
           </Button>
-          {showLoginIcon ? <LoginIconLink /> : null}
           <MobileNav
             homeBlend
             focusRingHero={focusRingNav}

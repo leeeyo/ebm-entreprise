@@ -1,5 +1,6 @@
 import { getMetaFbpFbcFromDocument } from "@/lib/meta-browser";
 import { META_CURRENCY, type MetaContentParams } from "@/lib/meta-pixel";
+import { hasTrackingConsent } from "@/lib/tracking-consent";
 
 export type MetaCapiClientEventName =
   | "PageView"
@@ -11,6 +12,7 @@ export type MetaClientContext = {
   fbp?: string;
   fbc?: string;
   eventSourceUrl: string;
+  consent: boolean;
 };
 
 export function createMetaEventId(prefix: string) {
@@ -25,13 +27,14 @@ export function getMetaClientContext(): MetaClientContext {
   const { fbp, fbc } = getMetaFbpFbcFromDocument();
   const eventSourceUrl =
     typeof window !== "undefined" ? window.location.href.split("#")[0] : "";
-  return { fbp, fbc, eventSourceUrl };
+  return { fbp, fbc, eventSourceUrl, consent: hasTrackingConsent() };
 }
 
 export function sendMetaCapiClientEvent(input: {
   eventName: MetaCapiClientEventName;
   eventId: string;
 } & MetaContentParams) {
+  if (!hasTrackingConsent()) return;
   const meta = getMetaClientContext();
 
   void fetch("/api/meta/events", {

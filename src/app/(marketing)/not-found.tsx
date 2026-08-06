@@ -7,7 +7,7 @@ export default function MarketingNotFound() {
         kind="lost"
         eyebrow="Repérage impossible"
         title="Cette référence n'est pas publiée."
-        description="Le contenu demandé a peut-être changé de slug, été masqué ou n'existe pas encore dans le back-office."
+        description="Le contenu demandé a peut-être été déplacé, retiré ou n'est plus disponible."
         primaryAction={{ label: "Voir nos projets", href: "/projets" }}
         secondaryAction={{ label: "Retour à l'accueil", href: "/" }}
         imagePriority

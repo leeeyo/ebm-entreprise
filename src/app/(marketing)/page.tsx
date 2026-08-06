@@ -15,7 +15,7 @@ import { buildSeoMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = buildSeoMetadata({
-  title: "EBM Ben Mokhtar — Construction & génie civil en Tunisie",
+  title: "EBM Ben Mokhtar — Construction et génie civil en Tunisie",
   description:
     "Entreprise de construction Tunisie : gros œuvre, projets clé en main, rénovation. Estimez votre budget avec notre simulateur — prix construction m² Tunisie (indicatif).",
   path: "/",

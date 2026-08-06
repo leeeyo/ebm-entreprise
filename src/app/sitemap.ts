@@ -15,6 +15,7 @@ const staticRoutes: Array<{
   { path: "/", priority: 1, changeFrequency: "weekly" },
   { path: "/simulateur", priority: 0.9, changeFrequency: "weekly" },
   { path: "/contact", priority: 0.9, changeFrequency: "weekly" },
+  { path: "/a-propos", priority: 0.7, changeFrequency: "yearly" },
   { path: "/construction", priority: 0.8, changeFrequency: "monthly" },
   { path: "/renovation", priority: 0.8, changeFrequency: "monthly" },
   { path: "/services", priority: 0.8, changeFrequency: "monthly" },

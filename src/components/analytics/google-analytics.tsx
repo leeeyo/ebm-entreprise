@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { GoogleAnalyticsClient } from "@/components/analytics/google-analytics-client";
+import { ConsentAwareGoogleAnalytics } from "@/components/analytics/consent-aware-google-analytics";
 import { isValidGaMeasurementId } from "@/lib/google-analytics";
 import {
   getGaMeasurementId,
@@ -21,7 +21,7 @@ export function GoogleAnalytics() {
 
   return (
     <Suspense fallback={null}>
-      <GoogleAnalyticsClient measurementId={gaId} debugMode={isGaDebugModeEnabled()} />
+      <ConsentAwareGoogleAnalytics measurementId={gaId} debugMode={isGaDebugModeEnabled()} />
     </Suspense>
   );
 }

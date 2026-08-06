@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { createMetaEventId, sendMetaCapiClientEvent } from "@/lib/meta-client-events";
 import { isMetaPixelEnabled, trackMetaViewContent } from "@/lib/meta-pixel";
+import { useTrackingConsent } from "@/lib/tracking-consent";
 
 type MetaViewContentTrackerProps = {
   contentId: string;
@@ -18,8 +19,10 @@ export function MetaViewContentTracker({
   value,
 }: MetaViewContentTrackerProps) {
   const firedKeyRef = useRef<string | null>(null);
+  const consent = useTrackingConsent();
 
   useEffect(() => {
+    if (consent !== "accepted") return;
     if (!isMetaPixelEnabled()) return;
 
     const key = `${contentCategory}:${contentId}`;
@@ -40,7 +43,7 @@ export function MetaViewContentTracker({
       eventName: "ViewContent",
       ...payload,
     });
-  }, [contentCategory, contentId, contentName, value]);
+  }, [consent, contentCategory, contentId, contentName, value]);
 
   return null;
 }

@@ -4,9 +4,9 @@ import { getSiteOrigin } from "@/lib/site-url";
 export const SEO_SITE_NAME = "EBM Ben Mokhtar";
 export const DEFAULT_SEO_TITLE = "EBM Ben Mokhtar - Entreprise de construction Tunisie";
 export const DEFAULT_SEO_DESCRIPTION =
-  "Construction batiment Tunisie, genie civil et projets cle en main. Entreprise BTP Ben Mokhtar - simulateur de budget et realisations.";
+  "Entreprise de construction et de rénovation en Tunisie. Découvrez les services, les réalisations et le simulateur de budget EBM Ben Mokhtar.";
 export const DEFAULT_OG_IMAGE_PATH = "/residences/fallback-residence-amira.png";
-export const DEFAULT_OG_IMAGE_ALT = "Residence construite par EBM Ben Mokhtar";
+export const DEFAULT_OG_IMAGE_ALT = "Résidence présentée par EBM Ben Mokhtar";
 
 type SeoImageInput =
   | string
@@ -57,13 +57,18 @@ function resolveImage(image?: SeoImageInput | null) {
 }
 
 export function buildSeoMetadata(input: BuildSeoMetadataInput = {}): Metadata {
-  const title = input.title?.trim() || DEFAULT_SEO_TITLE;
+  const rawTitle = input.title?.trim() || DEFAULT_SEO_TITLE;
+  const title = rawTitle.toLocaleLowerCase("fr").includes(SEO_SITE_NAME.toLocaleLowerCase("fr"))
+    ? rawTitle
+    : /\bEBM\b/i.test(rawTitle)
+      ? rawTitle.replace(/\bEBM\b/i, SEO_SITE_NAME)
+      : `${rawTitle} | ${SEO_SITE_NAME}`;
   const description = input.description?.trim() || DEFAULT_SEO_DESCRIPTION;
   const canonical = absoluteSiteUrl(input.path ?? "/");
   const image = resolveImage(input.image);
 
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: {
       canonical,

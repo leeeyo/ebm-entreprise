@@ -1,6 +1,6 @@
 export const contactContent = {
   addressLine: "Résidence el Amen, Riadh el Andalous, Ariana",
-  addressShort: "Résidence el Amen, Ariana, Tunisia",
+  addressShort: "Résidence El Amen, Ariana, Tunisie",
   phone: "22 181 181",
   phoneDisplay: "+216 22 181 181",
   phoneHref: "+21622181181",

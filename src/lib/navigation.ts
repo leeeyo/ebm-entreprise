@@ -44,7 +44,7 @@ export const navSections: NavSection[] = [
     children: [
       { title: "Construction villa", href: "/construction/villa" },
       {
-        title: "Construction Immeubles & résidences",
+        title: "Construction immeubles et résidences",
         href: "/construction/immeubles-residences",
       },
     ],
@@ -61,9 +61,9 @@ export const navSections: NavSection[] = [
     title: "Services",
     hubHref: "/services",
     children: [
-      { title: "Chauffage", href: "/services/fluide/chauffage", category: "Fluide" },
-      { title: "Sanitaire", href: "/services/fluide/sanitaire", category: "Fluide" },
-      { title: "Climatisation", href: "/services/fluide/climatisation", category: "Fluide" },
+      { title: "Chauffage", href: "/services/fluide/chauffage", category: "Fluides" },
+      { title: "Sanitaire", href: "/services/fluide/sanitaire", category: "Fluides" },
+      { title: "Climatisation", href: "/services/fluide/climatisation", category: "Fluides" },
       { title: "Courant fort", href: "/services/electricite/courant-fort", category: "Électricité" },
       { title: "Courant faible", href: "/services/electricite/courant-faible", category: "Électricité" },
       {
@@ -74,7 +74,7 @@ export const navSections: NavSection[] = [
       { title: "Aluminium", href: "/services/menuiserie/aluminium", category: "Menuiserie" },
       { title: "Menuiserie bois", href: "/services/menuiserie/bois", category: "Menuiserie" },
       {
-        title: "Peinture & Décoratifs",
+        title: "Peinture et décoratifs",
         href: "/services/menuiserie/peinture-decoratifs",
         category: "Menuiserie",
       },

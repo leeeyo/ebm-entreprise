@@ -285,8 +285,8 @@ export function serializeContactSubmission(doc: DocumentLike<ContactSubmissionRe
   return {
     id: value._id.toString(),
     name: value.name,
-    email: value.email,
-    phone: value.phone,
+    email: value.email ?? "",
+    phone: value.phone ?? "",
     subject: value.subject,
     serviceInterest: value.serviceInterest,
     message: value.message,

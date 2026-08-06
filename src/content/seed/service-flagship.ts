@@ -27,7 +27,7 @@ export const flagshipServicePages: SeedServicePage[] = [
       "Chaque villa que nous bâtissons est une pièce unique. EBM Ben Mokhtar allie la liberté architecturale à la rigueur du génie civil pour créer des demeures qui défient le temps — de l'étude technique aux finitions de prestige.",
     bullets: [
       "Étude technique et optimisation budgétaire",
-      "Gros œuvre exécuté avec notre propre parc d'engins",
+      "Moyens de chantier planifiés selon le terrain et la structure",
       "Second œuvre et lots techniques entièrement coordonnés",
       "Finitions de prestige et contrôle qualité strict",
       "Suivi de chantier transparent, du devis à la remise des clés",
@@ -35,30 +35,30 @@ export const flagshipServicePages: SeedServicePage[] = [
     contentSections: [
       {
         eyebrow: "Votre chantier pas à pas",
-        title: "Étude technique & optimisation budgétaire",
+        title: "Étude technique et optimisation budgétaire",
         body:
           "Nous ne nous contentons pas d'une simple consultation. Nos ingénieurs analysent vos plans d'architecte pour optimiser les structures et vous proposer un devis détaillé, transparent et adapté aux réalités du terrain.",
         items: [],
       },
       {
         eyebrow: "Votre chantier pas à pas",
-        title: "Fondations & gros œuvre (l'expertise EBM)",
+        title: "Fondations et gros œuvre",
         body:
-          "C'est ici que notre puissance logistique intervient. Grâce à notre propre parc d'engins, nous lançons le terrassement et la structure (béton armé, maçonnerie) sans dépendre de tiers. Nous bâtissons le squelette de votre villa avec une précision millimétrée.",
+          "Cette phase couvre le terrassement et la structure en béton armé ou en maçonnerie. Les moyens nécessaires sont planifiés selon les caractéristiques du terrain, les plans validés et les contraintes du chantier.",
         items: [],
       },
       {
         eyebrow: "Votre chantier pas à pas",
-        title: "Mise hors d'eau & second œuvre",
+        title: "Mise hors d'eau et second œuvre",
         body:
-          "Une fois la structure solide, nous assurons l'étanchéité totale et lançons les corps d'état techniques (électricité, plomberie, climatisation). Chaque étape est soumise à un contrôle qualité strict pour garantir un confort thermique et acoustique optimal.",
+          "Une fois la structure achevée, les travaux d'étanchéité et les corps d'état techniques sont engagés : électricité, plomberie et climatisation. Chaque étape fait l'objet de contrôles adaptés au périmètre prévu.",
         items: [],
       },
       {
         eyebrow: "Votre chantier pas à pas",
-        title: "Finitions de prestige & livraison",
+        title: "Finitions et livraison",
         body:
-          "Nous supervisons les travaux de finition (revêtements, menuiseries, peinture) avec un souci du détail artisanal. Après une inspection finale rigoureuse, nous vous remettons les clés d'un ouvrage certifié, prêt à accueillir votre foyer.",
+          "Les revêtements, menuiseries et peintures sont coordonnés jusqu'aux vérifications de fin de chantier et à la remise des clés, selon les prestations convenues.",
         items: [],
       },
     ],
@@ -71,17 +71,17 @@ export const flagshipServicePages: SeedServicePage[] = [
       {
         src: `${VILLA}/gallery-1.webp`,
         alt: "Étude technique d'un projet de villa : plans d'architecte et optimisation budgétaire.",
-        caption: "Étude technique & optimisation budgétaire",
+        caption: "Étude technique et optimisation budgétaire",
       },
       {
         src: `${VILLA}/gallery-2.webp`,
         alt: "Fondations et gros œuvre d'une villa : béton armé et structure.",
-        caption: "Fondations & gros œuvre",
+        caption: "Fondations et gros œuvre",
       },
       {
         src: `${VILLA}/gallery-3.webp`,
         alt: "Mise hors d'eau et second œuvre d'une villa en construction.",
-        caption: "Mise hors d'eau & second œuvre",
+        caption: "Mise hors d'eau et second œuvre",
       },
       {
         src: `${VILLA}/gallery-4.webp`,
@@ -108,7 +108,7 @@ export const flagshipServicePages: SeedServicePage[] = [
       {
         question: "Quelles garanties offrez-vous sur les matériaux ?",
         answer:
-          "Nous utilisons des matériaux certifiés issus de fournisseurs reconnus, pour une résistance optimale face au temps et aux conditions climatiques. Chaque phase est soumise à un contrôle qualité.",
+          "Les matériaux, contrôles et garanties applicables sont précisés dans le devis et le contrat selon la nature des travaux.",
       },
       {
         question: "Puis-je suivre l'avancement de mon chantier ?",
@@ -125,7 +125,7 @@ export const flagshipServicePages: SeedServicePage[] = [
   },
   {
     slug: "construction/immeubles-residences",
-    navLabel: "Construction Immeubles & résidences",
+    navLabel: "Construction immeubles et résidences",
     category: "Construction",
     heroEyebrow: "Programmes collectifs",
     heroImage: {
@@ -144,7 +144,7 @@ export const flagshipServicePages: SeedServicePage[] = [
     contentSections: [
       {
         eyebrow: "Méthode EBM",
-        title: "Étude & montage technique",
+        title: "Étude et montage technique",
         body:
           "Analyse des plans d'architecte, contrôle structurel et coordination avec les bureaux d'études. Nous optimisons la structure pour sécuriser le budget et les délais.",
         items: [],
@@ -158,14 +158,14 @@ export const flagshipServicePages: SeedServicePage[] = [
       },
       {
         eyebrow: "Méthode EBM",
-        title: "Second œuvre & corps d'état",
+        title: "Second œuvre et corps d'état",
         body:
           "Enveloppe, étanchéité, lots techniques (électricité / plomberie / CVC) et menuiseries. Chaque corps d'état est piloté sur un planning partagé.",
         items: [],
       },
       {
         eyebrow: "Méthode EBM",
-        title: "Finitions & livraison",
+        title: "Finitions et livraison",
         body:
           "Revêtements, peintures, espaces communs et contrôles de conformité. Livraison par tranches ou en une fois selon votre programme.",
         items: [],
@@ -180,7 +180,7 @@ export const flagshipServicePages: SeedServicePage[] = [
       {
         src: `${IMMEUBLE}/gallery-1.webp`,
         alt: "Préparation et montage technique d'un programme résidentiel.",
-        caption: "Étude & montage technique",
+        caption: "Étude et montage technique",
       },
       {
         src: `${IMMEUBLE}/gallery-2.webp`,
@@ -190,7 +190,7 @@ export const flagshipServicePages: SeedServicePage[] = [
       {
         src: `${IMMEUBLE}/gallery-3.webp`,
         alt: "Travaux d'enveloppe et de façade d'un immeuble résidentiel.",
-        caption: "Second œuvre & corps d'état",
+        caption: "Second œuvre et corps d'état",
       },
       {
         src: `${IMMEUBLE}/gallery-4.webp`,
@@ -207,12 +207,12 @@ export const flagshipServicePages: SeedServicePage[] = [
       {
         question: "Gérez-vous l'ensemble des corps d'état d'un programme ?",
         answer:
-          "Oui. Du gros œuvre aux lots techniques et aux finitions, nous coordonnons tous les corps d'état sur un planning partagé, avec un interlocuteur unique.",
+          "Selon le périmètre convenu, EBM peut coordonner le gros œuvre, les lots techniques et les finitions sur un planning partagé.",
       },
       {
         question: "Travaillez-vous avec les bureaux de contrôle ?",
         answer:
-          "Nous assurons les interfaces avec les architectes et les bureaux de contrôle pour garantir la conformité aux normes de performance et de sécurité.",
+          "Les interfaces avec les architectes et les bureaux de contrôle sont organisées selon les exigences du projet et les missions de chaque intervenant.",
       },
       {
         question: "La livraison peut-elle se faire par tranches ?",
@@ -248,21 +248,21 @@ export const flagshipServicePages: SeedServicePage[] = [
     contentSections: [
       {
         eyebrow: "Méthode EBM",
-        title: "Diagnostic & dépose",
+        title: "Diagnostic et dépose",
         body:
           "Nous évaluons l'existant, identifions les contraintes structurelles et organisons la dépose avec protection des zones conservées. Le phasage est défini avant toute intervention.",
         items: [],
       },
       {
         eyebrow: "Méthode EBM",
-        title: "Réseaux & remise à neuf technique",
+        title: "Réseaux et remise à neuf technique",
         body:
           "Reprise des réseaux électriques et de plomberie, mise aux normes et préparation des supports. Une base technique saine avant les finitions.",
         items: [],
       },
       {
         eyebrow: "Méthode EBM",
-        title: "Finitions & livraison",
+        title: "Finitions et livraison",
         body:
           "Revêtements, peinture, menuiseries et agencement. Réception soignée d'un intérieur transformé, prêt à vivre.",
         items: [],
@@ -277,17 +277,17 @@ export const flagshipServicePages: SeedServicePage[] = [
       {
         src: `${RENOV_APPART}/gallery-1.webp`,
         alt: "Phase de dépose lors d'une rénovation d'appartement.",
-        caption: "Diagnostic & dépose",
+        caption: "Diagnostic et dépose",
       },
       {
         src: `${RENOV_APPART}/gallery-2.webp`,
         alt: "Reprise des réseaux électriques et de plomberie en rénovation.",
-        caption: "Réseaux & remise à neuf",
+        caption: "Réseaux et remise à neuf",
       },
       {
         src: `${RENOV_APPART}/gallery-3.webp`,
         alt: "Préparation des supports, enduits et nouveaux revêtements de sol.",
-        caption: "Supports & revêtements",
+        caption: "Supports et revêtements",
       },
       {
         src: `${RENOV_APPART}/gallery-4.webp`,
@@ -345,21 +345,21 @@ export const flagshipServicePages: SeedServicePage[] = [
     contentSections: [
       {
         eyebrow: "Méthode EBM",
-        title: "Dépose & préparation",
+        title: "Dépose et préparation",
         body:
           "Retrait des appareils et revêtements existants, mise à nu des réseaux et préparation des supports. Une base saine pour une salle de bain durable.",
         items: [],
       },
       {
         eyebrow: "Méthode EBM",
-        title: "Étanchéité & réseaux",
+        title: "Étanchéité et réseaux",
         body:
           "Système d'étanchéité sous carrelage, reprise de la plomberie et des évacuations. L'étape clé pour éviter les désordres dans le temps.",
         items: [],
       },
       {
         eyebrow: "Méthode EBM",
-        title: "Carrelage, appareils & finitions",
+        title: "Carrelage, appareils et finitions",
         body:
           "Pose du carrelage et de la faïence, installation des appareils sanitaires et des menuiseries, puis finitions et éclairage soignés.",
         items: [],
@@ -374,22 +374,22 @@ export const flagshipServicePages: SeedServicePage[] = [
       {
         src: `${RENOV_SDB}/gallery-1.webp`,
         alt: "Dépose d'une ancienne salle de bain avant rénovation.",
-        caption: "Dépose & préparation",
+        caption: "Dépose et préparation",
       },
       {
         src: `${RENOV_SDB}/gallery-2.webp`,
         alt: "Système d'étanchéité et reprise de la plomberie d'une salle de bain.",
-        caption: "Étanchéité & réseaux",
+        caption: "Étanchéité et réseaux",
       },
       {
         src: `${RENOV_SDB}/gallery-3.webp`,
         alt: "Pose précise du carrelage et de la faïence en salle de bain.",
-        caption: "Carrelage & faïence",
+        caption: "Carrelage et faïence",
       },
       {
         src: `${RENOV_SDB}/gallery-4.webp`,
         alt: "Installation des appareils sanitaires et de la robinetterie.",
-        caption: "Appareils & menuiseries",
+        caption: "Appareils et menuiseries",
       },
       {
         src: `${RENOV_SDB}/gallery-5.webp`,
@@ -401,7 +401,7 @@ export const flagshipServicePages: SeedServicePage[] = [
       {
         question: "L'étanchéité est-elle systématiquement reprise ?",
         answer:
-          "Oui. Un système d'étanchéité sous carrelage est mis en œuvre pour éviter les infiltrations et garantir la durabilité de la pièce d'eau.",
+          "Un système d'étanchéité sous carrelage peut être prévu selon le support et le périmètre défini afin de limiter les risques d'infiltration.",
       },
       {
         question: "Peut-on transformer une baignoire en douche à l'italienne ?",
@@ -411,7 +411,7 @@ export const flagshipServicePages: SeedServicePage[] = [
       {
         question: "Quel délai pour rénover une salle de bain ?",
         answer:
-          "Selon l'ampleur, généralement de une à trois semaines. Le planning est précisé au devis, étape par étape.",
+          "Selon l'ampleur, généralement d'une à trois semaines. Le planning est précisé au devis, étape par étape.",
       },
     ],
     seoTitle: "Rénovation de salle de bain en Tunisie | EBM Ben Mokhtar",

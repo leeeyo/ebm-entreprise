@@ -10,14 +10,14 @@ import { buildSeoMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildSeoMetadata({
   title: "Simulateur de devis",
   description:
-    "Estimez le budget de votre projet en 2 minutes — coûts indicatifs basés sur le marché tunisien 2026.",
+    "Estimez le budget de votre projet en 2 minutes avec un résultat indicatif à confirmer par une étude et un devis.",
   path: "/simulateur",
 });
 
 const TRUST_ITEMS = [
   { icon: Timer, label: "Estimation en 2 minutes", hint: "Formulaire requis pour recevoir le prix" },
-  { icon: Lock, label: "Confidentiel", hint: "Vos données ne sont pas partagées" },
-  { icon: ShieldCheck, label: "Sans engagement", hint: "Résultat gratuit et immédiat" },
+  { icon: Lock, label: "Données encadrées", hint: "Consultez notre politique de confidentialité" },
+  { icon: ShieldCheck, label: "Sans engagement", hint: "Estimation indicative, distincte d'un devis" },
 ];
 
 export default function SimulateurPage() {

@@ -16,9 +16,6 @@ export const metadata: Metadata = buildSeoMetadata({
   path: "/projets",
 });
 
-// Static chips (visual only for now — no client-side filtering yet).
-const CHIPS = ["Tous les projets", "Résidentiel", "Clé en main", "Programmes livrés"] as const;
-
 export default async function ProjetsIndexPage() {
   const projects = await listProjects({ publishedOnly: true });
   const items = projects.map((p) => {
@@ -52,27 +49,8 @@ export default async function ProjetsIndexPage() {
         <SectionHeading
           eyebrow="Portfolio"
           title="Des ouvrages livrés, pas des promesses."
-          subtitle="Filtrez par typologie (à venir) ou parcourez l'ensemble — chaque chantier raconte une manière rigoureuse de construire."
+          subtitle="Parcourez la sélection et ouvrez chaque fiche pour découvrir les informations disponibles sur le projet."
         />
-
-        <div
-          className="mt-8 flex flex-wrap gap-2 sm:gap-3"
-          role="group"
-          aria-label="Filtres projets (aperçu)"
-        >
-          {CHIPS.map((chip, i) => (
-            <span
-              key={chip}
-              className={
-                i === 0
-                  ? "rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground shadow-sm"
-                  : "rounded-full border border-border/70 bg-card/70 px-4 py-1.5 text-sm font-medium text-foreground/80 backdrop-blur-sm transition-colors hover:border-primary/40 hover:text-foreground"
-              }
-            >
-              {chip}
-            </span>
-          ))}
-        </div>
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item, idx) => (
@@ -89,7 +67,7 @@ export default async function ProjetsIndexPage() {
       <CtaBand
         eyebrow="Votre projet, notre prochaine référence."
         title="Faisons de votre chantier le suivant."
-        body="Partagez-nous le brief — nous l'étudions et revenons avec une proposition de méthode et de budget."
+        body="Partagez-nous une description de votre projet — nous l'étudions avant de vous proposer une méthode et un budget adaptés."
         primary={{ label: "Demander un devis", href: "/contact" }}
         secondary={{ label: "Estimer mon budget", href: "/simulateur" }}
       />

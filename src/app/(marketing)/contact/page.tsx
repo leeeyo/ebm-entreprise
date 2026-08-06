@@ -67,7 +67,7 @@ function getInfoItems(settings: SiteSettingsRecord): Array<{
       icon: Mail,
       label: "Email",
       value: settings.email,
-      hint: "Réponse sous 24 h ouvrées",
+      hint: "Pour une demande détaillée",
       href: mailHref,
     },
     {
@@ -82,13 +82,13 @@ function getInfoItems(settings: SiteSettingsRecord): Array<{
 const TRUST_ITEMS = [
   {
     icon: Timer,
-    label: "Réponse sous 24 h",
-    hint: "Jours ouvrés",
+    label: "Suivi de votre demande",
+    hint: "Par l'équipe EBM",
   },
   {
     icon: ShieldCheck,
     label: "Données confidentielles",
-    hint: "Vos échanges restent entre nous",
+    hint: "Traitement décrit dans notre politique de confidentialité",
   },
   {
     icon: MapPinned,
@@ -142,7 +142,12 @@ function InfoCard({ item, index }: { item: ReturnType<typeof getInfoItems>[numbe
   );
 }
 
-export default async function ContactPage() {
+type ContactPageProps = {
+  searchParams?: Promise<{ envoye?: string }>;
+};
+
+export default async function ContactPage({ searchParams }: ContactPageProps) {
+  const params = await searchParams;
   const settings = await ensureSiteSettings();
   const infoItems = getInfoItems(settings);
   const { mapsHref, mailHref } = getContactLinks(settings);
@@ -153,7 +158,7 @@ export default async function ContactPage() {
         eyebrow="Contact"
         title="Parlons de votre projet."
         accent="projet"
-        subtitle="Une question, une estimation, un rendez-vous ? L'équipe EBM vous répond sous 24 heures ouvrées."
+        subtitle="Une question, une estimation, un rendez-vous ? Transmettez votre demande à l'équipe EBM."
         compact
       />
 
@@ -226,10 +231,15 @@ export default async function ContactPage() {
         <div className="mx-auto max-w-4xl px-4 sm:px-6">
           <SectionHeading
             eyebrow="Demande contact"
-            title="Écrivez-nous, le back-office reçoit tout."
-            subtitle="Votre message arrive dans l'espace admin Demandes contact avec statut, source et notes internes pour le suivi commercial."
+            title="Décrivez-nous votre projet."
+            subtitle="Précisez le type de travaux, la localisation et vos principales contraintes pour faciliter notre première lecture."
           />
           <div className="mt-10">
+            {params?.envoye ? (
+              <div className="mb-5 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+                Votre demande a bien été transmise à l'équipe EBM.
+              </div>
+            ) : null}
             <ContactForm />
           </div>
         </div>

@@ -35,9 +35,9 @@ export function MarkdownContent({ content }: { content: string }) {
     flushList();
     if (trimmed.startsWith("# ")) {
       blocks.push(
-        <h1 key={`h1-${blocks.length}`} className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h2 key={`h2-${blocks.length}`} className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
           {inlineText(trimmed.slice(2))}
-        </h1>,
+        </h2>,
       );
     } else if (trimmed.startsWith("## ")) {
       blocks.push(

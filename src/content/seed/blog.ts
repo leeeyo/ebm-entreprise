@@ -18,7 +18,7 @@ Estimer le prix de construction au m² en Tunisie ne se résume pas à un chiffr
 
 - **La surface et la typologie** : plain-pied, R+1 ou R+2 n'ont pas le même coût au m².
 - **La structure et le terrain** : nature du sol, fondations, terrassement et accès au chantier.
-- **Le niveau de finition** : du gros œuvre seul au clé en main premium ou luxe.
+- **Le niveau de finition** : d'une mission limitée au gros œuvre à une prestation clé en main haut de gamme ou de luxe.
 - **L'emplacement** : la localisation influence la logistique et certains coûts.
 - **Les options** : piscine, sous-sol, jardin paysager, clôtures.
 
@@ -53,14 +53,14 @@ La construction **clé en main** consiste à confier l'ensemble du projet à un 
 
 ## Les grandes étapes
 
-1. **Étude technique & budget** — analyse des plans, optimisation de la structure, devis détaillé.
-2. **Fondations & gros œuvre** — terrassement et structure, exécutés avec notre propre parc d'engins.
-3. **Mise hors d'eau & second œuvre** — étanchéité, électricité, plomberie, climatisation.
-4. **Finitions & livraison** — revêtements, menuiseries, peinture, contrôle final.
+1. **Étude technique et budget** — analyse des plans, optimisation de la structure, devis détaillé.
+2. **Fondations et gros œuvre** — terrassement et structure selon les caractéristiques du chantier.
+3. **Mise hors d'eau et second œuvre** — étanchéité, électricité, plomberie, climatisation.
+4. **Finitions et livraison** — revêtements, menuiseries, peinture, contrôle final.
 
 ## Les avantages d'un interlocuteur unique
 
-- **Coordination simplifiée** : un seul responsable pour tous les corps d'état.
+- **Coordination simplifiée** : des responsabilités et interfaces clairement définies pour les corps d'état concernés.
 - **Budget maîtrisé** : un chiffrage global et transparent.
 - **Délais tenus** : un planning partagé et suivi.
 - **Qualité contrôlée** : des contrôles à chaque phase.
@@ -103,7 +103,7 @@ Le budget se construit **par lot** : dépose, réseaux, supports, finitions. Le 
 
 ## 4. Coordonner les finitions
 
-Revêtements, peinture, menuiseries et agencement viennent en dernier, sur une base technique saine. La coordination des lots garantit un résultat homogène.
+Revêtements, peinture, menuiseries et agencement viennent en dernier, sur une base technique saine. La coordination des lots contribue à la cohérence du résultat.
 
 ## En résumé
 
@@ -129,7 +129,7 @@ Demandez à voir des **projets livrés**. Un portfolio de réalisations (réside
 
 ## 2. L'autonomie technique
 
-Une entreprise disposant de son **propre parc d'engins** dépend moins de tiers : meilleure maîtrise des délais et de la logistique du chantier.
+Des **moyens de chantier adaptés** facilitent l'organisation du terrassement, de la structure et des différentes phases d'intervention.
 
 ## 3. La transparence
 
@@ -137,7 +137,7 @@ Un **devis détaillé**, un **planning par phase** et des **points d'avancement 
 
 ## 4. La coordination des corps d'état
 
-Gros œuvre, lots techniques, finitions : une entreprise capable de **coordonner tous les corps d'état** simplifie votre projet et sécurise le résultat.
+Gros œuvre, lots techniques, finitions : une coordination adaptée au périmètre du projet facilite le suivi des interfaces.
 
 ## 5. Le respect des normes
 

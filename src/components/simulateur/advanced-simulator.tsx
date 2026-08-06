@@ -59,6 +59,7 @@ const STEPS = [
 const MIN_SURFACE_M2 = 80;
 const MAX_SURFACE_M2 = 1000;
 const STORAGE_KEY = "ebm-simulateur-progress-v3";
+const STORAGE_RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
 
 const BUILD_TYPE_VALUES: AdvancedProjectInput["buildType"][] = ["plainPied", "r1", "r2"];
 const OFFER_VALUES: AdvancedProjectInput["offer"][] = ["economique", "hautStanding", "prestige"];
@@ -94,6 +95,7 @@ function clampRoom(value: unknown, limit: { min: number; max: number }) {
 type StoredProgress = {
   step?: number;
   project?: Partial<AdvancedProjectInput>;
+  savedAt?: number;
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -164,6 +166,7 @@ export function AdvancedSimulator() {
   const [submittedLeadId, setSubmittedLeadId] = useState<string | null>(null);
   const [serverEstimateTnd, setServerEstimateTnd] = useState<number | null>(null);
   const [progressRestored, setProgressRestored] = useState(false);
+  const [progressStorageEnabled, setProgressStorageEnabled] = useState(true);
   const simulationStartedTracked = useRef(false);
 
   useEffect(() => {
@@ -171,6 +174,11 @@ export function AdvancedSimulator() {
     if (stored) {
       try {
         const parsed = JSON.parse(stored) as StoredProgress;
+        if (!parsed.savedAt || Date.now() - parsed.savedAt > STORAGE_RETENTION_MS) {
+          window.localStorage.removeItem(STORAGE_KEY);
+          setProgressRestored(true);
+          return;
+        }
         setStep(clampNumber(Number(parsed.step), 0, STEPS.length - 1));
         setProject(restoreProject(parsed.project));
       } catch {
@@ -181,13 +189,14 @@ export function AdvancedSimulator() {
   }, []);
 
   useEffect(() => {
-    if (!progressRestored) return;
+    if (!progressRestored || !progressStorageEnabled) return;
     const payload: StoredProgress = {
       step,
       project,
+      savedAt: Date.now(),
     };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-  }, [progressRestored, project, step]);
+  }, [progressRestored, progressStorageEnabled, project, step]);
 
   useEffect(() => {
     fetch("/api/simulator/settings")
@@ -333,10 +342,26 @@ export function AdvancedSimulator() {
 
   function updateProject(nextProject: AdvancedProjectInput) {
     trackSimulationStarted();
+    setProgressStorageEnabled(true);
     setEstimateRevealed(false);
     setSubmittedLeadId(null);
     setServerEstimateTnd(null);
     setProject(nextProject);
+  }
+
+  function clearSimulation() {
+    window.localStorage.removeItem(STORAGE_KEY);
+    setProgressStorageEnabled(false);
+    setStep(0);
+    setProject(DEFAULT_ADVANCED_PROJECT);
+    setName("");
+    setEmail("");
+    setPhone("");
+    setNotes("");
+    setEstimateRevealed(false);
+    setSubmittedLeadId(null);
+    setServerEstimateTnd(null);
+    toast.success("La progression enregistrée sur cet appareil a été effacée.");
   }
 
   if (!settings) {
@@ -366,7 +391,16 @@ export function AdvancedSimulator() {
             </div>
             <div className="text-left sm:text-right">
               <p className="text-sm font-medium text-white/80">Étape {step + 1} / {STEPS.length}</p>
-              <p className="mt-1 text-xs text-white/60">Progression sauvegardée sur cet appareil</p>
+              <p className="mt-1 text-xs text-white/60">
+                Progression conservée 30 jours sur cet appareil
+              </p>
+              <button
+                type="button"
+                className="mt-2 text-xs text-white/75 underline underline-offset-4 transition-colors hover:text-white"
+                onClick={clearSimulation}
+              >
+                Effacer ma simulation
+              </button>
             </div>
           </div>
           <div className="mt-6 h-2 overflow-hidden rounded-full bg-white/15">
@@ -456,20 +490,9 @@ export function AdvancedSimulator() {
                 <Button
                   type="button"
                   variant="ghost"
-                  onClick={() => {
-                    window.localStorage.removeItem(STORAGE_KEY);
-                    setStep(0);
-                    setProject(DEFAULT_ADVANCED_PROJECT);
-                    setName("");
-                    setEmail("");
-                    setPhone("");
-                    setNotes("");
-                    setEstimateRevealed(false);
-                    setSubmittedLeadId(null);
-                    setServerEstimateTnd(null);
-                  }}
+                  onClick={clearSimulation}
                 >
-                  Réinitialiser
+                  Effacer ma simulation
                 </Button>
               </div>
             )}
@@ -663,7 +686,7 @@ function ConfigurationStep({ project, onChange }: StepProps) {
   return (
     <div className="space-y-4">
       <div className="space-y-1">
-        <h2 className="text-lg font-semibold">Configuration sur-mesure</h2>
+        <h2 className="text-lg font-semibold">Configuration sur mesure</h2>
         <p className="text-sm text-muted-foreground">
           Précisez la composition du logement. Ces volumes ajustent la plomberie, les sanitaires et les
           finitions estimées.

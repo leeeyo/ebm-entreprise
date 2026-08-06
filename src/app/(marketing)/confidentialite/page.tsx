@@ -15,17 +15,17 @@ const dataUses = [
   {
     icon: Mail,
     title: "Répondre aux demandes",
-    text: "Les informations envoyées via le formulaire contact ou le simulateur servent à qualifier le projet et à recontacter le demandeur.",
+    text: "Les informations envoyées via le formulaire de contact ou le simulateur servent à qualifier le projet et à recontacter le demandeur.",
   },
   {
     icon: Database,
     title: "Gérer le suivi commercial",
-    text: "Les leads sont conservés dans le back-office EBM afin de suivre les échanges, les estimations et les relances utiles.",
+    text: "Les demandes sont enregistrées dans l'espace de suivi EBM afin de gérer les échanges, les estimations et les relances utiles.",
   },
   {
     icon: Activity,
     title: "Mesurer les campagnes",
-    text: "Le site peut utiliser Meta Pixel et Conversions API pour mesurer les visites, les démarrages de simulateur, les demandes contact et les leads simulateur.",
+    text: "Avec l'accord du visiteur, le site peut utiliser Google Analytics, Meta Pixel et Conversions API pour mesurer les visites et les actions principales.",
   },
 ] as const;
 
@@ -36,7 +36,7 @@ export default function ConfidentialitePage() {
         eyebrow="Confidentialité"
         title="Vos données restent liées à votre projet."
         accent="projet"
-        subtitle="Cette page résume les données collectées par EBM Ben Mokhtar et l'usage des outils de mesure Meta Pixel + Conversions API."
+        subtitle="Cette page résume les données collectées par EBM Ben Mokhtar et l'usage des outils de mesure Google Analytics, Meta Pixel et Conversions API."
         compact
       />
 
@@ -73,7 +73,7 @@ export default function ConfidentialitePage() {
           <div className="space-y-5 text-sm leading-7 text-muted-foreground">
             <p>
               Meta Pixel peut mesurer les pages visitées et certains événements publics du site. Conversions API envoie
-              une copie serveur des conversions importantes, notamment les leads simulateur et les demandes contact,
+              une copie serveur des conversions importantes, notamment les prospects issus du simulateur et les demandes de contact,
               avec un identifiant d'événement partagé pour éviter les doublons.
             </p>
             <p>
@@ -82,10 +82,24 @@ export default function ConfidentialitePage() {
               serveur sont normalisées puis hachées lorsque Meta l'exige.
             </p>
             <p>
-              Les événements principaux suivis sont le succès du simulateur, les demandes contact, les vues de contenu
+              Les événements principaux suivis sont le succès du simulateur, les demandes de contact, les vues de contenu
               public et les premières interactions avec le simulateur ou le formulaire.
             </p>
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-4xl px-4 pt-16 sm:px-6 sm:pt-20">
+        <h2 className="font-heading text-3xl font-semibold tracking-tight">Google Analytics et choix des traceurs</h2>
+        <div className="mt-4 space-y-4 text-sm leading-7 text-muted-foreground">
+          <p>
+            Google Analytics peut mesurer les pages consultées et les interactions principales afin de comprendre
+            l'utilisation du site. Les outils Google et Meta ne sont chargés qu'après l'acceptation du visiteur.
+          </p>
+          <p>
+            Le choix est enregistré dans le navigateur. Il peut être rouvert à tout moment avec le lien « Gérer les
+            traceurs » présent dans le pied de page.
+          </p>
         </div>
       </section>
 

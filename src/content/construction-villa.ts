@@ -1,6 +1,6 @@
 export const constructionVillaHero = {
   title: "Bâtir la maison qui vous ressemble.",
-  tagline: 'Votre Projet de Vie, Construit avec Rigueur. Que vous rêviez d\'une villa moderne ou d\'une maison familiale.',
+  tagline: "Votre projet de vie, construit avec rigueur, qu'il s'agisse d'une villa moderne ou d'une maison familiale.",
   cta: "Obtenez votre devis",
 };
 
@@ -8,52 +8,52 @@ export const constructionVillaAccroche =
   "Chaque villa que nous bâtissons est une pièce unique. Nous allions la liberté architecturale à la rigueur du génie civil pour créer des demeures qui défient le temps.";
 
 export const chantierStepsIntro = {
-  title: "Votre Chantier Pas à Pas",
-  subtitle: "Le Parcours de votre Construction : La Maîtrise EBM",
+  title: "Votre chantier pas à pas",
+  subtitle: "Le parcours de votre construction : la méthode EBM",
   lead:
     "Construire avec l'Entreprise Ben Mokhtar, c'est bénéficier d'une méthodologie rigoureuse où chaque phase est optimisée pour la qualité et le respect des délais.",
 };
 
 export const chantierSteps = [
   {
-    title: "Étude Technique & Optimisation Budgétaire",
+    title: "Étude technique et optimisation budgétaire",
     body:
       "Nous ne nous contentons pas d'une simple consultation. Nos ingénieurs analysent vos plans d'architecte pour optimiser les structures et vous proposer un devis détaillé, transparent et adapté aux réalités du terrain.",
   },
   {
-    title: "Fondations & Gros Œuvre (L'Expertise EBM)",
+    title: "Fondations et gros œuvre",
     body:
-      "C'est ici que notre puissance logistique intervient. Grâce à notre propre parc d'engins, nous lançons le terrassement et la structure (béton armé, maçonnerie) sans dépendre de tiers. Nous bâtissons le squelette de votre villa avec une précision millimétrée.",
+      "Cette phase couvre le terrassement et la structure en béton armé ou en maçonnerie. Les moyens nécessaires sont planifiés selon les caractéristiques du terrain, les plans validés et les contraintes du chantier.",
   },
   {
-    title: "Mise Hors d'Eau & Second Œuvre",
+    title: "Mise hors d'eau et second œuvre",
     body:
-      "Une fois la structure solide, nous assurons l'étanchéité totale et lançons les corps d'état techniques (électricité, plomberie, climatisation). Chaque étape est soumise à un contrôle qualité strict pour garantir un confort thermique et acoustique optimal.",
+      "Une fois la structure achevée, les travaux d'étanchéité et les corps d'état techniques sont engagés : électricité, plomberie et climatisation. Chaque étape fait l'objet de contrôles adaptés au périmètre prévu.",
   },
   {
-    title: "Finitions de Prestige & Livraison",
+    title: "Finitions et livraison",
     body:
-      "Nous supervisons les travaux de finition (revêtements, menuiseries, peinture) avec un souci du détail artisanal. Après une inspection finale rigoureuse, nous vous remettons les clés d'un ouvrage certifié, prêt à accueillir votre foyer.",
+      "Les revêtements, menuiseries et peintures sont coordonnés jusqu'aux vérifications de fin de chantier et à la remise des clés, selon les prestations convenues.",
   },
 ] as const;
 
 export const suiviSection = {
-  title: "Suivez l'évolution en temps réel",
+  title: "Suivez l'évolution de votre chantier",
   text:
-    "En complément de ces étapes, bénéficiez d'un accès privilégié pour consulter les photos et rapports d'avancement de votre chantier chaque semaine. La transparence est le socle de notre confiance.",
+    "Des points d'avancement peuvent être organisés selon le projet afin de partager les décisions, les prochaines étapes et les éventuels ajustements du planning.",
   cta: "Suivre mon projet",
 };
 
 export const referencesSection = {
-  title: "De la Vision à la Réalité : Nos Projets de Référence",
+  title: "De la vision à la réalité : nos projets de référence",
   intro:
-    "Découvrez comment l'Entreprise Ben Mokhtar concrétise les rêves de ses clients. Parcourez nos succès en construction résidentielle et clé en main à travers la Tunisie : des ouvrages livrés avec une rigueur technique absolue et une finition irréprochable.",
+    "Découvrez une sélection de projets résidentiels présentés par EBM Ben Mokhtar et les différentes étapes qui structurent leur réalisation.",
 };
 
 export const faqConstructionVilla = [
   {
     q: "Combien de temps dure la construction ?",
-    a: "Entre 8 et 12 mois selon le projet.",
+    a: "La durée dépend de la surface, du terrain, des autorisations et des finitions. Un planning adapté est établi avec le devis.",
   },
   {
     q: "Proposez-vous les plans d'architecte ?",
@@ -61,6 +61,6 @@ export const faqConstructionVilla = [
   },
   {
     q: "Quelles garanties offrez-vous ?",
-    a: "Nous garantissons l'utilisation de matériaux certifiés, issus de fournisseurs reconnus, pour assurer une résistance optimale face au temps et aux conditions climatiques.",
+    a: "Les matériaux, contrôles et garanties applicables sont précisés dans le devis et le contrat selon la nature des travaux.",
   },
 ] as const;

@@ -12,7 +12,8 @@ import {
   SectionHeading,
 } from "@/components/marketing";
 import { getProjectBySlug, listProjects } from "@/lib/cms-content";
-import { buildSeoMetadata } from "@/lib/seo";
+import { absoluteSiteUrl, buildSeoMetadata } from "@/lib/seo";
+import { JsonLd, breadcrumbJsonLd } from "@/components/seo/json-ld";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -47,9 +48,17 @@ export default async function ProjetDetailPage({ params }: Props) {
   const nextCover = next?.coverImage?.src ? { src: next.coverImage.src, alt: next.coverImage.alt ?? next.title } : null;
   const galleryImages = p.galleryImages;
   const showGallery = p.showImageGallery ?? galleryImages.length > 0;
+  const hasMeasuredSurface = Boolean(p.surface && /\d/.test(p.surface) && /m(?:²|2)/i.test(p.surface));
 
   return (
     <LazyMotionProvider>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Accueil", url: absoluteSiteUrl("/") },
+          { name: "Nos projets", url: absoluteSiteUrl("/projets") },
+          { name: p.title, url: absoluteSiteUrl(`/projets/${p.slug}`) },
+        ])}
+      />
       <MetaViewContentTracker
         contentId={`project:${p.slug}`}
         contentName={p.title}
@@ -86,12 +95,7 @@ export default async function ProjetDetailPage({ params }: Props) {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,18rem)] lg:gap-14">
           <div className="min-w-0 space-y-6 text-pretty leading-relaxed text-foreground/90">
             <p className="text-lg text-muted-foreground">{p.shortDescription}</p>
-            <p>{p.body || "Chantier résidentiel accompagné par EBM Ben Mokhtar, avec un pilotage complet du gros œuvre au second œuvre."}</p>
-            {p.galleryImages.length === 0 && showGallery ? (
-              <p className="text-sm text-muted-foreground">
-                Ajoutez des images intégrées à ce projet depuis l&apos;administration pour remplacer la galerie par défaut.
-              </p>
-            ) : null}
+            <p>{p.body || "Projet présenté dans le portfolio EBM Ben Mokhtar."}</p>
           </div>
 
           <aside className="lg:sticky lg:top-28 lg:self-start">
@@ -128,34 +132,34 @@ export default async function ProjetDetailPage({ params }: Props) {
                     <dd className="mt-0.5 font-medium text-foreground">{p.type}</dd>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span
-                    className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20"
-                    aria-hidden
-                  >
-                    <CalendarDays className="size-4" />
-                  </span>
-                  <div>
-                    <dt className="text-xs uppercase tracking-wider text-muted-foreground">
-                      Année
-                    </dt>
-                    <dd className="mt-0.5 font-medium text-foreground">{p.year}</dd>
+                {p.year ? (
+                  <div className="flex items-start gap-3">
+                    <span
+                      className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20"
+                      aria-hidden
+                    >
+                      <CalendarDays className="size-4" />
+                    </span>
+                    <div>
+                      <dt className="text-xs uppercase tracking-wider text-muted-foreground">Année</dt>
+                      <dd className="mt-0.5 font-medium text-foreground">{p.year}</dd>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span
-                    className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20"
-                    aria-hidden
-                  >
-                    <RulerIcon className="size-4" />
-                  </span>
-                  <div>
-                    <dt className="text-xs uppercase tracking-wider text-muted-foreground">
-                      Surface
-                    </dt>
-                    <dd className="mt-0.5 font-medium text-foreground">{p.surface}</dd>
+                ) : null}
+                {hasMeasuredSurface ? (
+                  <div className="flex items-start gap-3">
+                    <span
+                      className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20"
+                      aria-hidden
+                    >
+                      <RulerIcon className="size-4" />
+                    </span>
+                    <div>
+                      <dt className="text-xs uppercase tracking-wider text-muted-foreground">Surface</dt>
+                      <dd className="mt-0.5 font-medium text-foreground">{p.surface}</dd>
+                    </div>
                   </div>
-                </div>
+                ) : null}
               </dl>
               <Link
                 href="/contact"

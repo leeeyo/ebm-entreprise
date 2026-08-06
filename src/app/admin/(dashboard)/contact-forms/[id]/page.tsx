@@ -80,7 +80,7 @@ export default async function AdminContactFormDetailPage({ params, searchParams 
     notFound();
   }
 
-  const phoneHref = `tel:${submission.phone.replace(/\s/g, "")}`;
+  const phoneHref = submission.phone ? `tel:${submission.phone.replace(/\s/g, "")}` : null;
 
   return (
     <div className="space-y-8">
@@ -105,7 +105,12 @@ export default async function AdminContactFormDetailPage({ params, searchParams 
         <AdminMetricCard icon={MessageSquareText} label="Statut" value={STATUS_LABELS[submission.status]} detail="État du suivi commercial." tone="dark" />
         <AdminMetricCard icon={UserRoundCheck} label="Assigné à" value={submission.assignedTo || "Non assigné"} detail="Responsable du rappel." />
         <AdminMetricCard icon={CalendarDays} label="Reçu" value={formatDate(submission.createdAt).split(" à ")[0]} detail="Horodatage formulaire." tone="orange" />
-        <AdminMetricCard icon={Phone} label="Téléphone" value={submission.phone} detail="Contact direct." />
+        <AdminMetricCard
+          icon={Phone}
+          label="Contact"
+          value={submission.phone || submission.email}
+          detail={submission.phone ? "Contact téléphonique." : "Contact par e-mail."}
+        />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1fr_420px]">
@@ -120,7 +125,7 @@ export default async function AdminContactFormDetailPage({ params, searchParams 
               </Badge>
             </div>
             <h2 className="font-heading mt-4 text-3xl font-semibold">{submission.name}</h2>
-            <p className="mt-2 text-white/70">{submission.email}</p>
+            <p className="mt-2 text-white/70">{submission.email || submission.phone}</p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
@@ -128,10 +133,10 @@ export default async function AdminContactFormDetailPage({ params, searchParams 
               <Input value={submission.name} readOnly />
             </FieldShell>
             <FieldShell label="Email">
-              <Input value={submission.email} readOnly />
+              <Input value={submission.email || "Non renseigné"} readOnly />
             </FieldShell>
             <FieldShell label="Téléphone">
-              <Input value={submission.phone} readOnly />
+              <Input value={submission.phone || "Non renseigné"} readOnly />
             </FieldShell>
             <FieldShell label="Source">
               <Input value={submission.serviceInterest ?? submission.sourcePage} readOnly />
@@ -143,13 +148,17 @@ export default async function AdminContactFormDetailPage({ params, searchParams 
           </FieldShell>
 
           <div className="flex flex-wrap gap-2">
-            <ContactEmailAction email={submission.email} subject={submission.subject} label="Répondre par email" />
-            <Button type="button" variant="outline" asChild>
-              <a href={phoneHref}>
-                <Phone className="size-4" />
-                Appeler
-              </a>
-            </Button>
+            {submission.email ? (
+              <ContactEmailAction email={submission.email} subject={submission.subject} label="Répondre par e-mail" />
+            ) : null}
+            {phoneHref ? (
+              <Button type="button" variant="outline" asChild>
+                <a href={phoneHref}>
+                  <Phone className="size-4" />
+                  Appeler
+                </a>
+              </Button>
+            ) : null}
             <Button type="button" variant="outline" asChild>
               <Link href="/admin/contact-forms">
                 <ArrowLeft className="size-4" />

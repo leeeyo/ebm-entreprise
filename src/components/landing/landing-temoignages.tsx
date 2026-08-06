@@ -125,8 +125,11 @@ export function LandingTemoignages() {
           <div>
             <span className="mb-3 block h-1 w-9 rounded-full bg-primary/80" aria-hidden />
             <h2 className="font-heading text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">
-              Ce que nos clients disent de nous
+              Retours d'expérience
             </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+              Disponibilité, clarté des échanges et coordination technique au fil du projet.
+            </p>
           </div>
         </Reveal>
 

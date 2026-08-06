@@ -31,6 +31,7 @@ import { genericServicePages } from "@/content/service-pages";
 import type { PageHeroProps } from "@/components/marketing";
 import type { ServicePageRecord } from "@/lib/cms-content";
 import { getDefaultServiceContentSections } from "@/lib/service-page-editor";
+import { JsonLd, faqJsonLd } from "@/components/seo/json-ld";
 
 const KEY_ICONS: Record<string, LucideIcon> = {
   "construction/immeubles-residences": Home,
@@ -99,6 +100,7 @@ export function GenericMarketingPage({ pageKey, page }: { pageKey: string; page?
 
   return (
     <MarketingInnerPage hero={heroProps}>
+      {faqItems.length ? <JsonLd data={faqJsonLd(faqItems)} /> : null}
       <MetaViewContentTracker
         contentId={`service:${pageKey}`}
         contentName={data.title}

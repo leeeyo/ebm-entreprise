@@ -70,7 +70,7 @@ export const LOCATION_OPTIONS: Array<{ label: string; zone: LocationZone }> = [
   { label: "Sfax", zone: "coastal" },
   { label: "Bizerte", zone: "coastal" },
   { label: "Kairouan", zone: "interior" },
-  { label: "Beja", zone: "interior" },
+  { label: "Béja", zone: "interior" },
   { label: "Gafsa", zone: "interior" },
   { label: "Djerba", zone: "south" },
   { label: "Gabès", zone: "south" },

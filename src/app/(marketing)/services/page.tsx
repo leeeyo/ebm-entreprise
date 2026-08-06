@@ -19,21 +19,21 @@ export const metadata: Metadata = buildSeoMetadata({
 });
 
 const PILLAR_ICONS: Record<string, LucideIcon> = {
-  Fluide: Droplets,
+  Fluides: Droplets,
   Électricité: Zap,
   Menuiserie: Hammer,
   "Aménagements extérieurs": Palmtree,
 };
 
 const PILLAR_HREF: Record<string, string> = {
-  Fluide: "/services/fluide/chauffage",
+  Fluides: "/services/fluide/chauffage",
   Électricité: "/services/electricite/courant-fort",
   Menuiserie: "/services/menuiserie/aluminium",
   "Aménagements extérieurs": "/services/amenagements-exterieurs/terrasse",
 };
 
 const PILLAR_DESCRIPTION: Record<string, string> = {
-  Fluide:
+  Fluides:
     "Chauffage, sanitaire et climatisation — réseaux dimensionnés et mis en service dans les règles de l'art.",
   Électricité:
     "Courant fort, courant faible et mise aux normes — une installation sûre, conforme et documentée.",
@@ -65,7 +65,7 @@ export default async function ServicesHubPage() {
         eyebrow="Expertise technique"
         title="Nos métiers, votre chantier."
         accent="chantier."
-        subtitle="Quatre pôles techniques coordonnés sur vos projets neufs ou de rénovation — exécutés par nos équipes internes."
+        subtitle="Quatre pôles techniques coordonnés selon les besoins de vos projets neufs ou de rénovation."
         ctas={[
           { label: "Parler à un expert", href: "/contact" },
           { label: "Estimer mon projet", href: "/simulateur", variant: "outline" },
@@ -79,7 +79,7 @@ export default async function ServicesHubPage() {
         <SectionHeading
           eyebrow="Quatre pôles"
           title="Un seul interlocuteur pour tout votre projet."
-          subtitle="Nous pilotons l'ensemble des corps d'état — de la conception à la mise en service — sans multiplier les intervenants."
+          subtitle="EBM organise les interfaces entre les corps d'état, de l'étude du besoin à la mise en service."
         />
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:gap-8">
           {groups
@@ -109,7 +109,7 @@ export default async function ServicesHubPage() {
       <CtaBand
         eyebrow="Un besoin ponctuel ?"
         title="Un chantier précis en tête ?"
-        body="Décrivez-nous votre besoin — nous orientons votre dossier vers l'équipe spécialisée sous 48 h."
+        body="Décrivez-nous votre besoin — nous orientons votre dossier vers l'interlocuteur adapté et revenons vers vous dans les meilleurs délais."
         primary={{ label: "Demander un devis", href: "/contact" }}
         secondary={{ label: "Estimer mon budget", href: "/simulateur" }}
       />

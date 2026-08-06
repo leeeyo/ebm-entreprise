@@ -17,6 +17,7 @@ const metaContextSchema = z
     fbp: z.string().trim().max(256).optional(),
     fbc: z.string().trim().max(512).optional(),
     eventSourceUrl: z.string().trim().max(2048).optional(),
+    consent: z.boolean().optional(),
   })
   .optional();
 
@@ -117,36 +118,38 @@ export async function POST(req: NextRequest) {
     const leadId = lead._id.toString();
     const { firstName, lastName } = splitFullName(leadData.name);
 
-    void sendMetaCapiLead({
-      eventId: leadId,
-      eventTimeSec: Math.floor(Date.now() / 1000),
-      eventSourceUrl: resolveMetaEventSourceUrl(meta?.eventSourceUrl, "/simulateur"),
-      value: estimateTnd,
-      currency: "TND",
-      contentId: "simulateur:devis",
-      contentName: "Estimation simulateur EBM",
-      contentCategory: "simulateur",
-      customData: {
-        lead_source: "simulator",
-        lead_id: leadId,
-        build_type: project.buildType,
-        offer: project.offer,
-        surface_m2: project.surfaceM2,
-        location_zone: project.zone,
-      },
-      email: leadData.email,
-      phone: leadData.phone,
-      firstName,
-      lastName,
-      city: project.location,
-      country: "tn",
-      clientIp: getClientIp(req),
-      userAgent: req.headers.get("user-agent"),
-      fbp: meta?.fbp,
-      fbc: meta?.fbc,
-    }).catch((error) => {
-      console.error("[meta-capi] lead dispatch failed:", error);
-    });
+    if (meta?.consent === true) {
+      void sendMetaCapiLead({
+        eventId: leadId,
+        eventTimeSec: Math.floor(Date.now() / 1000),
+        eventSourceUrl: resolveMetaEventSourceUrl(meta?.eventSourceUrl, "/simulateur"),
+        value: estimateTnd,
+        currency: "TND",
+        contentId: "simulateur:devis",
+        contentName: "Estimation simulateur EBM",
+        contentCategory: "simulateur",
+        customData: {
+          lead_source: "simulator",
+          lead_id: leadId,
+          build_type: project.buildType,
+          offer: project.offer,
+          surface_m2: project.surfaceM2,
+          location_zone: project.zone,
+        },
+        email: leadData.email,
+        phone: leadData.phone,
+        firstName,
+        lastName,
+        city: project.location,
+        country: "tn",
+        clientIp: getClientIp(req),
+        userAgent: req.headers.get("user-agent"),
+        fbp: meta?.fbp,
+        fbc: meta?.fbc,
+      }).catch((error) => {
+        console.error("[meta-capi] lead dispatch failed:", error);
+      });
+    }
 
     const notifyTo = process.env.SMTP_USER ?? process.env.ADMIN_EMAIL;
     if (notifyTo) {

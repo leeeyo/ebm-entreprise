@@ -10,11 +10,12 @@ import {
 } from "@/components/marketing";
 import { getPublishedServicePage } from "@/lib/cms-content";
 import { buildSeoMetadata } from "@/lib/seo";
+import { JsonLd, faqJsonLd } from "@/components/seo/json-ld";
 import { getDefaultServiceContentSections } from "@/lib/service-page-editor";
 
 const defaultSteps = [
   {
-    title: "Étude & montage technique",
+    title: "Étude et montage technique",
     body: "Analyse des plans d'architecte, contrôle structurel et coordination avec les bureaux d'études. Nous optimisons la structure pour sécuriser le budget et les délais.",
   },
   {
@@ -22,11 +23,11 @@ const defaultSteps = [
     body: "Terrassement, fondations, ossature béton armé et maçonnerie. Notre parc d'engins nous rend autonomes, même sur des projets à forte densité.",
   },
   {
-    title: "Second œuvre & corps d'état",
+    title: "Second œuvre et corps d'état",
     body: "Enveloppe, étanchéité, lots techniques (électricité / plomberie / CVC) et menuiseries. Chaque corps d'état est piloté sur un planning partagé.",
   },
   {
-    title: "Finitions & livraison",
+    title: "Finitions et livraison",
     body: "Revêtements, peintures, espaces communs et contrôles de conformité. Livraison par tranches ou en une fois selon votre programme.",
   },
 ];
@@ -36,7 +37,7 @@ const PAGE_KEY = "construction/immeubles-residences";
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPublishedServicePage(PAGE_KEY);
   return buildSeoMetadata({
-    title: page?.seoTitle ?? page?.title ?? "Construction Immeubles & résidences",
+    title: page?.seoTitle ?? page?.title ?? "Construction immeubles et résidences",
     description: page?.seoDescription ?? page?.intro ?? "Construction d'immeubles et de résidences avec coordination technique EBM.",
     path: "/construction/immeubles-residences",
     image: page?.heroImage?.src,
@@ -65,6 +66,7 @@ export default async function ConstructionImmeublesPage() {
 
   return (
     <LazyMotionProvider>
+      {faqItems.length ? <JsonLd data={faqJsonLd(faqItems)} /> : null}
       <PageHero
         eyebrow={page?.heroEyebrow ?? "Programmes collectifs"}
         title={page?.title ?? "Construire des résidences qui durent."}
@@ -130,7 +132,7 @@ export default async function ConstructionImmeublesPage() {
       <CtaBand
         eyebrow="Un programme à lancer ?"
         title="Parlons coordination, planning et budget."
-        body="Transmettez-nous votre dossier — nous revenons avec une lecture technique et une fourchette budgétaire sous 72 h."
+        body="Transmettez-nous votre dossier pour préparer une lecture technique et une première fourchette budgétaire."
         primary={{ label: page?.ctaPrimaryLabel ?? "Demander un devis", href: "/contact" }}
         secondary={{ label: page?.ctaSecondaryLabel ?? "Lancer le simulateur", href: "/simulateur" }}
       />

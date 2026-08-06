@@ -24,15 +24,15 @@ export const seedFaqEntries: SeedFaqEntry[] = [
   {
     question: "Combien de temps dure la construction d'une villa ?",
     answer:
-      "En général entre 8 et 12 mois selon le programme, la surface et le niveau de finition. EBM établit un planning par phase pour garder une lecture claire du chantier.",
+      "La durée dépend du programme, de la surface, du terrain, des autorisations et des finitions. Un planning adapté est établi avec le devis.",
     category: "Construction",
     targetPage: "/construction/villa",
     keywords: ["délai construction villa", "planning chantier"],
   },
   {
-    question: "EBM prend-elle en charge tous les corps d'état ?",
+    question: "EBM peut-elle coordonner plusieurs corps d'état ?",
     answer:
-      "Oui. Les lots fluides, électricité, menuiserie et finitions peuvent être coordonnés dans une logique clé en main, avec un interlocuteur unique.",
+      "Selon le périmètre convenu, les lots fluides, électricité, menuiserie et finitions peuvent être coordonnés dans une logique clé en main.",
     category: "Services",
     targetPage: "/services",
     keywords: ["clé en main", "corps d'état", "coordination chantier"],
@@ -40,7 +40,7 @@ export const seedFaqEntries: SeedFaqEntry[] = [
   {
     question: "Peut-on suivre l'avancement de son chantier ?",
     answer:
-      "Oui. Vous bénéficiez d'un suivi transparent avec des photos et des points d'avancement réguliers tout au long du chantier.",
+      "Les modalités de suivi, les points d'avancement et les documents partagés sont définis selon l'organisation de chaque projet.",
     category: "Construction",
     targetPage: "/construction/villa",
     keywords: ["suivi chantier", "transparence", "photos chantier"],
@@ -48,7 +48,7 @@ export const seedFaqEntries: SeedFaqEntry[] = [
   {
     question: "Intervenez-vous en dehors du Grand Tunis ?",
     answer:
-      "Oui. EBM intervient sur différents projets en Tunisie, comme le complexe des Orangers à Mrezga (Nabeul), avec la même exigence technique.",
+      "La zone d'intervention est confirmée après étude de la localisation, du type de travaux et des moyens nécessaires.",
     category: "Général",
     targetPage: "/projets",
     keywords: ["zone d'intervention", "Nabeul", "Tunisie"],
@@ -56,10 +56,10 @@ export const seedFaqEntries: SeedFaqEntry[] = [
   {
     question: "Quelles garanties offrez-vous sur les matériaux ?",
     answer:
-      "Nous utilisons des matériaux certifiés issus de fournisseurs reconnus et appliquons un contrôle qualité à chaque phase du chantier.",
+      "Les matériaux, contrôles et garanties applicables sont précisés dans le devis et le contrat selon la nature des travaux.",
     category: "Construction",
     targetPage: "/construction/villa",
-    keywords: ["garanties", "matériaux certifiés", "qualité"],
+    keywords: ["garanties", "matériaux", "qualité"],
   },
   {
     question: "Comment obtenir un devis ?",

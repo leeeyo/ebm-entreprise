@@ -14,6 +14,7 @@ import { listProjects } from "@/lib/cms-content";
 import { connectDB } from "@/lib/db";
 import { galleryPayloadFromFormData } from "@/lib/embedded-gallery";
 import { Project } from "@/models/Project";
+import { getMissingProjectPublicationFields } from "@/lib/project-publishing";
 
 async function saveProject(formData: FormData) {
   "use server";
@@ -59,6 +60,14 @@ async function saveProject(formData: FormData) {
         }
       : {}),
   };
+  const missingPublicationFields = getMissingProjectPublicationFields({
+    ...update,
+    coverImageSrc,
+  });
+  const requestedPublication = update.status === "published";
+  if (requestedPublication && missingPublicationFields.length > 0) {
+    update.status = "draft";
+  }
   await connectDB();
   await Project.findOneAndUpdate(
     { slug },
@@ -70,7 +79,8 @@ async function saveProject(formData: FormData) {
   revalidatePath("/admin/content/projects");
   revalidatePath("/projets");
   revalidatePath(`/projets/${slug}`);
-  redirect(`/admin/content/projects?slug=${encodeURIComponent(slug)}&saved=1`);
+  const outcome = requestedPublication && missingPublicationFields.length > 0 ? "incomplete=1" : "saved=1";
+  redirect(`/admin/content/projects?slug=${encodeURIComponent(slug)}&${outcome}`);
 }
 
 async function hideProject(formData: FormData) {
@@ -110,7 +120,7 @@ async function deleteProject(formData: FormData) {
 }
 
 type Props = {
-  searchParams?: Promise<{ slug?: string; saved?: string; hidden?: string; deleted?: string }>;
+  searchParams?: Promise<{ slug?: string; saved?: string; hidden?: string; deleted?: string; incomplete?: string }>;
 };
 
 function normalizeMediaSrc(src?: string) {
@@ -144,6 +154,12 @@ export default async function AdminProjectsContentPage({ searchParams }: Props) 
       {params?.saved ? (
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
           Projet enregistré et pages publiques revalidées.
+        </div>
+      ) : null}
+      {params?.incomplete ? (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-900">
+          Projet enregistré en brouillon : complétez la localisation, l'année, la surface en m², les lots,
+          la description et la photo de couverture avant publication.
         </div>
       ) : null}
       {params?.hidden ? (

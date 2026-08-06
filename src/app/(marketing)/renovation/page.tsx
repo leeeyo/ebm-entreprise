@@ -26,7 +26,7 @@ const tiles = [
   {
     slug: "renovation/maison-appartement",
     href: "/renovation/maison-appartement",
-    title: "Maison & appartement",
+    title: "Maison et appartement",
     description:
       "Réhabilitation complète ou partielle : restructuration, second œuvre et respect de l'existant.",
     tag: "Rénovation globale",
@@ -48,8 +48,8 @@ const tiles = [
     icon: <Droplets className="size-5" />,
     bullets: [
       "Mise aux normes",
-      "Étanchéité & réseaux",
-      "Carrelage & menuiseries",
+      "Étanchéité et réseaux",
+      "Carrelage et menuiseries",
       "Budget maîtrisé",
     ],
   },
@@ -77,7 +77,7 @@ export default async function RenovationHubPage() {
       >
         <SectionHeading
           eyebrow="Nos spécialités"
-          title="Deux approches, un même exigence de qualité."
+          title="Deux approches, une même exigence de qualité."
           subtitle="Que vous rénoviez un logement entier ou une pièce technique, nous gardons le même niveau de rigueur — sécurité, délais et finitions."
         />
         <div className="mt-10 grid gap-6 lg:grid-cols-2 lg:gap-8">
@@ -90,7 +90,7 @@ export default async function RenovationHubPage() {
       <CtaBand
         eyebrow="Prêts à transformer votre intérieur ?"
         title="Rénovons votre espace ensemble."
-        body="Photos, plans ou simples idées : partagez votre projet, nous revenons avec une première lecture technique sous 48 h."
+        body="Photos, plans ou simples idées : partagez votre projet pour recevoir une première lecture technique."
         primary={{ label: "Demander un devis", href: "/contact" }}
         secondary={{ label: "Voir nos projets", href: "/projets" }}
       />

@@ -18,6 +18,7 @@ import {
 } from "@/content/construction-villa";
 import { getPublishedServicePage } from "@/lib/cms-content";
 import { buildSeoMetadata } from "@/lib/seo";
+import { JsonLd, faqJsonLd } from "@/components/seo/json-ld";
 import { getDefaultServiceContentSections } from "@/lib/service-page-editor";
 
 const PAGE_KEY = "construction/villa";
@@ -55,6 +56,7 @@ export default async function ConstructionVillaPage() {
 
   return (
     <LazyMotionProvider>
+      <JsonLd data={faqJsonLd(faqItems)} />
       <PageHero
         eyebrow={page?.heroEyebrow ?? constructionVillaHero.title}
         title={page?.title ?? constructionVillaHero.tagline}

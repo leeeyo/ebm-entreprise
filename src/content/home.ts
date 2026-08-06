@@ -1,21 +1,21 @@
 export const homeHero = {
-  h1: "EBM Ben Mokhtar : Construire l'Avenir avec Rigueur",
+  h1: "EBM Ben Mokhtar : construire l'avenir avec rigueur",
   ctaPrimary: "Estimer votre projet",
-  ctaSecondary: "Consulter nos Réalisations",
+  ctaSecondary: "Consulter nos réalisations",
 };
 
 export const domaines = [
   {
-    title: "Gros Œuvre & Structure",
+    title: "Gros œuvre et structure",
     description:
-      "La maîtrise du béton et de la solidité pour garantir la pérennité de chaque ouvrage.",
+      "La maîtrise du béton et de la structure pour construire des ouvrages adaptés à leur usage.",
     image: {
       src: "/domaines/gros-oeuvre.webp",
       alt: "Coulage de béton et structure sur un chantier de gros œuvre EBM.",
     },
   },
   {
-    title: "Projets Clé en Main",
+    title: "Projets clé en main",
     description:
       "Une prise en charge totale, assurant une cohérence parfaite entre les plans et la réalité.",
     image: {
@@ -24,7 +24,7 @@ export const domaines = [
     },
   },
   {
-    title: "Rénovation & Extension",
+    title: "Rénovation et extension",
     description:
       "Valoriser l'existant avec les techniques de construction les plus modernes.",
     image: {
@@ -33,7 +33,7 @@ export const domaines = [
     },
   },
   {
-    title: "Ouvrages Spécialisés",
+    title: "Ouvrages spécialisés",
     description:
       "Travaux de haute technicité nécessitant un parc matériel de pointe et un savoir-faire spécifique.",
     image: {
@@ -50,47 +50,47 @@ export const stats = [
 ] as const;
 
 export const pourquoiIntro =
-  "Confier votre projet à EBM, c'est choisir un partenaire solide qui allie savoir-faire historique et réactivité logistique pour garantir la réussite de vos constructions.";
+  "Confier votre projet à EBM, c'est choisir un interlocuteur qui associe méthode technique, organisation et suivi des étapes de construction.";
 
 export const pourquoiPillars = [
   {
-    title: "Expertise & Maîtrise Technique",
-    body: "Plus de 15 ans d'expérience dans le bâtiment, garantissant une exécution irréprochable du gros œuvre aux finitions.",
+    title: "Expertise et maîtrise technique",
+    body: "Une expérience du bâtiment mobilisée à chaque étape, du gros œuvre aux finitions, avec une méthode adaptée au projet.",
   },
   {
-    title: "Qualité & Normes Rigoureuses",
-    body: "Engagement total sur la sécurité, la durabilité des matériaux et le respect strict des normes de construction.",
+    title: "Qualité et méthode",
+    body: "Une attention constante portée à la sécurité, au choix des matériaux et au contrôle des travaux réalisés.",
   },
   {
-    title: "Solutions Clé en Main",
+    title: "Solutions clé en main",
     body: "Un interlocuteur unique de la conception à la livraison pour une gestion simplifiée et une vision maîtrisée.",
   },
   {
-    title: "Autonomie & Respect des Délais",
-    body: "Grâce à notre propre parc d'engins, nous maîtrisons notre calendrier et garantissons une livraison ponctuelle.",
+    title: "Organisation et suivi des délais",
+    body: "Les moyens mobilisés et le suivi du planning permettent d'anticiper les contraintes et de communiquer clairement sur l'avancement.",
   },
 ] as const;
 
 export const realisations = {
-  title: "Nos Réalisations",
+  title: "Nos réalisations",
   cta: "Voir nos projets",
 };
 
 export const temoignages = [
   {
     quote:
-      "Professionnalisme et Solidité. L'entreprise EBM a su relever les défis techniques de notre projet avec une maîtrise impressionnante.",
-    author: "Responsable de Projet Industriel",
+      "L'équipe a pris le temps de clarifier les étapes du chantier et de nous tenir informés lorsque des choix devaient être faits.",
+    author: "Client particulier · projet résidentiel",
   },
   {
     quote:
-      "Un partenaire de confiance. Le respect des délais et la qualité des finitions sont au rendez-vous. Nous recommandons vivement.",
-    author: "Investisseur Immobilier",
+      "Les échanges ont été directs et les ajustements ont été expliqués avec des solutions concrètes pour rester cohérents avec notre budget.",
+    author: "Client professionnel · projet immobilier",
   },
   {
     quote:
-      "Expertise unique. La possession de leur propre matériel change tout en termes de rapidité sur le chantier.",
-    author: "Architecte Partenaire",
+      "La coordination sur le terrain a facilité le travail entre les différents intervenants et le suivi des points techniques.",
+    author: "Partenaire de chantier · coordination technique",
   },
 ] as const;
 

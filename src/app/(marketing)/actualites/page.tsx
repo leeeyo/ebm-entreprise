@@ -48,7 +48,7 @@ export default async function ActualitesPage() {
         eyebrow="Actualités"
         title="Nos histoires de chantier et conseils techniques."
         accent="techniques"
-        subtitle="Chantiers livrés, nouveautés d'équipe et retours d'expérience — les publications EBM sont maintenant pilotées depuis le back-office."
+        subtitle="Chantiers, conseils techniques et retours d'expérience — retrouvez ici les nouvelles publications EBM."
       />
 
       <section
@@ -100,7 +100,7 @@ export default async function ActualitesPage() {
             kind="empty"
             eyebrow="Actualités"
             title="Le carnet de chantier est encore vide."
-            description="Les articles passés en statut publié depuis l'administration apparaîtront automatiquement ici."
+            description="De nouvelles publications viendront bientôt compléter cette rubrique."
             primaryAction={{ label: "Voir nos projets", href: "/projets" }}
             variant="compact"
           />
@@ -114,7 +114,7 @@ export default async function ActualitesPage() {
       <CtaBand
         eyebrow="En attendant"
         title="Découvrez nos chantiers déjà livrés."
-        body="Notre portfolio illustre mieux qu'un article la méthode EBM — prenez une minute pour le parcourir."
+        body="Nos réalisations présentent les projets et les savoir-faire mis en avant par EBM."
         primary={{ label: "Voir nos projets", href: "/projets" }}
         secondary={{ label: "Lancer le simulateur", href: "/simulateur" }}
       />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { Send } from "lucide-react";
 import { toast } from "sonner";
 import { BrandedMascotState } from "@/components/brand/mascot-state";
@@ -78,7 +79,12 @@ export function ContactForm() {
     const formData = new FormData(form);
     const phoneValue = formValue(formData, "phone");
 
-    if (!/^\d{2} \d{3} \d{3}$/.test(phoneValue)) {
+    const emailValue = formValue(formData, "email");
+    if (!emailValue && !phoneValue) {
+      toast.error("Indiquez un e-mail ou un numéro de téléphone.");
+      return;
+    }
+    if (phoneValue && !/^\d{2} \d{3} \d{3}$/.test(phoneValue)) {
       toast.error("Le téléphone doit respecter le format xx xxx xxx.");
       return;
     }
@@ -87,7 +93,7 @@ export function ContactForm() {
     try {
       const meta = getMetaClientContext();
       const name = formValue(formData, "name");
-      const email = formValue(formData, "email");
+      const email = emailValue;
       const serviceInterest = formValue(formData, "serviceInterest");
       const response = await fetch("/api/contact", {
         method: "POST",
@@ -98,6 +104,7 @@ export function ContactForm() {
           phone: phoneValue,
           subject: formValue(formData, "subject"),
           serviceInterest,
+          website: formValue(formData, "website"),
           message: formValue(formData, "message"),
           sourcePage: "/contact",
           meta,
@@ -169,22 +176,27 @@ export function ContactForm() {
 
   return (
     <form
+      action="/api/contact"
+      method="post"
       onSubmit={onSubmit}
       onFocusCapture={trackContactFormStarted}
       className="rounded-3xl border border-border/60 bg-card/85 p-5 shadow-sm backdrop-blur-sm sm:p-6"
     >
+      <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+        <Label htmlFor="contact-website">Site internet</Label>
+        <Input id="contact-website" name="website" tabIndex={-1} autoComplete="off" />
+      </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="contact-name">Nom complet</Label>
           <Input id="contact-name" name="name" required placeholder="Votre nom" />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="contact-phone">Téléphone</Label>
+          <Label htmlFor="contact-phone">Téléphone <span className="text-muted-foreground">(ou e-mail)</span></Label>
           <Input
             id="contact-phone"
             name="phone"
             type="tel"
-            required
             value={phone}
             onChange={onPhoneChange}
             inputMode="numeric"
@@ -197,8 +209,8 @@ export function ContactForm() {
       </div>
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="contact-email">Email</Label>
-          <Input id="contact-email" name="email" type="email" required placeholder="vous@exemple.tn" />
+          <Label htmlFor="contact-email">E-mail <span className="text-muted-foreground">(ou téléphone)</span></Label>
+          <Input id="contact-email" name="email" type="email" placeholder="vous@exemple.tn" />
         </div>
         <div className="space-y-2">
           <Label htmlFor="contact-service">Service concerné</Label>
@@ -206,8 +218,12 @@ export function ContactForm() {
             id="contact-service"
             name="serviceInterest"
             className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-            defaultValue="Construction"
+            defaultValue=""
+            required
           >
+            <option value="" disabled>
+              Sélectionnez un service
+            </option>
             <option>Construction</option>
             <option>Rénovation</option>
             <option>Services techniques</option>
@@ -217,8 +233,8 @@ export function ContactForm() {
         </div>
       </div>
       <div className="mt-4 space-y-2">
-        <Label htmlFor="contact-subject">Sujet</Label>
-        <Input id="contact-subject" name="subject" required placeholder="Construction villa R+1 à Ariana" />
+        <Label htmlFor="contact-subject">Sujet <span className="text-muted-foreground">(facultatif)</span></Label>
+        <Input id="contact-subject" name="subject" placeholder="Construction villa R+1 à Ariana" />
       </div>
       <div className="mt-4 space-y-2">
         <Label htmlFor="contact-message">Message</Label>
@@ -234,6 +250,13 @@ export function ContactForm() {
         <Send className="size-4" />
         {submitting ? "Envoi..." : "Envoyer ma demande"}
       </Button>
+      <p className="mt-4 text-xs leading-5 text-muted-foreground">
+        Les informations saisies servent à traiter votre demande. Consultez notre{" "}
+        <Link href="/confidentialite" className="underline underline-offset-4">
+          politique de confidentialité
+        </Link>
+        .
+      </p>
     </form>
   );
 }

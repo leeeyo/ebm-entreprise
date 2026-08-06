@@ -21,7 +21,7 @@ const ProjectSchema = new Schema(
     year: { type: String, trim: true },
     surface: { type: String, trim: true },
     lots: { type: String, trim: true },
-    status: { type: String, enum: CONTENT_STATUSES, default: "published", index: true },
+    status: { type: String, enum: CONTENT_STATUSES, default: "draft", index: true },
     featured: { type: Boolean, default: false },
     coverImage: ImageSchema,
     showImageGallery: { type: Boolean, default: true },

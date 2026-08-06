@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { connectDB } from "@/lib/db";
 import { Project } from "@/models/Project";
+import { getMissingProjectPublicationFields } from "@/lib/project-publishing";
 
 function normalizeProjectSlug(value: FormDataEntryValue | null) {
   return String(value ?? "")
@@ -29,6 +30,21 @@ async function createProject(formData: FormData) {
 
   const slug = normalizeProjectSlug(formData.get("slug"));
   const title = String(formData.get("title") ?? "").trim();
+  const projectInput = {
+    title,
+    shortDescription: String(formData.get("shortDescription") ?? "").trim(),
+    body: String(formData.get("body") ?? "").trim(),
+    city: String(formData.get("city") ?? "").trim() || "Tunisie",
+    type: String(formData.get("type") ?? "").trim() || "Résidentiel",
+    year: String(formData.get("year") ?? "").trim(),
+    surface: String(formData.get("surface") ?? "").trim(),
+    lots: String(formData.get("lots") ?? "").trim(),
+  };
+  const requestedStatus = formData.get("status") === "published" ? "published" : "draft";
+  const status =
+    requestedStatus === "published" && getMissingProjectPublicationFields(projectInput).length > 0
+      ? "draft"
+      : requestedStatus;
 
   await connectDB();
   await Project.findOneAndUpdate(
@@ -37,14 +53,8 @@ async function createProject(formData: FormData) {
       $setOnInsert: {
         slug,
         title,
-        shortDescription: String(formData.get("shortDescription") ?? "").trim(),
-        body: String(formData.get("body") ?? "").trim(),
-        city: String(formData.get("city") ?? "").trim() || "Tunisie",
-        type: String(formData.get("type") ?? "").trim() || "Résidentiel",
-        year: String(formData.get("year") ?? "").trim(),
-        surface: String(formData.get("surface") ?? "").trim(),
-        lots: String(formData.get("lots") ?? "").trim(),
-        status: formData.get("status") === "draft" ? "draft" : "published",
+        ...projectInput,
+        status,
         featured: formData.get("featured") === "on",
         showImageGallery: true,
         galleryEyebrow: "Galerie",
@@ -61,7 +71,8 @@ async function createProject(formData: FormData) {
 
   revalidatePath("/admin/content/projects");
   revalidatePath("/projets");
-  redirect(`/admin/content/projects?slug=${encodeURIComponent(slug)}&saved=1`);
+  const outcome = requestedStatus === "published" && status === "draft" ? "incomplete=1" : "saved=1";
+  redirect(`/admin/content/projects?slug=${encodeURIComponent(slug)}&${outcome}`);
 }
 
 export default function NewProjectPage() {

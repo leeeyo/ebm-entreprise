@@ -19,6 +19,7 @@ const eventSchema = z.object({
       fbp: z.string().trim().max(256).optional(),
       fbc: z.string().trim().max(512).optional(),
       eventSourceUrl: z.string().trim().max(2048).optional(),
+      consent: z.boolean().optional(),
     })
     .optional(),
 });
@@ -40,6 +41,9 @@ export async function POST(req: NextRequest) {
   }
 
   const event = parsed.data;
+  if (event.meta?.consent !== true) {
+    return NextResponse.json({ ok: true, tracked: false });
+  }
   await sendMetaCapiBrowserEvent(event.eventName as MetaCapiBrowserEventName, {
     eventId: event.eventId,
     eventTimeSec: Math.floor(Date.now() / 1000),

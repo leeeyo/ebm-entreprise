@@ -5,6 +5,7 @@ import { listProjects, serializeProject } from "@/lib/cms-content";
 import { connectDB } from "@/lib/db";
 import { Project } from "@/models/Project";
 import { CONTENT_STATUSES } from "@/models/ServicePage";
+import { getMissingProjectPublicationFields } from "@/lib/project-publishing";
 
 const projectSchema = z.object({
   slug: z.string().trim().min(2),
@@ -42,8 +43,21 @@ export async function POST(req: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: "Données invalides" }, { status: 400 });
   }
-
   await connectDB();
+  const existing = await Project.findOne({ slug: parsed.data.slug }).select("coverImage.src").lean();
+  if (parsed.data.status === "published") {
+    const missing = getMissingProjectPublicationFields({
+      ...parsed.data,
+      coverImageSrc: existing?.coverImage?.src,
+    });
+    if (missing.length > 0) {
+      return NextResponse.json(
+        { error: "Publication impossible", missing },
+        { status: 400 },
+      );
+    }
+  }
+
   const doc = await Project.findOneAndUpdate(
     { slug: parsed.data.slug },
     { $set: parsed.data },
